@@ -1,0 +1,14 @@
+tagging-rules:
+  huawei:
+    - regex: ^ip ip-prefix (\S+) index \d+
+      tags: [bgp-routing-policy, pl]
+    - regex: ^ip community-list (\S+)
+      tags: [bgp-routing-policy, cl]
+    - regex: ^ip community-filter basic (\S+) index
+      tags: [bgp-routing-policy, cf]
+    - regex: ^route-policy (\S+) (?:permit|deny)
+      tags: [bgp-routing-policy, rp]
+    - regex: ^bgp \d+ .* / peer (\S+) route-policy (\S+) (?:import|export)
+      tags: [bgp-routing-policy, bgp]
+    - regex: ^bgp \d+ .* / import-route direct route-policy (\S+)
+      tags: [bgp-routing-policy, bgp, redistribution]

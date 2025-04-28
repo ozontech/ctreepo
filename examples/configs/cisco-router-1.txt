@@ -1,0 +1,356 @@
+Building configuration...
+
+Current configuration : 23658 bytes
+!
+! Last configuration change at 10:00:00 MSK Fri Apr 10 1987 by root
+! NVRAM config last updated at 10:01:00 MSK Fri Apr 10 1987 by root
+!
+version 15.4
+service tcp-keepalives-in
+service timestamps debug datetime msec localtime show-timezone
+service timestamps log datetime msec localtime show-timezone
+service password-encryption
+!
+hostname router-01
+!
+boot-start-marker
+boot system flash flash:c800-universalk9-mz.SPA.154-3.M7.bin
+boot-end-marker
+!
+!
+logging buffered 10240 informational
+logging console informational
+enable secret 5 2Fe034RYzgb7xbt2pYxcpA==
+!
+aaa new-model
+!
+!
+aaa group server tacacs+ TacacsGroup
+ server 192.168.0.100
+ server 192.168.0.101
+!
+aaa authentication login default group TacacsGroup local
+aaa authentication enable default enable
+aaa authorization console
+aaa authorization exec default group TacacsGroup local 
+aaa accounting commands 15 default start-stop group TacacsGroup
+!
+!
+!
+!
+!
+aaa session-id common
+clock timezone MSK 3 0
+!
+crypto pki trustpoint pkiCert
+ enrollment mode ra
+ enrollment url http://my.company.ru:80/certsrv/mscep/mscep.dll
+ serial-number
+ fqdn router-01.company.ru
+ subject-name CN=router-01.company.ru,C=RU,O=company,L=Moscow
+ revocation-check none
+ source interface Loopback0
+ rsakeypair router-01
+ auto-enroll 90
+!
+crypto pki trustpoint pkiCA
+ enrollment terminal
+ serial-number
+ revocation-check none
+ rsakeypair router-01
+!
+!
+crypto pki certificate chain pkiCert
+ certificate 6f6c6f6c6f
+  30820172 3082011C A0030201 02020101 300D0609 2A864886 F70D0101 04050030 
+  5A170D30 38313030 33313534 3734345A 300F310D 300B0603 55040313 04723363 
+  60B376F8 4B1C0A45 D6916465 0488BAEF 6ABF2C2B 2F567395 25E258C2 FB06BB9C 
+  63306130 0F060355 1D130101 FF040530 030101FF 300E0603 551D0F01 01FF0404 
+  B6075A76 47955C9D FA673691 8450A15C 9C420C9F 04EA2E70 D1394D7E 20FB91DF 
+  7D478328 4B63CBF5
+        quit
+ certificate ca 01
+  30820176 30820120 A0030201 02020101 300D0609 2A864886 F70D0101 04050030
+  30345A17 0D313031 31323931 35303330 345A3011 310F300D 06035504 03130643
+  B917730A 5D8BBF73 C5C1F4D4 0DAA0438 647A9031 5702D68B 317FD0BA E2FAD957
+  8A0384EC 7F18C99E 366587EA 405CCCAB C267D3A9 D3A904BF DD2084D1 2AEAEE0A
+  010001A3 63306130 0F060355 1D130101 FF040530 030101FF 300E0603 551D0F01
+  8137E559 C3315442 81A5D70E 811542B6 494E8C04 A851DC28
+        quit
+crypto pki certificate chain pkiCA
+ certificate ca 02
+  30820176 30820120 A0030201 02020101 300D0609 2A864886 F70D0101 04050030
+  11310F30 0D060355 04031306 43415345 5256301E 170D3037 31313330 31353033
+  30345A17 0D313031 31323931 35303330 345A3011 310F300D 06035504 03130643
+  41534552 56305C30 0D06092A 864886F7 0D010101 0500034B 00304802 4100DA5A
+  B917730A 5D8BBF73 C5C1F4D4 0DAA0438 647A9031 5702D68B 317FD0BA E2FAD957
+  D40B4D8C 91B2AEB3 9B301D06 03551D0E 04160414
+        quit
+no ip source-route
+ip arp proxy disable
+no ip gratuitous-arps
+!
+!
+!
+!
+!
+!
+!
+!
+!
+vrf definition FVRF
+ rd 1.2.3.4:123
+ !
+ address-family ipv4
+ exit-address-family
+!
+!
+ip domain list company.ru
+ip domain lookup source-interface Loopback0
+ip domain name company.ru
+ip host vrf FVRF hub.company.ru 100.64.0.1
+ip name-server 192.168.0.3
+ip name-server 192.168.0.4
+ip cef
+no ipv6 cef
+!
+!
+!
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+cts logging verbose
+license udi pid C819G-4G-GA-K9 sn FCZ123321CF
+license boot module c800 level advipservices
+!
+!
+no spanning-tree optimize bpdu transmission
+vtp mode transparent
+username root privilege 15 secret 5 $1$mERr$KnP4XAeHLfyk/RPXMCetr0
+!
+!
+!
+!
+!
+controller Cellular 0
+ lte modem link-recovery wait-timer 10
+ lte modem link-recovery debounce-count 6
+!
+vlan 100
+ name Users
+!
+!
+policy-map pm_shape_10mb
+ class class-default
+  shape average 10000000
+!
+!
+crypto isakmp policy 100
+ encr aes 256
+ group 2
+!
+crypto isakmp invalid-spi-recovery
+crypto isakmp aggressive-mode disable
+crypto isakmp profile isakmpSpoke
+   self-identity fqdn
+   ca trust-point pkiCert
+   match identity address 4.4.4.4 255.255.255.255 FVRF
+   match identity host domain company.ru FVRF
+   keepalive 20 retry 20
+   local-address GigabitEthernet0
+!
+!
+crypto ipsec transform-set tsAES256 esp-aes 256 esp-sha-hmac 
+ mode transport
+crypto ipsec fragmentation after-encryption
+!
+crypto ipsec profile ipsecSpoke
+ set transform-set tsAES256 
+ set isakmp-profile isakmpSpoke
+!
+!
+!
+!
+!
+!
+!
+!
+interface Tunnel1
+ ip address 10.0.0.2 255.255.255.0
+ no ip redirects
+ ip mtu 1200
+ ip nhrp authentication nhrp-secret
+ ip nhrp map 10.0.0.1 192.66.55.44
+ ip nhrp map multicast 192.66.55.44
+ ip nhrp network-id 1
+ ip nhrp nhs 10.0.0.1
+ ip ospf network broadcast
+ ip ospf priority 0
+ tunnel source GigabitEthernet0
+ tunnel mode gre multipoint
+ tunnel vrf FVRF
+ tunnel protection ipsec profile ipsecSpoke
+!
+interface Tunnel2
+ ip address 10.1.0.2 255.255.255.0
+ no ip redirects
+ ip mtu 1200
+ ip nhrp authentication nhrp-secret
+ ip nhrp map 10.1.0.1 192.66.55.33
+ ip nhrp map multicast 192.66.55.33
+ ip nhrp network-id 2
+ ip nhrp nhs 10.1.0.1
+ ip ospf network broadcast
+ ip ospf priority 0
+ tunnel source GigabitEthernet0
+ tunnel mode gre multipoint
+ tunnel vrf FVRF
+ tunnel protection ipsec profile ipsecSpoke
+!
+interface FastEthernet0
+ switchport access vlan 100
+ no ip address
+!
+interface FastEthernet1
+ switchport access vlan 100
+ no ip address
+!
+interface FastEthernet2
+ switchport access vlan 100
+ no ip address
+!
+interface FastEthernet3
+ switchport access vlan 100
+ no ip address
+!
+interface GigabitEthernet0
+ description L3VPN
+ ip vrf forwarding FVRF
+ ip address 143.31.31.2 255.255.255.252
+ ip access-group acl_OUTSIDE_IN in
+ duplex auto
+ speed auto
+!
+interface Loopback0
+ description RID
+ ip address 10.255.255.1 255.255.255.255
+!
+interface Serial0
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+interface Vlan100
+ description Users
+ ip address 192.168.100.1 255.255.255.0
+ ip helper-address 5.4.3.2
+ ip tcp adjust-mss 1160
+!
+router ospf 1
+ passive-interface default
+ no passive-interface Tunnel1
+ network 192.168.100.1 0.0.0.0 area 1.2.3.4
+ network 10.1.0.2 0.0.0.0 area 1.2.3.4
+!
+router bgp 64512
+ bgp log-neighbor-changes
+ neighbor RR peer-group
+ neighbor RR remote-as 64512
+ neighbor RR ebgp-multihop 255
+ neighbor RR update-source Loopback0
+ neighbor 192.168.255.1 remote-as 64512
+ neighbor 192.168.255.1 update-source Loopback0
+ !
+ address-family ipv4
+  network 192.168.100.0 mask 255.255.255.0
+  redistribute ospf 1 route-map rm_OSPF2BGP
+  neighbor RR send-community both
+  neighbor RR advertisement-interval 0
+  neighbor 192.168.255.1 activate
+  neighbor 192.168.255.1 soft-reconfiguration inbound
+  neighbor 192.168.255.1 prefix-list pl_BGP_out out
+ exit-address-family
+!
+ip forward-protocol nd
+no ip http server
+no ip http secure-server
+!
+!
+ip dns view vrf Front default
+ip route 192.168.255.1 255.255.255.255 Tunnel1
+ip route 192.168.255.1 255.255.255.255 Tunnel2
+ip route vrf FVRF 192.66.55.33 255.255.255.255 143.31.31.2
+ip route vrf FVRF 192.66.55.44 255.255.255.255 143.31.31.2
+ip tacacs source-interface Loopback0
+!
+ip access-list extended acl_OUTSIDE_IN
+ permit icmp any any
+ permit esp any any
+ permit udp any any eq isakmp
+!
+!
+ip prefix-list pl_BGP_out seq 5 permit 192.168.100.0/24
+ip prefix-list pl_BGP_out seq 10 permit 10.255.255.1/32
+!
+logging host 172.16.17.18
+logging host 172.16.17.19
+!
+route-map rm_OSPF2BGP permit 10
+ match ip address prefix-list pl_SOME_LIST
+!
+snmp-server community public RO
+snmp-server community private RW
+snmp-server location Moscow
+snmp-server contact t.me/alexigna
+snmp-server host 192.168.22.33 version 2c public 
+snmp-server host 192.168.22.33 version 2c public 
+tacacs-server host 192.168.22.44 key 7 104D000A0618
+tacacs-server host 192.168.22.55 key 7 104D000A0618
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+banner login ^C
+=====================================
+     THIS IS RESTRICTED AREA!
+      PROPERTY OF MY COMPANY
+=====================================
+^C
+banner motd ^C $(hostname).$(domain) at line $(line) ^C
+!
+line con 0
+ exec-timeout 10 0
+ logging synchronous
+ transport preferred none
+line vty 0 4
+ exec-timeout 15 0
+ logging synchronous
+ transport preferred none
+ transport input telnet ssh
+line vty 5 15
+ exec-timeout 15 0
+ logging synchronous
+ transport preferred none
+ transport input telnet ssh
+!
+ntp server 192.168.44.55 source Loopback0
+ntp server 192.168.44.66 source Loopback0
+!
+!
+end

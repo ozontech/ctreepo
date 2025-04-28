@@ -1,0 +1,32 @@
+!
+service tcp-keepalives-in
+service timestamps debug datetime msec localtime show-timezone
+!
+enable secret 5 2Fe034RYzgb7xbt2pYxcpA==
+!
+aaa group server tacacs+ TacacsGroup
+ server 192.168.0.100
+ server 192.168.0.101
+!
+interface Tunnel1
+ ip address 10.0.0.2 255.255.255.0
+ ip address 10.2.0.2 255.255.255.0 secondary
+ no ip redirects
+!
+interface Tunnel2
+ ip address 10.1.0.2 255.255.255.0
+ no ip redirects
+!
+interface FastEthernet0
+ switchport access vlan 100
+ no ip address
+!
+router bgp 64512
+ neighbor 192.168.255.1 remote-as 64512
+ neighbor 192.168.255.1 update-source Loopback0
+ !
+ address-family ipv4
+  network 192.168.100.0 mask 255.255.255.0
+  neighbor 192.168.255.1 activate
+ exit-address-family
+!

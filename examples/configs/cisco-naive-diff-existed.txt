@@ -1,0 +1,20 @@
+!
+service tcp-keepalives-in
+service timestamps debug datetime msec localtime show-timezone
+!
+interface FastEthernet0
+ switchport access vlan 100
+ no ip address
+!
+router ospf 1
+ router-id 1.2.3.4
+!
+router bgp 64512
+ neighbor 192.168.255.1 remote-as 64512
+ neighbor 192.168.255.1 update-source Loopback0
+ !
+ address-family ipv4
+  network 192.168.100.0 mask 255.255.255.0
+  neighbor 192.168.255.1 activate
+ exit-address-family
+!

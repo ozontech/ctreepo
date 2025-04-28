@@ -1,0 +1,33 @@
+interface BVI123
+ description User-NEW
+ vrf CE
+ load-interval 30
+!
+prefix-set ps-some-networks
+  1.2.3.0/24,
+  5.6.7.0/24
+end-set
+!
+prefix-set ps-google
+  8.8.8.8/32,
+  8.8.4.4/32
+end-set
+!
+route-policy rp-policy
+  if tag eq 12345 then
+    set community (64512:12345)
+  else
+    pass
+  endif
+end-policy
+!
+route-policy rp-google
+  if destination in ps-google then
+    drop
+  elseif destination in ps-some-networks then
+    drop
+  else
+    pass
+  endif
+end-policy
+!

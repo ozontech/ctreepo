@@ -1,0 +1,41 @@
+no platform punt-keepalive disable-kernel-core
+no service dhcp
+ip dhcp bootp ignore
+no service pad
+!
+router bgp 64512
+ neighbor CSC peer-group
+ neighbor CSC remote-as 12345
+ neighbor RR peer-group
+ neighbor RR remote-as 64512
+ !
+ address-family ipv4
+  neighbor CSC send-community both
+  neighbor CSC route-map rm_CSC_PE_in in
+  neighbor CSC send-label
+ exit-address-family
+ !
+ address-family vpnv4
+  neighbor RR route-map rm_RR_in in
+ exit-address-family
+!
+route-map rm_CSC_PE_in deny 10 
+ match community cl_PE1 cl_PE2
+route-map rm_CSC_PE_in permit 20 
+ match ip address prefix-list pl_CSC
+ set local-preference 200
+!
+route-map rm_RR_in permit 10 
+ match community cl_VPNv4_1
+ set local-preference 200
+route-map rm_RR_in permit 20 
+ match community cl_VPNv4_2
+ set local-preference 190
+!
+ip community-list standard cl_PE1 permit 64512:10001
+ip community-list standard cl_PE2 permit 64512:10002
+ip community-list expanded cl_VPNv4_1 permit 64512:2[0-9][0-9][0-9]1
+ip community-list expanded cl_VPNv4_2 permit 64512:2[0-9][0-9][0-9]2
+!
+ip prefix-list pl_CSC seq 5 permit 10.0.0.0/24 ge 32
+!

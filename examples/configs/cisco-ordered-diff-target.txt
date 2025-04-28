@@ -1,0 +1,23 @@
+no service timestamps debug uptime
+no service timestamps log uptime
+!
+vrf definition mgmt
+ !
+ address-family ipv4
+ exit-address-family
+!
+ip access-list standard acl_TEST_STD
+ permit 8.8.8.8
+ permit 8.8.4.4
+ deny   any
+!
+ip access-list extended act_TEST_EXT
+ 10 permit ip host 8.8.8.8 any
+ 15 permit ip host 8.8.4.4 any
+ 20 deny   ip any any
+!
+line vty 0 4
+ transport input telnet ssh
+line vty 5 15
+ transport input telnet ssh
+!

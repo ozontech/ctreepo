@@ -1,0 +1,30 @@
+tagging-rules:
+  huawei:
+    - regex: ^ip vpn-instance (\S+)$
+      tags:
+        - vpn
+    - regex: ^ip vpn-instance (\S+) .* export-extcommunity evpn
+      tags:
+        - rt
+    - regex: ^interface (\S+)$
+      tags:
+        - interface
+    - regex: ^interface (gi0/0/0) .* ip address \S+ \S+$
+      tags:
+        - ip
+        - interface-1
+    - regex: ^interface (gi0/0/1) .* ip address \S+ \S+$
+      tags:
+        - ip
+        - interface-2
+    - regex: ^ip vpn-instance (LAN) .* route-distinguisher (\S+)
+      tags:
+        - rd
+  arista:
+    - regex: ^interface (\S+)$
+      tags:
+        - interface
+  other_vendor:
+    - regex: ^interface (\S+)$
+      tags:
+        - interface

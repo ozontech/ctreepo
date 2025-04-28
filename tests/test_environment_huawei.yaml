@@ -1,0 +1,50 @@
+tagging-rules:
+  huawei:
+    - regex: ^interface (LoopBack\d+)$
+      tags:
+        - interface
+        - loopback
+    - regex: ^interface (\S+)$
+      tags:
+        - interface
+    - regex: ^interface (\S+) mode l2$
+      tags:
+        - interface
+        - sub
+    - regex: ^interface (\S+) / qos .*
+      tags:
+        - interface
+        - qos
+    - regex: ^diffserv .*
+      tags:
+        - qos
+    - regex: ^(?:undo )?telnet .*
+      tags:
+        - mgmt
+        - telnet
+    - regex: ^aaa$
+      tags:
+        - aaa
+    - regex: ^aaa / local-user (\S+)@(\S+) .*
+      tags:
+        - mgmt
+        - user
+    - regex: ^xpl .*
+      tags:
+        - xpl
+    - regex: ^user-interface .*
+      tags:
+        - mgmt
+    - regex: ^route-policy (\S+) (?:permit|deny) node \d+
+      tags:
+        - route-policy
+    - regex: ^ip ip-prefix (\S+) index \d+ .*
+      tags:
+        - prefix-list
+    - regex: ^ip vpn-instance (\S+)$
+      tags:
+        - vrf
+    - regex: ^grpc$
+      tags:
+        - mgmt
+        - gnmi

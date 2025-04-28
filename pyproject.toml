@@ -1,0 +1,91 @@
+[tool.poetry]
+name = "ctreepo"
+version = "0.3.25"
+description = "CTreePO - configuration tree patch overview - Parsing, filtering and diff calculation for network device configurations"
+license = "Apache-2.0"
+authors = ["Alexander Ignatov <alexigna@ozon.ru>"]
+readme = "README.md"
+keywords = [
+  "cisco",
+  "arista",
+  "huawei",
+  "network",
+  "automation",
+  "configuration",
+]
+
+[tool.poetry.dependencies]
+python = ">=3.11"
+pyyaml = "^6.0.2"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.10.0"
+ruff = "^0.8.0"
+mypy = "^1.13.0"
+pytest = "^8.3.3"
+pytest-cov = "^6.0.0"
+types-pyyaml = "^6.0.12.20240917"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 120
+
+[tool.ruff]
+extend-exclude = [
+  "__init__.py",
+]
+
+line-length = 120
+
+[tool.ruff.lint]
+select = ["N", "B", "A", "E", "W", "F", "ASYNC", "S", "D", "I"]
+ignore = [
+  "D100",  # Missing docstring in public module
+  "D101",  # Missing docstring in public class
+  "D102",  # Missing docstring in public method
+  "D103",  # Missing docstring in public function
+  "D105",  # Missing docstring in magic method
+  "D106",  # Missing docstring in public nested class
+  "D107",  # Missing docstring in `__init__`
+  "S101",  # Use of `assert` detected
+  "S311",  # Standard pseudo-random generators are not suitable for cryptographic purposes
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.pytest.ini_options]
+addopts = """
+  -vrA
+  --cov ctreepo
+  --cov-report term
+  --cov-report html
+  --cov-report xml:coverage.xml
+  --cov-fail-under=100
+  --disable-pytest-warnings
+"""
+testpaths = [
+    "./tests/",
+]
+
+[tool.coverage.report]
+skip_empty = true
+
+[tool.coverage.run]
+omit = [
+    # omit anything in a .local directory anywhere
+    '*/.local/*',
+    '__init__.py',
+    'tests/*',
+    '*/tests/*',
+    # omit anything in a .venv directory anywhere
+    '.venv/*'
+]
+
+[tool.mypy]
+disallow_untyped_defs = true
+check_untyped_defs = true
