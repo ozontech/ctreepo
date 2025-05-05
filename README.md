@@ -1,6 +1,6 @@
-# Библиотека CTreePO - Configuration Tree Patch Overview
+# CTreePO - Configuration Tree Patch Overview
 
-- [Библиотека CTreePO - Configuration Tree Patch Overview](#библиотека-ctreepo---configuration-tree-patch-overview)
+- [CTreePO - Configuration Tree Patch Overview](#ctreepo---configuration-tree-patch-overview)
   - [Краткое описание](#краткое-описание)
   - [Быстрый пример (00.quick-start.py)](#быстрый-пример-00quick-startpy)
   - [Преобразование в дерево (01.parsing.py)](#преобразование-в-дерево-01parsingpy)

@@ -7,6 +7,7 @@ from typing import cast
 
 import yaml
 
+from . import settings
 from .ctree import CTree
 from .factory import ctree_class
 from .models import TaggingRule, Vendor
@@ -106,7 +107,8 @@ class CTreeParser:
 
     def _get_template(self, line: str, template_list: list[CTree]) -> CTree:
         for template in template_list:
-            if re.fullmatch(template.line, line):
+            pattern = template.line.split(settings.TEMPLATE_SEPARATOR)[0].strip()
+            if re.fullmatch(pattern, line) is not None:
                 return template
         return self._class()
 

@@ -417,82 +417,119 @@ def test_to_dict(root: CTree) -> None:
         "line": "",
         "tags": [],
         "template": "",
+        "undo_line": "",
         "children": {
             "service timestamps debug datetime msec": {
                 "line": "service timestamps debug datetime msec",
                 "tags": [],
                 "template": "",
+                "undo_line": "",
                 "children": {},
             },
             "service timestamps log datetime msec": {
                 "line": "service timestamps log datetime msec",
                 "tags": [],
                 "template": "",
+                "undo_line": "",
                 "children": {},
             },
-            "service call-home": {"line": "service call-home", "tags": [], "template": "", "children": {}},
+            "service call-home": {
+                "line": "service call-home",
+                "tags": [],
+                "template": "",
+                "undo_line": "",
+                "children": {},
+            },
             "platform qfp utilization monitor load 80": {
                 "line": "platform qfp utilization monitor load 80",
                 "tags": [],
                 "template": "",
+                "undo_line": "",
                 "children": {},
             },
             "platform punt-keepalive disable-kernel-core": {
                 "line": "platform punt-keepalive disable-kernel-core",
                 "tags": [],
                 "template": "",
+                "undo_line": "",
                 "children": {},
             },
-            "platform console serial": {"line": "platform console serial", "tags": [], "template": "", "children": {}},
-            "boot-start-marker": {"line": "boot-start-marker", "tags": [], "template": "", "children": {}},
-            "boot-end-marker": {"line": "boot-end-marker", "tags": [], "template": "", "children": {}},
+            "platform console serial": {
+                "line": "platform console serial",
+                "tags": [],
+                "template": "",
+                "undo_line": "",
+                "children": {},
+            },
+            "boot-start-marker": {
+                "line": "boot-start-marker",
+                "tags": [],
+                "template": "",
+                "undo_line": "",
+                "children": {},
+            },
+            "boot-end-marker": {"line": "boot-end-marker", "tags": [], "template": "", "undo_line": "", "children": {}},
             "vrf definition MGMT": {
                 "line": "vrf definition MGMT",
                 "tags": ["vrf", "MGMT"],
                 "template": "",
+                "undo_line": "",
                 "children": {
                     "address-family ipv4": {
                         "line": "address-family ipv4",
                         "tags": ["vrf", "MGMT"],
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                     }
                 },
             },
-            "aaa new-model": {"line": "aaa new-model", "tags": ["mgmt", "aaa"], "template": "", "children": {}},
+            "aaa new-model": {
+                "line": "aaa new-model",
+                "tags": ["mgmt", "aaa"],
+                "template": "",
+                "undo_line": "",
+                "children": {},
+            },
             "aaa authentication login default local": {
                 "line": "aaa authentication login default local",
                 "tags": ["mgmt", "aaa"],
                 "template": "",
+                "undo_line": "",
                 "children": {},
             },
             "aaa authorization exec default local": {
                 "line": "aaa authorization exec default local",
                 "tags": ["mgmt", "aaa"],
                 "template": "",
+                "undo_line": "",
                 "children": {},
             },
             "spanning-tree extend system-id": {
                 "line": "spanning-tree extend system-id",
                 "tags": [],
                 "template": "",
+                "undo_line": "",
                 "children": {},
             },
             "username admin privilege 15 secret 9 admin-secret-key": {
                 "line": ("username admin privilege 15 secret 9 " "admin-secret-key"),
                 "tags": ["mgmt", "user", "admin"],
                 "template": "",
+                "undo_line": "",
                 "children": {},
             },
             "crypto pki certificate chain TP_NAME_1": {
                 "line": "crypto pki certificate chain TP_NAME_1",
                 "tags": [],
                 "template": "",
+                "undo_line": "",
                 "children": {
                     "certificate ca 1234ABCD": {
                         "line": "certificate ca 1234ABCD",
                         "tags": [],
                         "template": "",
+                        "undo_line": "",
                         "children": {
                             (
                                 "30820378 30820260 A0030201 02021017 16449497 577B9F48 1ED1DB4F 4D01F430\n  "
@@ -506,6 +543,7 @@ def test_to_dict(root: CTree) -> None:
                                 ),
                                 "tags": [],
                                 "template": "",
+                                "undo_line": "",
                                 "children": {},
                             }
                         },
@@ -516,11 +554,13 @@ def test_to_dict(root: CTree) -> None:
                 "line": "crypto pki certificate chain TP_NAME_2",
                 "tags": [],
                 "template": "",
+                "undo_line": "",
                 "children": {
                     "certificate ABCD1234": {
                         "line": "certificate ABCD1234",
                         "tags": [],
                         "template": "",
+                        "undo_line": "",
                         "children": {
                             (
                                 "308207AE 30820696 A0030201 02020A7E 0C784200 02007AB8 A3300D06 092A8648\n  "
@@ -534,6 +574,7 @@ def test_to_dict(root: CTree) -> None:
                                 ),
                                 "tags": [],
                                 "template": "",
+                                "undo_line": "",
                                 "children": {},
                             }
                         },
@@ -542,6 +583,7 @@ def test_to_dict(root: CTree) -> None:
                         "line": "certificate ca 4321DCBA",
                         "tags": [],
                         "template": "",
+                        "undo_line": "",
                         "children": {
                             (
                                 "30820674 3082055C A0030201 02020A61 4FBE3E00 01000000 08300D06 092A8648\n"
@@ -555,6 +597,7 @@ def test_to_dict(root: CTree) -> None:
                                 ),
                                 "tags": [],
                                 "template": "",
+                                "undo_line": "",
                                 "children": {},
                             }
                         },
@@ -565,17 +608,20 @@ def test_to_dict(root: CTree) -> None:
                 "line": "interface Loopback0",
                 "tags": ["interface", "loopback", "Loopback0"],
                 "template": "",
+                "undo_line": "",
                 "children": {
                     "description -= RID =-": {
                         "line": "description -= RID =-",
                         "tags": ["interface", "loopback", "Loopback0"],
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                     },
                     "ip address 2.3.4.5 255.255.255.255": {
                         "line": "ip address 2.3.4.5 255.255.255.255",
                         "tags": ["interface", "loopback", "Loopback0"],
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                     },
                 },
@@ -584,41 +630,48 @@ def test_to_dict(root: CTree) -> None:
                 "line": "interface GigabitEthernet1",
                 "tags": ["interface", "GigabitEthernet1"],
                 "template": "",
+                "undo_line": "",
                 "children": {
                     "vrf forwarding mgmt": {
                         "line": "vrf forwarding mgmt",
                         "tags": ["interface", "vrf", "GigabitEthernet1", "mgmt"],
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                     },
                     "ip address 1.2.3.4 255.255.255.0": {
                         "line": "ip address 1.2.3.4 255.255.255.0",
                         "tags": ["interface", "GigabitEthernet1"],
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                     },
                     "negotiation auto": {
                         "line": "negotiation auto",
                         "tags": ["interface", "GigabitEthernet1"],
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                     },
                     "no mop enabled": {
                         "line": "no mop enabled",
                         "tags": ["interface", "GigabitEthernet1"],
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                     },
                     "no mop sysid": {
                         "line": "no mop sysid",
                         "tags": ["interface", "GigabitEthernet1"],
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                     },
                     "service-policy output PL_NAME_1": {
                         "line": "service-policy output PL_NAME_1",
                         "tags": ["interface", "qos", "GigabitEthernet1", "PL_NAME_1"],
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                     },
                 },
@@ -627,11 +680,13 @@ def test_to_dict(root: CTree) -> None:
                 "line": "class-map match-all CM_NAME_1",
                 "tags": ["qos", "CM_NAME_1"],
                 "template": "",
+                "undo_line": "",
                 "children": {
                     "match  dscp af41": {
                         "line": "match  dscp af41",
                         "tags": ["qos", "CM_NAME_1"],
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                     }
                 },
@@ -640,11 +695,13 @@ def test_to_dict(root: CTree) -> None:
                 "line": "class-map match-all CM_NAME_2",
                 "tags": ["qos", "CM_NAME_2"],
                 "template": "",
+                "undo_line": "",
                 "children": {
                     "match  dscp ef": {
                         "line": "match  dscp ef",
                         "tags": ["qos", "CM_NAME_2"],
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                     }
                 },
@@ -653,16 +710,19 @@ def test_to_dict(root: CTree) -> None:
                 "line": "policy-map PL_NAME_1",
                 "tags": ["qos", "PL_NAME_1"],
                 "template": "",
+                "undo_line": "",
                 "children": {
                     "class CM_NAME_1": {
                         "line": "class CM_NAME_1",
                         "tags": ["qos", "PL_NAME_1"],
                         "template": "",
+                        "undo_line": "",
                         "children": {
                             "bandwidth percent 10": {
                                 "line": "bandwidth percent 10",
                                 "tags": ["qos", "PL_NAME_1"],
                                 "template": "",
+                                "undo_line": "",
                                 "children": {},
                             }
                         },
@@ -671,11 +731,13 @@ def test_to_dict(root: CTree) -> None:
                         "line": "class CM_NAME_2",
                         "tags": ["qos", "PL_NAME_1"],
                         "template": "",
+                        "undo_line": "",
                         "children": {
                             "priority percent 20": {
                                 "line": "priority percent 20",
                                 "tags": ["qos", "PL_NAME_1"],
                                 "template": "",
+                                "undo_line": "",
                                 "children": {},
                             }
                         },
@@ -684,11 +746,13 @@ def test_to_dict(root: CTree) -> None:
                         "line": "class CM_NAME_3",
                         "tags": ["qos", "PL_NAME_1"],
                         "template": "",
+                        "undo_line": "",
                         "children": {
                             "priority percent 30": {
                                 "line": "priority percent 30",
                                 "tags": ["qos", "PL_NAME_1"],
                                 "template": "",
+                                "undo_line": "",
                                 "children": {},
                             }
                         },
@@ -697,11 +761,13 @@ def test_to_dict(root: CTree) -> None:
                         "line": "class CM_NAME_4",
                         "tags": ["qos", "PL_NAME_1"],
                         "template": "",
+                        "undo_line": "",
                         "children": {
                             "bandwidth percent 40": {
                                 "line": "bandwidth percent 40",
                                 "tags": ["qos", "PL_NAME_1"],
                                 "template": "",
+                                "undo_line": "",
                                 "children": {},
                             }
                         },
@@ -710,17 +776,20 @@ def test_to_dict(root: CTree) -> None:
                         "line": "class CM_NAME_5",
                         "tags": ["qos", "PL_NAME_1"],
                         "template": "",
+                        "undo_line": "",
                         "children": {
                             "bandwidth percent 50": {
                                 "line": "bandwidth percent 50",
                                 "tags": ["qos", "PL_NAME_1"],
                                 "template": "",
+                                "undo_line": "",
                                 "children": {},
                             },
                             "fair-queue": {
                                 "line": "fair-queue",
                                 "tags": ["qos", "PL_NAME_1"],
                                 "template": "",
+                                "undo_line": "",
                                 "children": {},
                             },
                         },
@@ -729,11 +798,13 @@ def test_to_dict(root: CTree) -> None:
                         "line": "class CM_NAME_6",
                         "tags": ["qos", "PL_NAME_1"],
                         "template": "",
+                        "undo_line": "",
                         "children": {
                             "bandwidth percent 60": {
                                 "line": "bandwidth percent 60",
                                 "tags": ["qos", "PL_NAME_1"],
                                 "template": "",
+                                "undo_line": "",
                                 "children": {},
                             }
                         },
@@ -744,24 +815,34 @@ def test_to_dict(root: CTree) -> None:
                 "line": "ip ssh rsa keypair-name SSH",
                 "tags": ["mgmt", "ssh"],
                 "template": "",
+                "undo_line": "",
                 "children": {},
             },
-            "ip ssh version 2": {"line": "ip ssh version 2", "tags": ["mgmt", "ssh"], "template": "", "children": {}},
+            "ip ssh version 2": {
+                "line": "ip ssh version 2",
+                "tags": ["mgmt", "ssh"],
+                "template": "",
+                "undo_line": "",
+                "children": {},
+            },
             "ip access-list extended ACL_NAME_1": {
                 "line": "ip access-list extended ACL_NAME_1",
                 "tags": ["access-list", "ACL_NAME_1"],
                 "template": "",
+                "undo_line": "",
                 "children": {
                     "10 permit icmp any any": {
                         "line": "10 permit icmp any any",
                         "tags": ["access-list", "ACL_NAME_1"],
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                     },
                     "20 permit tcp any range 22 telnet host 1.2.3.4": {
                         "line": "20 permit tcp any range 22 telnet host 1.2.3.4",
                         "tags": ["access-list", "ACL_NAME_1"],
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                     },
                 },
@@ -770,23 +851,27 @@ def test_to_dict(root: CTree) -> None:
                 "line": "route-map RM_DENY deny 10",
                 "tags": ["route-map", "RM_DENY"],
                 "template": "",
+                "undo_line": "",
                 "children": {},
             },
             "route-map RM_NAME_1 permit 10": {
                 "line": "route-map RM_NAME_1 permit 10",
                 "tags": ["route-map", "RM_NAME_1"],
                 "template": "",
+                "undo_line": "",
                 "children": {
                     "match ip address ACL_NAME_1": {
                         "line": "match ip address ACL_NAME_1",
                         "tags": ["route-map", "RM_NAME_1"],
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                     },
                     "set ip next-hop 4.4.4.4": {
                         "line": "set ip next-hop 4.4.4.4",
                         "tags": ["route-map", "RM_NAME_1"],
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                     },
                 },
@@ -801,6 +886,7 @@ def test_to_dict(root: CTree) -> None:
                 ),
                 "tags": ["banner", "motd"],
                 "template": "",
+                "undo_line": "",
                 "children": {},
             },
             (
@@ -813,34 +899,53 @@ def test_to_dict(root: CTree) -> None:
                 ),
                 "tags": ["banner", "exec"],
                 "template": "",
+                "undo_line": "",
                 "children": {},
             },
             "banner login # $(hostname).$(domain) at line $(line) #": {
                 "line": "banner login # $(hostname).$(domain) at line $(line) #",
                 "tags": ["banner", "login"],
                 "template": "",
+                "undo_line": "",
                 "children": {},
             },
             "line con 0": {
                 "line": "line con 0",
                 "tags": [],
                 "template": "",
-                "children": {"stopbits 1": {"line": "stopbits 1", "tags": [], "template": "", "children": {}}},
+                "undo_line": "",
+                "children": {
+                    "stopbits 1": {"line": "stopbits 1", "tags": [], "template": "", "undo_line": "", "children": {}}
+                },
             },
             "line vty 0 4": {
                 "line": "line vty 0 4",
                 "tags": [],
                 "template": "",
+                "undo_line": "",
                 "children": {
-                    "transport input all": {"line": "transport input all", "tags": [], "template": "", "children": {}}
+                    "transport input all": {
+                        "line": "transport input all",
+                        "tags": [],
+                        "template": "",
+                        "undo_line": "",
+                        "children": {},
+                    }
                 },
             },
             "line vty 5 15": {
                 "line": "line vty 5 15",
                 "tags": [],
                 "template": "",
+                "undo_line": "",
                 "children": {
-                    "transport input all": {"line": "transport input all", "tags": [], "template": "", "children": {}}
+                    "transport input all": {
+                        "line": "transport input all",
+                        "tags": [],
+                        "template": "",
+                        "undo_line": "",
+                        "children": {},
+                    }
                 },
             },
         },
@@ -854,82 +959,119 @@ def test_from_dict(root: CTree) -> None:
         "line": "",
         "tags": [],
         "template": "",
+        "undo_line": "",
         "children": {
             "service timestamps debug datetime msec": {
                 "line": "service timestamps debug datetime msec",
                 "tags": [],
                 "template": "",
+                "undo_line": "",
                 "children": {},
             },
             "service timestamps log datetime msec": {
                 "line": "service timestamps log datetime msec",
                 "tags": [],
                 "template": "",
+                "undo_line": "",
                 "children": {},
             },
-            "service call-home": {"line": "service call-home", "tags": [], "template": "", "children": {}},
+            "service call-home": {
+                "line": "service call-home",
+                "tags": [],
+                "template": "",
+                "undo_line": "",
+                "children": {},
+            },
             "platform qfp utilization monitor load 80": {
                 "line": "platform qfp utilization monitor load 80",
                 "tags": [],
                 "template": "",
+                "undo_line": "",
                 "children": {},
             },
             "platform punt-keepalive disable-kernel-core": {
                 "line": "platform punt-keepalive disable-kernel-core",
                 "tags": [],
                 "template": "",
+                "undo_line": "",
                 "children": {},
             },
-            "platform console serial": {"line": "platform console serial", "tags": [], "template": "", "children": {}},
-            "boot-start-marker": {"line": "boot-start-marker", "tags": [], "template": "", "children": {}},
-            "boot-end-marker": {"line": "boot-end-marker", "tags": [], "template": "", "children": {}},
+            "platform console serial": {
+                "line": "platform console serial",
+                "tags": [],
+                "template": "",
+                "undo_line": "",
+                "children": {},
+            },
+            "boot-start-marker": {
+                "line": "boot-start-marker",
+                "tags": [],
+                "template": "",
+                "undo_line": "",
+                "children": {},
+            },
+            "boot-end-marker": {"line": "boot-end-marker", "tags": [], "template": "", "undo_line": "", "children": {}},
             "vrf definition MGMT": {
                 "line": "vrf definition MGMT",
                 "tags": ["vrf", "MGMT"],
                 "template": "",
+                "undo_line": "",
                 "children": {
                     "address-family ipv4": {
                         "line": "address-family ipv4",
                         "tags": ["vrf", "MGMT"],
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                     }
                 },
             },
-            "aaa new-model": {"line": "aaa new-model", "tags": ["mgmt", "aaa"], "template": "", "children": {}},
+            "aaa new-model": {
+                "line": "aaa new-model",
+                "tags": ["mgmt", "aaa"],
+                "template": "",
+                "undo_line": "",
+                "children": {},
+            },
             "aaa authentication login default local": {
                 "line": "aaa authentication login default local",
                 "tags": ["mgmt", "aaa"],
                 "template": "",
+                "undo_line": "",
                 "children": {},
             },
             "aaa authorization exec default local": {
                 "line": "aaa authorization exec default local",
                 "tags": ["mgmt", "aaa"],
                 "template": "",
+                "undo_line": "",
                 "children": {},
             },
             "spanning-tree extend system-id": {
                 "line": "spanning-tree extend system-id",
                 "tags": [],
                 "template": "",
+                "undo_line": "",
                 "children": {},
             },
             "username admin privilege 15 secret 9 admin-secret-key": {
                 "line": ("username admin privilege 15 secret 9 " "admin-secret-key"),
                 "tags": ["mgmt", "user", "admin"],
                 "template": "",
+                "undo_line": "",
                 "children": {},
             },
             "crypto pki certificate chain TP_NAME_1": {
                 "line": "crypto pki certificate chain TP_NAME_1",
                 "tags": [],
                 "template": "",
+                "undo_line": "",
                 "children": {
                     "certificate ca 1234ABCD": {
                         "line": "certificate ca 1234ABCD",
                         "tags": [],
                         "template": "",
+                        "undo_line": "",
                         "children": {
                             (
                                 "30820378 30820260 A0030201 02021017 16449497 577B9F48 1ED1DB4F 4D01F430\n  "
@@ -943,6 +1085,7 @@ def test_from_dict(root: CTree) -> None:
                                 ),
                                 "tags": [],
                                 "template": "",
+                                "undo_line": "",
                                 "children": {},
                             }
                         },
@@ -953,11 +1096,13 @@ def test_from_dict(root: CTree) -> None:
                 "line": "crypto pki certificate chain TP_NAME_2",
                 "tags": [],
                 "template": "",
+                "undo_line": "",
                 "children": {
                     "certificate ABCD1234": {
                         "line": "certificate ABCD1234",
                         "tags": [],
                         "template": "",
+                        "undo_line": "",
                         "children": {
                             (
                                 "308207AE 30820696 A0030201 02020A7E 0C784200 02007AB8 A3300D06 092A8648\n  "
@@ -971,6 +1116,7 @@ def test_from_dict(root: CTree) -> None:
                                 ),
                                 "tags": [],
                                 "template": "",
+                                "undo_line": "",
                                 "children": {},
                             }
                         },
@@ -979,6 +1125,7 @@ def test_from_dict(root: CTree) -> None:
                         "line": "certificate ca 4321DCBA",
                         "tags": [],
                         "template": "",
+                        "undo_line": "",
                         "children": {
                             (
                                 "30820674 3082055C A0030201 02020A61 4FBE3E00 01000000 08300D06 092A8648\n"
@@ -992,6 +1139,7 @@ def test_from_dict(root: CTree) -> None:
                                 ),
                                 "tags": [],
                                 "template": "",
+                                "undo_line": "",
                                 "children": {},
                             }
                         },
@@ -1002,17 +1150,20 @@ def test_from_dict(root: CTree) -> None:
                 "line": "interface Loopback0",
                 "tags": ["interface", "loopback", "Loopback0"],
                 "template": "",
+                "undo_line": "",
                 "children": {
                     "description -= RID =-": {
                         "line": "description -= RID =-",
                         "tags": ["interface", "loopback", "Loopback0"],
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                     },
                     "ip address 2.3.4.5 255.255.255.255": {
                         "line": "ip address 2.3.4.5 255.255.255.255",
                         "tags": ["interface", "loopback", "Loopback0"],
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                     },
                 },
@@ -1021,41 +1172,48 @@ def test_from_dict(root: CTree) -> None:
                 "line": "interface GigabitEthernet1",
                 "tags": ["interface", "GigabitEthernet1"],
                 "template": "",
+                "undo_line": "",
                 "children": {
                     "vrf forwarding mgmt": {
                         "line": "vrf forwarding mgmt",
                         "tags": ["interface", "vrf", "GigabitEthernet1", "mgmt"],
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                     },
                     "ip address 1.2.3.4 255.255.255.0": {
                         "line": "ip address 1.2.3.4 255.255.255.0",
                         "tags": ["interface", "GigabitEthernet1"],
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                     },
                     "negotiation auto": {
                         "line": "negotiation auto",
                         "tags": ["interface", "GigabitEthernet1"],
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                     },
                     "no mop enabled": {
                         "line": "no mop enabled",
                         "tags": ["interface", "GigabitEthernet1"],
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                     },
                     "no mop sysid": {
                         "line": "no mop sysid",
                         "tags": ["interface", "GigabitEthernet1"],
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                     },
                     "service-policy output PL_NAME_1": {
                         "line": "service-policy output PL_NAME_1",
                         "tags": ["interface", "qos", "GigabitEthernet1", "PL_NAME_1"],
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                     },
                 },
@@ -1064,11 +1222,13 @@ def test_from_dict(root: CTree) -> None:
                 "line": "class-map match-all CM_NAME_1",
                 "tags": ["qos", "CM_NAME_1"],
                 "template": "",
+                "undo_line": "",
                 "children": {
                     "match  dscp af41": {
                         "line": "match  dscp af41",
                         "tags": ["qos", "CM_NAME_1"],
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                     }
                 },
@@ -1077,11 +1237,13 @@ def test_from_dict(root: CTree) -> None:
                 "line": "class-map match-all CM_NAME_2",
                 "tags": ["qos", "CM_NAME_2"],
                 "template": "",
+                "undo_line": "",
                 "children": {
                     "match  dscp ef": {
                         "line": "match  dscp ef",
                         "tags": ["qos", "CM_NAME_2"],
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                     }
                 },
@@ -1090,16 +1252,19 @@ def test_from_dict(root: CTree) -> None:
                 "line": "policy-map PL_NAME_1",
                 "tags": ["qos", "PL_NAME_1"],
                 "template": "",
+                "undo_line": "",
                 "children": {
                     "class CM_NAME_1": {
                         "line": "class CM_NAME_1",
                         "tags": ["qos", "PL_NAME_1"],
                         "template": "",
+                        "undo_line": "",
                         "children": {
                             "bandwidth percent 10": {
                                 "line": "bandwidth percent 10",
                                 "tags": ["qos", "PL_NAME_1"],
                                 "template": "",
+                                "undo_line": "",
                                 "children": {},
                             }
                         },
@@ -1108,11 +1273,13 @@ def test_from_dict(root: CTree) -> None:
                         "line": "class CM_NAME_2",
                         "tags": ["qos", "PL_NAME_1"],
                         "template": "",
+                        "undo_line": "",
                         "children": {
                             "priority percent 20": {
                                 "line": "priority percent 20",
                                 "tags": ["qos", "PL_NAME_1"],
                                 "template": "",
+                                "undo_line": "",
                                 "children": {},
                             }
                         },
@@ -1121,11 +1288,13 @@ def test_from_dict(root: CTree) -> None:
                         "line": "class CM_NAME_3",
                         "tags": ["qos", "PL_NAME_1"],
                         "template": "",
+                        "undo_line": "",
                         "children": {
                             "priority percent 30": {
                                 "line": "priority percent 30",
                                 "tags": ["qos", "PL_NAME_1"],
                                 "template": "",
+                                "undo_line": "",
                                 "children": {},
                             }
                         },
@@ -1134,11 +1303,13 @@ def test_from_dict(root: CTree) -> None:
                         "line": "class CM_NAME_4",
                         "tags": ["qos", "PL_NAME_1"],
                         "template": "",
+                        "undo_line": "",
                         "children": {
                             "bandwidth percent 40": {
                                 "line": "bandwidth percent 40",
                                 "tags": ["qos", "PL_NAME_1"],
                                 "template": "",
+                                "undo_line": "",
                                 "children": {},
                             }
                         },
@@ -1147,17 +1318,20 @@ def test_from_dict(root: CTree) -> None:
                         "line": "class CM_NAME_5",
                         "tags": ["qos", "PL_NAME_1"],
                         "template": "",
+                        "undo_line": "",
                         "children": {
                             "bandwidth percent 50": {
                                 "line": "bandwidth percent 50",
                                 "tags": ["qos", "PL_NAME_1"],
                                 "template": "",
+                                "undo_line": "",
                                 "children": {},
                             },
                             "fair-queue": {
                                 "line": "fair-queue",
                                 "tags": ["qos", "PL_NAME_1"],
                                 "template": "",
+                                "undo_line": "",
                                 "children": {},
                             },
                         },
@@ -1166,11 +1340,13 @@ def test_from_dict(root: CTree) -> None:
                         "line": "class CM_NAME_6",
                         "tags": ["qos", "PL_NAME_1"],
                         "template": "",
+                        "undo_line": "",
                         "children": {
                             "bandwidth percent 60": {
                                 "line": "bandwidth percent 60",
                                 "tags": ["qos", "PL_NAME_1"],
                                 "template": "",
+                                "undo_line": "",
                                 "children": {},
                             }
                         },
@@ -1181,24 +1357,34 @@ def test_from_dict(root: CTree) -> None:
                 "line": "ip ssh rsa keypair-name SSH",
                 "tags": ["mgmt", "ssh"],
                 "template": "",
+                "undo_line": "",
                 "children": {},
             },
-            "ip ssh version 2": {"line": "ip ssh version 2", "tags": ["mgmt", "ssh"], "template": "", "children": {}},
+            "ip ssh version 2": {
+                "line": "ip ssh version 2",
+                "tags": ["mgmt", "ssh"],
+                "template": "",
+                "undo_line": "",
+                "children": {},
+            },
             "ip access-list extended ACL_NAME_1": {
                 "line": "ip access-list extended ACL_NAME_1",
                 "tags": ["access-list", "ACL_NAME_1"],
                 "template": "",
+                "undo_line": "",
                 "children": {
                     "10 permit icmp any any": {
                         "line": "10 permit icmp any any",
                         "tags": ["access-list", "ACL_NAME_1"],
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                     },
                     "20 permit tcp any range 22 telnet host 1.2.3.4": {
                         "line": "20 permit tcp any range 22 telnet host 1.2.3.4",
                         "tags": ["access-list", "ACL_NAME_1"],
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                     },
                 },
@@ -1207,23 +1393,27 @@ def test_from_dict(root: CTree) -> None:
                 "line": "route-map RM_DENY deny 10",
                 "tags": ["route-map", "RM_DENY"],
                 "template": "",
+                "undo_line": "",
                 "children": {},
             },
             "route-map RM_NAME_1 permit 10": {
                 "line": "route-map RM_NAME_1 permit 10",
                 "tags": ["route-map", "RM_NAME_1"],
                 "template": "",
+                "undo_line": "",
                 "children": {
                     "match ip address ACL_NAME_1": {
                         "line": "match ip address ACL_NAME_1",
                         "tags": ["route-map", "RM_NAME_1"],
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                     },
                     "set ip next-hop 4.4.4.4": {
                         "line": "set ip next-hop 4.4.4.4",
                         "tags": ["route-map", "RM_NAME_1"],
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                     },
                 },
@@ -1238,6 +1428,7 @@ def test_from_dict(root: CTree) -> None:
                 ),
                 "tags": ["banner", "motd"],
                 "template": "",
+                "undo_line": "",
                 "children": {},
             },
             (
@@ -1250,34 +1441,53 @@ def test_from_dict(root: CTree) -> None:
                 ),
                 "tags": ["banner", "exec"],
                 "template": "",
+                "undo_line": "",
                 "children": {},
             },
             "banner login # $(hostname).$(domain) at line $(line) #": {
                 "line": "banner login # $(hostname).$(domain) at line $(line) #",
                 "tags": ["banner", "login"],
                 "template": "",
+                "undo_line": "",
                 "children": {},
             },
             "line con 0": {
                 "line": "line con 0",
                 "tags": [],
                 "template": "",
-                "children": {"stopbits 1": {"line": "stopbits 1", "tags": [], "template": "", "children": {}}},
+                "undo_line": "",
+                "children": {
+                    "stopbits 1": {"line": "stopbits 1", "tags": [], "template": "", "undo_line": "", "children": {}}
+                },
             },
             "line vty 0 4": {
                 "line": "line vty 0 4",
                 "tags": [],
                 "template": "",
+                "undo_line": "",
                 "children": {
-                    "transport input all": {"line": "transport input all", "tags": [], "template": "", "children": {}}
+                    "transport input all": {
+                        "line": "transport input all",
+                        "tags": [],
+                        "template": "",
+                        "undo_line": "",
+                        "children": {},
+                    }
                 },
             },
             "line vty 5 15": {
                 "line": "line vty 5 15",
                 "tags": [],
                 "template": "",
+                "undo_line": "",
                 "children": {
-                    "transport input all": {"line": "transport input all", "tags": [], "template": "", "children": {}}
+                    "transport input all": {
+                        "line": "transport input all",
+                        "tags": [],
+                        "template": "",
+                        "undo_line": "",
+                        "children": {},
+                    }
                 },
             },
         },
