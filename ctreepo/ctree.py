@@ -4,13 +4,22 @@ import re
 from collections import deque
 from typing import Deque, Self
 
+from . import settings
 from .models import Vendor
 
 __all__ = ("CTree",)
 
 
 class CTree:
-    __slots__ = ("line", "parent", "children", "tags", "template", "prefix")
+    __slots__ = (
+        "line",  # строка настройки
+        "parent",  # родитель узла
+        "children",  # словарь с вложенными потомками узла
+        "tags",  # теги узла
+        "template",  # шаблон, что бы разобрать строку на команду и аргументы
+        "undo_line",  # как удаляем строку, если не указано, то undo добавляем
+        "prefix",  # префикс перед строкой, используется в human-diff (-/+)
+    )
 
     @property
     def vendor(self) -> Vendor:
@@ -65,7 +74,7 @@ class CTree:
         """паттерны для маскирования строк, указываем текст перед тем, что нужно заменить."""
         raise NotImplementedError("property should be overridden")
 
-    masking_string: str = "******"
+    masking_string: str = settings.MASKING_STRING
 
     def __init__(
         self,
@@ -90,26 +99,49 @@ class CTree:
             parent.children[line.strip()] = self
 
         if len(template) != 0:
-            self.template = self._get_line_template(self.line, template)
+            self.template, self.undo_line = self._get_template_undo(self.line, template)
         else:
             self.template = ""
+            self.undo_line = ""
 
-    def _get_line_template(self, line: str, template: str) -> str:
-        result = ""
-        if (m := re.fullmatch(template, line)) is None:
-            return result
-        groups = {v: k for k, v in m.groupdict().items()}
-        patterns = dict(re.findall(r"\(\?P<(\S+)>(\S+)\)", template))
-        if len(m.regs) == 1:
-            return result
-        start, end = m.regs[0]
-        for _s, _e in m.regs[1:]:
+    def _get_template_undo(self, line: str, template: str) -> tuple[str, str]:
+        if settings.TEMPLATE_SEPARATOR in template:
+            apply_template, remove_template = map(str.strip, template.split(settings.TEMPLATE_SEPARATOR))
+        else:
+            apply_template = template.strip()
+            remove_template = ""
+        apply_result = ""
+        remove_result = ""
+
+        if (m := re.fullmatch(apply_template, line)) is None:
+            return apply_result, remove_result
+        patterns = dict(re.findall(r"\(\?P<(\S+?)>(\S+?)\)", apply_template))
+        start, _ = m.regs[0]
+        named_group_by_index = {index: name for name, index in m.re.groupindex.items()}
+        for indx, (_s, _e) in enumerate(m.regs):
+            # если не именованная группа - пропускаем
+            group = named_group_by_index.get(indx)
+            if group is None:
+                continue
+
+            # если ничего в группе нет совпадения - пропускаем
+            if _s == -1 and _e == -1:
+                continue
+
+            # если не удалось найти паттерн для группы - пропускаем
+            pattern = patterns.get(group)
+            if pattern is None:
+                continue
+
             if _s > start:
-                result += line[start:_s]
-            group = groups[line[_s:_e]]
-            result += f"(?P<{group}>{patterns[group]})"
+                apply_result += line[start:_s]
+            apply_result += f"(?P<{group}>{pattern})"
             start = _e
-        return result
+
+        if len(remove_template) == 0:
+            return apply_result, remove_result
+        remove_result = re.sub(apply_template, remove_template, line).strip()
+        return apply_result, remove_result
 
     @classmethod
     def mask_line(cls, line: str) -> str:
@@ -304,6 +336,7 @@ class CTree:
 
         new_obj = self.__class__(line=self.line, parent=parent, tags=self.tags.copy(), template=self.template)
         new_obj.prefix = self.prefix
+        new_obj.undo_line = self.undo_line
         if children:
             for child in self.children.values():
                 _ = child._copy(children, new_obj)

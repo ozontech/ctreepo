@@ -15,6 +15,7 @@ class CTreeSerializer:
             "line": root.line,
             "tags": root.tags,
             "template": root.template,
+            "undo_line": root.undo_line,
         }
         for child in root.children.values():
             children |= {child.line: cls.to_dict(child)}
@@ -29,6 +30,7 @@ class CTreeSerializer:
             template=data.get("template", ""),
             parent=parent,
         )
+        node.undo_line = data.get("undo_line", "")
         for child in data.get("children", {}).values():
             cls.from_dict(vendor, child, node)
         return node

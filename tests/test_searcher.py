@@ -72,16 +72,19 @@ def test_string(get_config_tree: CTree) -> None:
         "line": "",
         "tags": [],
         "template": "",
+        "undo_line": "",
         "children": {
             "interface gi0/0/0": {
                 "line": "interface gi0/0/0",
                 "tags": ["interface", "gi0/0/0"],
                 "template": "",
+                "undo_line": "",
                 "children": {
                     "ip address 1.1.1.1 255.255.255.252": {
                         "line": "ip address 1.1.1.1 255.255.255.252",
                         "tags": ["ip", "interface-1", "gi0/0/0"],
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                     }
                 },
@@ -90,11 +93,13 @@ def test_string(get_config_tree: CTree) -> None:
                 "line": "interface gi0/0/1",
                 "tags": ["interface", "gi0/0/1"],
                 "template": "",
+                "undo_line": "",
                 "children": {
                     "ip address 1.1.1.1 255.255.255.252": {
                         "line": "ip address 1.1.1.1 255.255.255.252",
                         "tags": ["ip", "interface-2", "gi0/0/1"],
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                     }
                 },
@@ -132,27 +137,32 @@ def test_regex(get_config_tree: CTree) -> None:
         "line": "",
         "tags": [],
         "template": "",
+        "undo_line": "",
         "children": {
             "sflow collector 1 ip 100.64.0.1 vpn-instance MGMT": {
                 "line": "sflow collector 1 ip 100.64.0.1 vpn-instance MGMT",
                 "tags": [],
                 "template": "",
+                "undo_line": "",
                 "children": {},
             },
             "ip vpn-instance MGMT": {
                 "line": "ip vpn-instance MGMT",
                 "tags": ["vpn", "MGMT"],
                 "template": "",
+                "undo_line": "",
                 "children": {
                     "ipv4-family": {
                         "line": "ipv4-family",
                         "tags": ["vpn", "MGMT"],
                         "template": "",
+                        "undo_line": "",
                         "children": {
                             "route-distinguisher 192.168.0.1:123": {
                                 "line": "route-distinguisher 192.168.0.1:123",
                                 "tags": ["rd", "MGMT", "192.168.0.1:123"],
                                 "template": "",
+                                "undo_line": "",
                                 "children": {},
                             }
                         },
@@ -163,16 +173,19 @@ def test_regex(get_config_tree: CTree) -> None:
                 "line": "ip vpn-instance LAN",
                 "tags": ["vpn", "LAN"],
                 "template": "",
+                "undo_line": "",
                 "children": {
                     "ipv4-family": {
                         "line": "ipv4-family",
                         "tags": ["vpn", "LAN"],
                         "template": "",
+                        "undo_line": "",
                         "children": {
                             "route-distinguisher 192.168.0.1:123": {
                                 "line": "route-distinguisher 192.168.0.1:123",
                                 "tags": ["rd", "LAN", "192.168.0.1:123"],
                                 "template": "",
+                                "undo_line": "",
                                 "children": {},
                             }
                         },
@@ -183,11 +196,13 @@ def test_regex(get_config_tree: CTree) -> None:
                 "line": "interface gi0/0/0",
                 "tags": ["interface", "gi0/0/0"],
                 "template": "",
+                "undo_line": "",
                 "children": {
                     "ip address 1.1.1.1 255.255.255.252": {
                         "line": "ip address 1.1.1.1 255.255.255.252",
                         "tags": ["ip", "interface-1", "gi0/0/0"],
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                     }
                 },
@@ -196,11 +211,13 @@ def test_regex(get_config_tree: CTree) -> None:
                 "line": "interface gi0/0/1",
                 "tags": ["interface", "gi0/0/1"],
                 "template": "",
+                "undo_line": "",
                 "children": {
                     "ip address 1.1.1.1 255.255.255.252": {
                         "line": "ip address 1.1.1.1 255.255.255.252",
                         "tags": ["ip", "interface-2", "gi0/0/1"],
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                     }
                 },
@@ -230,16 +247,19 @@ def test_tag(get_config_tree: CTree) -> None:
         "line": "",
         "tags": [],
         "template": "",
+        "undo_line": "",
         "children": {
             "ip vpn-instance MGMT": {
                 "line": "ip vpn-instance MGMT",
                 "tags": ["vpn", "MGMT"],
                 "template": "",
+                "undo_line": "",
                 "children": {
                     "ipv4-family": {
                         "line": "ipv4-family",
                         "tags": ["vpn", "MGMT"],
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                     }
                 },
@@ -248,16 +268,19 @@ def test_tag(get_config_tree: CTree) -> None:
                 "line": "ip vpn-instance LAN",
                 "tags": ["vpn", "LAN"],
                 "template": "",
+                "undo_line": "",
                 "children": {
                     "ipv4-family": {
                         "line": "ipv4-family",
                         "tags": ["vpn", "LAN"],
                         "template": "",
+                        "undo_line": "",
                         "children": {
                             "vpn-target 123:123 import-extcommunity evpn": {
                                 "line": "vpn-target 123:123 import-extcommunity evpn",
                                 "tags": ["vpn", "LAN"],
                                 "template": "",
+                                "undo_line": "",
                                 "children": {},
                             },
                         },
@@ -266,6 +289,7 @@ def test_tag(get_config_tree: CTree) -> None:
                         "line": "vxlan vni 123",
                         "tags": ["vpn", "LAN"],
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                     },
                 },
@@ -298,21 +322,25 @@ def test_tags_or(get_config_tree: CTree) -> None:
         "line": "",
         "tags": [],
         "template": "",
+        "undo_line": "",
         "children": {
             "ip vpn-instance MGMT": {
                 "line": "ip vpn-instance MGMT",
                 "tags": ["vpn", "MGMT"],
                 "template": "",
+                "undo_line": "",
                 "children": {
                     "ipv4-family": {
                         "line": "ipv4-family",
                         "tags": ["vpn", "MGMT"],
                         "template": "",
+                        "undo_line": "",
                         "children": {
                             "route-distinguisher 192.168.0.1:123": {
                                 "line": "route-distinguisher 192.168.0.1:123",
                                 "tags": ["rd", "MGMT", "192.168.0.1:123"],
                                 "template": "",
+                                "undo_line": "",
                                 "children": {},
                             }
                         },
@@ -323,20 +351,24 @@ def test_tags_or(get_config_tree: CTree) -> None:
                 "line": "ip vpn-instance LAN",
                 "tags": ["vpn", "LAN"],
                 "template": "",
+                "undo_line": "",
                 "children": {
                     "ipv4-family": {
                         "line": "ipv4-family",
                         "tags": ["vpn", "LAN"],
                         "template": "",
+                        "undo_line": "",
                         "children": {
                             "route-distinguisher 192.168.0.1:123": {
                                 "template": "",
+                                "undo_line": "",
                                 "children": {},
                                 "line": "route-distinguisher 192.168.0.1:123",
                                 "tags": ["rd", "LAN", "192.168.0.1:123"],
                             },
                             "vpn-target 123:123 export-extcommunity evpn": {
                                 "template": "",
+                                "undo_line": "",
                                 "children": {},
                                 "line": "vpn-target 123:123 export-extcommunity evpn",
                                 "tags": ["rt", "LAN"],
@@ -345,6 +377,7 @@ def test_tags_or(get_config_tree: CTree) -> None:
                                 "line": "vpn-target 123:123 import-extcommunity evpn",
                                 "tags": ["vpn", "LAN"],
                                 "template": "",
+                                "undo_line": "",
                                 "children": {},
                             },
                         },
@@ -353,6 +386,7 @@ def test_tags_or(get_config_tree: CTree) -> None:
                         "line": "vxlan vni 123",
                         "tags": ["vpn", "LAN"],
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                     },
                 },
@@ -378,19 +412,23 @@ def test_tags_and(get_config_tree: CTree) -> None:
         "line": "",
         "tags": [],
         "template": "",
+        "undo_line": "",
         "children": {
             "ip vpn-instance LAN": {
                 "line": "ip vpn-instance LAN",
                 "tags": ["vpn", "LAN"],
                 "template": "",
+                "undo_line": "",
                 "children": {
                     "ipv4-family": {
                         "line": "ipv4-family",
                         "tags": ["vpn", "LAN"],
                         "template": "",
+                        "undo_line": "",
                         "children": {
                             "route-distinguisher 192.168.0.1:123": {
                                 "template": "",
+                                "undo_line": "",
                                 "children": {},
                                 "line": "route-distinguisher 192.168.0.1:123",
                                 "tags": ["rd", "LAN", "192.168.0.1:123"],
@@ -433,16 +471,19 @@ def test_string_tags_and(get_config_tree: CTree) -> None:
         "line": "",
         "tags": [],
         "template": "",
+        "undo_line": "",
         "children": {
             "interface gi0/0/0": {
                 "line": "interface gi0/0/0",
                 "tags": ["interface", "gi0/0/0"],
                 "template": "",
+                "undo_line": "",
                 "children": {
                     "ip address 1.1.1.1 255.255.255.252": {
                         "line": "ip address 1.1.1.1 255.255.255.252",
                         "tags": ["ip", "interface-1", "gi0/0/0"],
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                     }
                 },
@@ -470,25 +511,30 @@ def test_string_tags_or(get_config_tree: CTree) -> None:
         "line": "",
         "tags": [],
         "template": "",
+        "undo_line": "",
         "children": {
             "interface gi0/0/0": {
                 "line": "interface gi0/0/0",
                 "tags": ["interface", "gi0/0/0"],
                 "template": "",
+                "undo_line": "",
                 "children": {
                     "ip address 1.1.1.1 255.255.255.252": {
                         "line": "ip address 1.1.1.1 255.255.255.252",
                         "tags": ["ip", "interface-1", "gi0/0/0"],
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                     }
                 },
             },
             "interface gi0/0/1": {
                 "template": "",
+                "undo_line": "",
                 "children": {
                     "ip address 1.1.1.1 255.255.255.252": {
                         "template": "",
+                        "undo_line": "",
                         "children": {},
                         "line": "ip address 1.1.1.1 255.255.255.252",
                         "tags": ["ip", "interface-2", "gi0/0/1"],
@@ -509,7 +555,7 @@ def test_string_tags_or(get_config_tree: CTree) -> None:
 
 def test_null_tags(get_config_tree: CTree) -> None:
     filtered_config = ""
-    filtered_dict = {"line": "", "tags": [], "template": "", "children": {}}
+    filtered_dict = {"line": "", "tags": [], "template": "", "undo_line": "", "children": {}}
     root = get_config_tree
     filtered_root = CTreeSearcher.search(root, include_tags=["gi0/0/0", "gi0/0/1"], include_mode="and")
     assert filtered_root.config == filtered_config
@@ -518,7 +564,7 @@ def test_null_tags(get_config_tree: CTree) -> None:
 
 def test_null_string(get_config_tree: CTree) -> None:
     filtered_config = ""
-    filtered_dict = {"line": "", "tags": [], "template": "", "children": {}}
+    filtered_dict = {"line": "", "tags": [], "template": "", "undo_line": "", "children": {}}
     root = get_config_tree
     filtered_root = CTreeSearcher.search(root, string="unknown")
     assert filtered_root.config == filtered_config

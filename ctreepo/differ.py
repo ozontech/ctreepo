@@ -2,6 +2,7 @@ import re
 from collections import deque
 from typing import Literal
 
+from . import settings
 from .ctree import CTree
 from .models import DiffAction
 from .postproc import _REGISTRY, CTreePostProc
@@ -79,7 +80,10 @@ class CTreeDiffer:
                         node = root
                         while len(node.children) == 1:
                             node = list(node.children.values())[0]
-                        node.line = f"{node.undo} {node.line}"
+                        if len(node.undo_line) != 0:
+                            node.line = node.undo_line
+                        else:
+                            node.line = f"{node.undo} {node.line}"
                         root.rebuild(deep=True)
                         result.append(root)
                 # целиком добавляем (negative=False)
@@ -106,13 +110,21 @@ class CTreeDiffer:
                     # добавить default? нужно кейс вспомнить
                     # _ = node.__class__(f"default {node.line}", node.parent, node.tags.copy())
                     if node.line.startswith(f"{node.undo} "):
-                        node.line = node.line.replace(f"{node.undo} ", "", 1)
+                        if len(node.undo_line) != 0:
+                            node.line = node.undo_line
+                        else:
+                            node.line = node.line.replace(f"{node.undo} ", "", 1)
+
                         # пока не знаю, нужно ли модифицировать шаблоны или нет, с первого взгляда нет
                         # так как тогда эти ноды станут как и "оригинальными" (из целевого шаблона).
                         # по логике мы их должны находить у удалять на основе шаблона оригинальной ноды
                         # node.template = node.template.replace(f"{node.undo} ", "", 1)
                     else:
-                        node.line = f"{node.undo} {node.line}"
+                        if len(node.undo_line) != 0:
+                            node.line = node.undo_line
+                        else:
+                            node.line = f"{node.undo} {node.line}"
+
                         # выше комментарий про модификацию шаблона
                         # if len(node.template) != 0:
                         #     node.template = f"{node.undo} {node.template}"
@@ -121,7 +133,7 @@ class CTreeDiffer:
                     root.rebuild(deep=True)
                 result.append(root)
             else:
-                # todo тут если потомков нет, то нет смысла делать рекурсию, лишняя трата ресурсов
+                # todo тут если потомков нет, то нет смысла делать рекурсию
                 nested_result = cls._diff_list(
                     child,
                     b.children[line],
@@ -179,7 +191,7 @@ class CTreeDiffer:
 
         negative = {node.line: node for node in root.children.values() if node.line.startswith(node.undo)}
         for node in negative.values():
-            node.tags.append("post")
+            node.tags.append(settings.TAG_ON_UNDO)
         if reorder_root:
             positive = {node.line: node for node in root.children.values() if not node.line.startswith(node.undo)}
             root.children = positive | negative

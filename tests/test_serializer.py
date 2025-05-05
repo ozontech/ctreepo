@@ -41,33 +41,39 @@ config_dict = {
     "line": "",
     "tags": [],
     "template": "",
+    "undo_line": "",
     "children": {
         "sflow collector 1 ip 100.64.0.1 vpn-instance MGMT": {
             "line": "sflow collector 1 ip 100.64.0.1 vpn-instance MGMT",
             "tags": [],
             "template": "",
+            "undo_line": "",
             "children": {},
         },
         "storm suppression statistics enable": {
             "line": "storm suppression statistics enable",
             "tags": [],
             "template": "",
+            "undo_line": "",
             "children": {},
         },
         "ip vpn-instance MGMT": {
             "line": "ip vpn-instance MGMT",
             "tags": ["vpn", "MGMT"],
             "template": "",
+            "undo_line": "",
             "children": {
                 "ipv4-family": {
                     "line": "ipv4-family",
                     "tags": ["vpn", "MGMT"],
                     "template": "",
+                    "undo_line": "",
                     "children": {
                         "route-distinguisher 192.168.0.1:123": {
                             "line": "route-distinguisher 192.168.0.1:123",
                             "tags": ["vpn", "MGMT"],
                             "template": "",
+                            "undo_line": "",
                             "children": {},
                         }
                     },
@@ -78,28 +84,33 @@ config_dict = {
             "line": "ip vpn-instance LAN",
             "tags": ["vpn", "LAN"],
             "template": "",
+            "undo_line": "",
             "children": {
                 "ipv4-family": {
                     "line": "ipv4-family",
                     "tags": ["vpn", "LAN"],
                     "template": "",
+                    "undo_line": "",
                     "children": {
                         "route-distinguisher 192.168.0.1:123": {
                             "line": "route-distinguisher 192.168.0.1:123",
                             "tags": ["rd", "LAN", "192.168.0.1:123"],
                             "template": "",
+                            "undo_line": "",
                             "children": {},
                         },
                         "vpn-target 123:123 export-extcommunity evpn": {
                             "line": "vpn-target 123:123 export-extcommunity evpn",
                             "tags": ["rt", "LAN"],
                             "template": "",
+                            "undo_line": "",
                             "children": {},
                         },
                         "vpn-target 123:123 import-extcommunity evpn": {
                             "line": "vpn-target 123:123 import-extcommunity evpn",
                             "tags": ["vpn", "LAN"],
                             "template": "",
+                            "undo_line": "",
                             "children": {},
                         },
                     },
@@ -108,6 +119,7 @@ config_dict = {
                     "line": "vxlan vni 123",
                     "tags": ["vpn", "LAN"],
                     "template": "",
+                    "undo_line": "",
                     "children": {},
                 },
             },
@@ -116,11 +128,13 @@ config_dict = {
             "line": "interface gi0/0/0",
             "tags": ["interface", "gi0/0/0"],
             "template": "",
+            "undo_line": "",
             "children": {
                 "ip address 1.1.1.1 255.255.255.252": {
                     "line": "ip address 1.1.1.1 255.255.255.252",
                     "tags": ["ip", "interface-1", "gi0/0/0"],
                     "template": "",
+                    "undo_line": "",
                     "children": {},
                 }
             },
@@ -129,11 +143,13 @@ config_dict = {
             "line": "interface gi0/0/1",
             "tags": ["interface", "gi0/0/1"],
             "template": "",
+            "undo_line": "",
             "children": {
                 "ip address 1.1.1.1 255.255.255.252": {
                     "line": "ip address 1.1.1.1 255.255.255.252",
                     "tags": ["ip", "interface-2", "gi0/0/1"],
                     "template": "",
+                    "undo_line": "",
                     "children": {},
                 }
             },
@@ -142,23 +158,27 @@ config_dict = {
             "line": "ntp-service authentication-keyid 1 authentication-mode md5 cipher secret_password",
             "tags": [],
             "template": "",
+            "undo_line": "",
             "children": {},
         },
         "radius-server template RADIUS_TEMPLATE": {
             "line": "radius-server template RADIUS_TEMPLATE",
             "tags": [],
             "template": "",
+            "undo_line": "",
             "children": {
                 "radius-server shared-key cipher secret_password": {
                     "line": "radius-server shared-key cipher secret_password",
                     "tags": [],
                     "template": "",
+                    "undo_line": "",
                     "children": {},
                 },
                 "radius-server algorithm loading-share": {
                     "line": "radius-server algorithm loading-share",
                     "tags": [],
                     "template": "",
+                    "undo_line": "",
                     "children": {},
                 },
             },
