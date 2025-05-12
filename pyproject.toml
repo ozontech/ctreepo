@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ctreepo"
-version = "0.3.26"
+version = "0.3.27"
 description = "CTreePO - configuration tree patch overview - Parsing, filtering and diff calculation for network device configurations"
 license = "Apache-2.0"
 authors = ["Alexander Ignatov <alexigna@ozon.ru>"]
