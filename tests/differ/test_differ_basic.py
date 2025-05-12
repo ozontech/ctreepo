@@ -162,3 +162,83 @@ def test_double_undo() -> None:
     target = parser.parse(target_config)
     diff = CTreeDiffer.diff(current, target)
     assert diff.config == diff_config
+
+
+def test_rule_with_undo() -> None:
+    current_str = dedent(
+        """
+        interface LoopBack0
+         description OLD
+         command arg1 arg2
+         load-interval 30
+        acl name ACL 1234
+         rule 10 permit ip source 192.168.0.0 0.0.0.255
+         rule 10 description mgmt-network
+         rule 15 permit tcp destination-port range 1024 2048
+        """
+    )
+    target_str = dedent(
+        """
+        interface LoopBack0
+         description NEW
+         command arg1 arg22
+        acl name ACL 1234
+         rule 10 permit ip source 192.168.1.0 0.0.0.255
+         rule 10 description old mgmt-network
+         rule 15 permit tcp destination-port range 1024 2048
+        """
+    )
+    template_str = dedent(
+        r"""
+        interface \S+
+         description (?P<DESCRIPTION>.*)               UNDO>> undo description \1
+         command (?P<ARG1>\S+) (?P<ARG2>\S+)           UNDO>> undo command \1
+         load-interval (?P<INTERVAL>\d+)               UNDO>> undo load-interval
+        acl name \S+ \d+
+         rule (\d+) description (?P<DESCRIPTION>.*)    UNDO>> undo rule \1 description
+         rule (\d+) (?P<RULE>.*)                       UNDO>> undo rule \1
+        """
+    )
+    diff_config_raw = dedent(
+        """
+        interface LoopBack0
+         undo description OLD
+         undo command arg1 arg2
+         undo load-interval 30
+         description NEW
+         command arg1 arg22
+        #
+        acl name ACL 1234
+         undo rule 10 permit ip source 192.168.0.0 0.0.0.255
+         undo rule 10 description mgmt-network
+         rule 10 permit ip source 192.168.1.0 0.0.0.255
+         rule 10 description old mgmt-network
+        #
+        """
+    ).strip()
+    diff_config = dedent(
+        """
+        interface LoopBack0
+         undo load-interval
+         description NEW
+         command arg1 arg22
+        #
+        acl name ACL 1234
+         rule 10 permit ip source 192.168.1.0 0.0.0.255
+         rule 10 description old mgmt-network
+        #
+        """
+    ).strip()
+    parser = CTreeParser(Vendor.HUAWEI)
+
+    template = parser.parse(template_str)
+    current = parser.parse(current_str, template)
+    current_raw = parser.parse(current_str)
+    target = parser.parse(target_str, template)
+    target_raw = parser.parse(target_str)
+
+    diff = CTreeDiffer().diff(current, target)
+    diff_raw = CTreeDiffer().diff(current_raw, target_raw)
+
+    assert diff.config == diff_config
+    assert diff_raw.config == diff_config_raw
