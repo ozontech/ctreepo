@@ -38,12 +38,16 @@ class CTreeDiffer:
                 cls._delete_nodes_by_template(node)
             if len(node.template) == 0:
                 continue
+            patterns = []
+            if len(node.undo_line) != 0:
+                patterns.append(node.undo_line)
             if node.line.startswith(f"{node.undo} "):
-                template = node.template.replace(f"{node.undo} ", "", 1)
+                patterns.append(node.template.replace(f"{node.undo} ", "", 1))
             else:
-                template = f"{node.undo} {node.template}"
+                patterns.append(f"{node.undo} {node.template}")
+            pattern = "|".join(patterns)
             for n in root.children.values():
-                if re.fullmatch(template, n.line):
+                if re.fullmatch(pattern, n.line):
                     to_delete.add(n)
         for node in to_delete:
             node.delete()
