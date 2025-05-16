@@ -2,7 +2,7 @@
 
 init:
 	python -m pip install --upgrade pip
-	pip install poetry
+	pip install "poetry>=2.0"
 	poetry install
 
 init-dev: init

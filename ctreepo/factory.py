@@ -1,5 +1,3 @@
-from typing import cast
-
 from .ctree import CTree
 from .models import Vendor
 from .vendors import AristaCT, CiscoCT, HuaweiCT
@@ -28,5 +26,6 @@ def ctree_factory(
 ) -> CTree:
     _ct = ctree_class(vendor)
     node = _ct(line=line, parent=parent, tags=tags)
-    node = cast(CTree, node)
+    # тут уже CTree, cast не нужен, но для истории оставлю
+    # node = cast(CTree, node)
     return node

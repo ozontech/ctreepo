@@ -8,7 +8,7 @@ __all__ = ("CiscoPostProcBGP",)
 @register_rule(Vendor.CISCO)
 class CiscoPostProcBGP(CTreePostProc):
     @classmethod
-    def _delete_nodes(cls, ct: CTree, lines_to_delete: set) -> None:
+    def _delete_nodes(cls, ct: CTree, lines_to_delete: set[str]) -> None:
         nodes_to_delete: list[CTree] = []
         for node in ct.children.values():
             if len(node.children) != 0:

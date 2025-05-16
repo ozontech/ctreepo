@@ -3,7 +3,6 @@
 from collections import deque
 from pathlib import Path
 from textwrap import dedent
-from typing import cast
 
 import pytest
 
@@ -270,7 +269,7 @@ def test_copy(huawei_manual_config: dict[str, HuaweiCT]) -> None:
         nodes: list[HuaweiCT] = []
         while len(stack) > 0:
             node = stack.popleft()
-            node = cast(HuaweiCT, node)
+            # node = cast(HuaweiCT, node)
             nodes.append(node)
             if len(node.children) != 0:
                 stack.extendleft(list(node.children.values())[::-1])
@@ -286,7 +285,7 @@ def test_copy(huawei_manual_config: dict[str, HuaweiCT]) -> None:
     copy1 = root.copy()
     copy2 = root.copy()
     copy3 = huawei_manual_config["root"].children["ip vpn-instance LAN"].children["ipv4-family"].copy()
-    copy3 = cast(HuaweiCT, copy3)
+    # copy3 = cast(HuaweiCT, copy3)
     assert root == copy1
     assert root == copy2
     assert root == copy3
@@ -428,7 +427,7 @@ def test_mask_line(huawei_manual_config: dict[str, HuaweiCT]) -> None:
         f"ntp-service authentication-keyid 1 authentication-mode md5 cipher {HuaweiCT.masking_string}",
         f"radius-server shared-key cipher {HuaweiCT.masking_string}",
     ]
-    for node, raw, masked in zip(nodes, raw_lines, masked_lines):
+    for node, raw, masked in zip(nodes, raw_lines, masked_lines, strict=True):
         if not isinstance(node, HuaweiCT):
             raise AssertionError
         assert node.line == raw
