@@ -1,8 +1,8 @@
 from textwrap import dedent
 
-from ctreepo import CTreeEnv
+from ctreepo import CTreeEnv, Vendor
 from ctreepo.parser import CTreeParser
-from ctreepo.vendors import CiscoCT, Vendor
+from ctreepo.vendors import CiscoCT
 
 
 def test_parsing_with_template() -> None:

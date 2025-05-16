@@ -3,7 +3,6 @@ from __future__ import annotations
 import abc
 import re
 from pathlib import Path
-from typing import cast
 
 import yaml
 
@@ -77,7 +76,7 @@ class TaggingRulesFile(TaggingRules):
         for vendor, rules in (data.get("tagging-rules") or {}).items():
             if vendor not in [e.value for e in Vendor]:
                 continue
-            result[Vendor(vendor)] = [TaggingRule(**rule) for rule in rules]  # type: ignore[arg-type]
+            result[Vendor(vendor)] = [TaggingRule(**rule) for rule in rules]
 
         self.rules = result
 
@@ -172,5 +171,6 @@ class CTreeParser:
         config = self._class.pre_run(config)
         root = self._parse(self._class, config, template)
         root.post_run()
-        root = cast(CTree, root)
+        # тут уже CTree, cast не нужен, но для истории оставлю
+        # root = cast(CTree, root)
         return root
