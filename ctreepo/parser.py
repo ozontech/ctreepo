@@ -171,6 +171,7 @@ class CTreeParser:
         config = self._class.pre_run(config)
         root = self._parse(self._class, config, template)
         root.post_run()
+        root.update_node_hash()
         # тут уже CTree, cast не нужен, но для истории оставлю
         # root = cast(CTree, root)
         return root
