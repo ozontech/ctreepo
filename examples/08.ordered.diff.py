@@ -18,7 +18,7 @@ def get_ct_environment_ordered() -> CTreeEnv:
     return CTreeEnv(
         vendor=Vendor.CISCO,
         ordered_sections=[
-            r"ip access-list standard \S+$",
+            r"ip access-list standard \S+",
         ],
     )
 

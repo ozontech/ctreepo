@@ -178,21 +178,21 @@ def test_differ_ordered_section() -> None:
     diff = CTreeDiffer.diff(
         current,
         target,
-        ordered_sections=[r"^aaa group server tacacs\+"],
+        ordered_sections=[r"aaa group server tacacs\+ \S+"],
     )
     assert diff.config == diff_ordered_tacacs
 
     diff = CTreeDiffer.diff(
         current,
         target,
-        ordered_sections=[r"^aaa group server tacacs\+", r"^section \d+$"],
+        ordered_sections=[r"aaa group server tacacs\+ \S+", r"section \d+"],
     )
     assert diff.config == diff_ordered_tacacs_and_section
 
     diff = CTreeDiffer.diff(
         current,
         target,
-        ordered_sections=[r"^section \d+ / sub-section \d+$"],
+        ordered_sections=[r"section \d+ / sub-section \d+"],
     )
     assert diff.config == diff_ordered_subsection
 

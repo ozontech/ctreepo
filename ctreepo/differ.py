@@ -16,7 +16,7 @@ class CTreeDiffer:
         if ordered_sections is not None:
             for section in ordered_sections:
                 formal_line = " / ".join(a._formal_path)
-                if re.search(section, formal_line):
+                if re.fullmatch(section, formal_line):
                     return True
         return False
 
@@ -111,14 +111,11 @@ class CTreeDiffer:
                     node = root
                     while len(node.children) == 1:
                         node = list(node.children.values())[0]
-                    # добавить default? нужно кейс вспомнить
-                    # _ = node.__class__(f"default {node.line}", node.parent, node.tags.copy())
                     if node.line.startswith(f"{node.undo} "):
                         if len(node.undo_line) != 0:
                             node.line = node.undo_line
                         else:
                             node.line = node.line.replace(f"{node.undo} ", "", 1)
-
                         # пока не знаю, нужно ли модифицировать шаблоны или нет, с первого взгляда нет
                         # так как тогда эти ноды станут как и "оригинальными" (из целевого шаблона).
                         # по логике мы их должны находить у удалять на основе шаблона оригинальной ноды
@@ -138,16 +135,19 @@ class CTreeDiffer:
                 result.append(root)
             else:
                 # todo тут если потомков нет, то нет смысла делать рекурсию
-                nested_result = cls._diff_list(
-                    child,
-                    b.children[line],
-                    existed_diff=None,
-                    ordered_sections=ordered_sections,
-                    no_diff_sections=no_diff_sections,
-                    masked=masked,
-                    negative=negative,
-                )
-                result.extend(nested_result)
+                # проваливаемся в рекурсивное сравнение потомков только если
+                # они существуют и (хеши нод разные или секция _ordered)
+                if len(child.children) != 0 and (child.node_hash != b.children[line].node_hash or _ordered):
+                    nested_result = cls._diff_list(
+                        child,
+                        b.children[line],
+                        existed_diff=None,
+                        ordered_sections=ordered_sections,
+                        no_diff_sections=no_diff_sections,
+                        masked=masked,
+                        negative=negative,
+                    )
+                    result.extend(nested_result)
         return result
 
     @classmethod
@@ -203,7 +203,7 @@ class CTreeDiffer:
         # пробегаем по diff и удаляем ноды, которые совпадают по шаблонам
         cls._delete_nodes_by_template(root)
 
-        # пробегаемся по post-proc правилам и дорабатываем diff
+        # пробегаем по post-proc правилам и дорабатываем diff
         if post_proc_rules is None:
             post_proc_rules = _REGISTRY.get(root.vendor) or []
         for rule in post_proc_rules:

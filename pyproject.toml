@@ -1,6 +1,6 @@
 [project]
 name = "ctreepo"
-version = "0.3.27"
+version = "0.3.28"
 description = "CTreePO - configuration tree patch overview - Parsing, filtering and diff calculation for network device configurations"
 authors = [{ name = "Alexander Ignatov", email = "alexigna@ozon.ru" }]
 license = "Apache-2.0"
@@ -34,9 +34,11 @@ build-backend = "poetry.core.masonry.api"
 [tool.black]
 line-length = 120
 
+
 [tool.ruff]
 extend-exclude = ["__init__.py"]
 line-length = 120
+
 
 [tool.ruff.lint]
 select = ["N", "B", "A", "E", "W", "F", "ASYNC", "S", "D", "I"]
@@ -52,8 +54,10 @@ ignore = [
   "S311", # Standard pseudo-random generators are not suitable for cryptographic purposes
 ]
 
+
 [tool.ruff.lint.pydocstyle]
 convention = "google"
+
 
 [tool.pytest.ini_options]
 addopts = """

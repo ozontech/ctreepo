@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import re
 from collections import deque
 from typing import Deque, Self
@@ -19,6 +20,7 @@ class CTree:
         "template",  # шаблон, что бы разобрать строку на команду и аргументы
         "undo_line",  # как удаляем строку, если не указано, то undo добавляем
         "prefix",  # префикс перед строкой, используется в human-diff (-/+)
+        "node_hash",  # хеш узла с учетом дочерних узлов
     )
 
     @property
@@ -104,6 +106,10 @@ class CTree:
             self.template = ""
             self.undo_line = ""
 
+        # тут можно сразу считать, но смысла кмк нет пока неизвестны потомки, поэтому пересчет
+        # нужно делать после построения дерева
+        self.node_hash = ""
+
     def _get_template_undo(self, line: str, template: str) -> tuple[str, str]:
         if settings.TEMPLATE_SEPARATOR in template:
             apply_template, remove_template = map(str.strip, template.split(settings.TEMPLATE_SEPARATOR))
@@ -145,7 +151,7 @@ class CTree:
 
     @classmethod
     def mask_line(cls, line: str) -> str:
-        pattern = "|".join(cls.mask_patterns)  # type: ignore [arg-type]
+        pattern: str = "|".join(cls.mask_patterns)  # type: ignore [arg-type]
         if (m := re.fullmatch(pattern, line)) is not None:
             secret = [g for g in m.groups() if g is not None][0]
             return line.replace(secret, cls.masking_string)
@@ -181,6 +187,9 @@ class CTree:
 
     def __hash__(self) -> int:
         """вычисление hash."""
+        # todo тут получается два вида хеша: один только на основе строки конфигурации, и нужен для того
+        # todo что бы сделать объект хэшируемым, второй хеш нужен для сравнения на основе как строки, так
+        # todo и потомков, что бы при одинаковых хешах у нод не лазить по потомкам. объединить может их?
         return hash(self.formal_path)
 
     # todo добавить сравнение, с учетом порядка команд, как в differ сделано
@@ -387,6 +396,7 @@ class CTree:
     def apply(self, other: Self) -> Self:
         result = self.copy()
         result._apply(other=other)
+        result.update_node_hash()
         return result
 
     def rebuild(self, deep: bool = False) -> None:
@@ -395,6 +405,7 @@ class CTree:
         if deep:
             for child in self.children.values():
                 child.rebuild(deep)
+        self.update_node_hash()
 
     def exists_in(self, other: Self, masked: bool = False) -> str:
         if masked:
@@ -495,3 +506,10 @@ class CTree:
 
     def post_run(self) -> None:
         return
+
+    def update_node_hash(self) -> None:
+        for node in self.children.values():
+            node.update_node_hash()
+        hashes = [node.node_hash for node in self.children.values()]
+        hashes.append(hashlib.sha256(self.line.encode()).hexdigest())
+        self.node_hash = hashlib.sha256("".join(sorted(hashes)).encode()).hexdigest()
