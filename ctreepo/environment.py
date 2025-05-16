@@ -3,7 +3,7 @@ from typing import Any, Literal
 
 from .ctree import CTree
 from .differ import CTreeDiffer
-from .models import Vendor
+from .models import Platform
 from .parser import CTreeParser, TaggingRulesDict, TaggingRulesFile
 from .postproc import CTreePostProc
 from .searcher import CTreeSearcher
@@ -15,7 +15,7 @@ __all__ = ("CTreeEnv",)
 class CTreeEnv:
     def __init__(
         self,
-        vendor: Vendor,
+        platform: Platform,
         *,
         tagging_rules: Path | str | list[dict[str, str | list[str]]] | None = None,
         ordered_sections: list[str] | None = None,
@@ -28,12 +28,12 @@ class CTreeEnv:
         else:
             _tr_file = None
         if isinstance(tagging_rules, list):
-            _tr_dict = TaggingRulesDict({vendor: tagging_rules})
+            _tr_dict = TaggingRulesDict({platform: tagging_rules})
         else:
             _tr_dict = None
 
-        self.vendor = vendor
-        self._parser = CTreeParser(vendor=self.vendor, tagging_rules=_tr_file or _tr_dict)
+        self.platform = platform
+        self._parser = CTreeParser(platform=self.platform, tagging_rules=_tr_file or _tr_dict)
         self._ordered_sections = ordered_sections
         self._no_diff_sections = no_diff_sections
         self._post_proc_rules = post_proc_rules
@@ -83,7 +83,7 @@ class CTreeEnv:
         data: dict[str, Any],
     ) -> CTree:
         return CTreeSerializer.from_dict(
-            vendor=self.vendor,
+            platform=self.platform,
             data=data,
         )
 

@@ -1,6 +1,6 @@
 from textwrap import dedent
 
-from ctreepo import CTreeDiffer, CTreeParser, Vendor
+from ctreepo import CTreeDiffer, CTreeParser, Platform
 
 
 def test_huawei_bgp_base() -> None:
@@ -40,7 +40,7 @@ def test_huawei_bgp_base() -> None:
          neighbor 192.168.0.3 peer group PEER_GROUP_3
          neighbor 192.168.0.3 remote-as 12345
         #
-        """
+        """,
     ).strip()
     diff_config = dedent(
         """
@@ -73,7 +73,7 @@ def test_huawei_bgp_base() -> None:
          address-family evpn
           neighbor PEER_GROUP_3 activate
         #
-        """
+        """,
     ).strip()
     diff_patch = dedent(
         """
@@ -109,10 +109,10 @@ def test_huawei_bgp_base() -> None:
         neighbor PEER_GROUP_3 activate
         quit
         quit
-        """
+        """,
     ).strip()
 
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
     current = parser.parse(current_config)
     target = parser.parse(target_config)
     diff = CTreeDiffer.diff(current, target)
@@ -135,7 +135,7 @@ def test_huawei_bgp_peer_group_delete() -> None:
           peer PEER-GROUP bfd min-tx-interval 300 min-rx-interval 300
           peer PEER-GROUP bfd enable
         #
-        """
+        """,
     ).strip()
     target_config = dedent(
         """
@@ -144,7 +144,7 @@ def test_huawei_bgp_peer_group_delete() -> None:
          ipv4-family vpn-instance VRF
           maximum load-balancing 4
         #
-        """
+        """,
     ).strip()
     diff_patch = dedent(
         """
@@ -153,10 +153,10 @@ def test_huawei_bgp_peer_group_delete() -> None:
         undo group PEER-GROUP
         quit
         quit
-        """
+        """,
     ).strip()
 
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
     current = parser.parse(current_config)
     target = parser.parse(target_config)
     diff = CTreeDiffer.diff(current, target)

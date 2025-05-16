@@ -1,6 +1,6 @@
 from textwrap import dedent
 
-from ctreepo import CTreeDiffer, CTreeParser, Vendor
+from ctreepo import CTreeDiffer, CTreeParser, Platform
 from ctreepo.parser import TaggingRulesDict
 
 
@@ -37,7 +37,7 @@ def test_arista_interface_post_processing() -> None:
          bridge-domain 1234
          statistics enable
         #
-        """
+        """,
     ).strip()
 
     target_config = dedent(
@@ -59,7 +59,7 @@ def test_arista_interface_post_processing() -> None:
          bridge-domain 1234
          statistics enable
         #
-        """
+        """,
     ).strip()
     diff_config = dedent(
         """
@@ -70,7 +70,7 @@ def test_arista_interface_post_processing() -> None:
         !
         no interface 25GE1/0/1.1234 mode l2
         !
-        """
+        """,
     ).strip()
     diff_patch = dedent(
         """
@@ -79,9 +79,9 @@ def test_arista_interface_post_processing() -> None:
         exit
         no interface 25GE1/0/1
         no interface 25GE1/0/1.1234 mode l2
-        """
+        """,
     ).strip()
-    parser = CTreeParser(Vendor.ARISTA)
+    parser = CTreeParser(Platform.ARISTA_EOS)
 
     current = parser.parse(current_config)
     target = parser.parse(target_config)
@@ -143,7 +143,7 @@ def test_arista_route_policy_post_processing() -> None:
         route-map DIRECT_IN permit 5
          apply community community-list CL_NAME_1 additive
         #
-        """
+        """,
     ).strip()
     target_config = dedent(
         """
@@ -187,7 +187,7 @@ def test_arista_route_policy_post_processing() -> None:
         route-map DIRECT_IN permit 5
          apply community community-list CL_NAME_1 additive
         #
-        """
+        """,
     ).strip()
     diff_config = dedent(
         """
@@ -202,7 +202,7 @@ def test_arista_route_policy_post_processing() -> None:
         !
         no route-map RM_NAME_2 permit 20
         !
-        """
+        """,
     ).strip()
     diff_patch = dedent(
         """
@@ -214,9 +214,9 @@ def test_arista_route_policy_post_processing() -> None:
         no route-map RM_NAME_1 permit 20
         no route-map RM_NAME_2 permit 10
         no route-map RM_NAME_2 permit 20
-        """
+        """,
     ).strip()
-    parser = CTreeParser(vendor=Vendor.ARISTA)
+    parser = CTreeParser(platform=Platform.ARISTA_EOS)
 
     current = parser.parse(current_config)
     target = parser.parse(target_config)
@@ -234,14 +234,14 @@ def test_arista_prefix_list_post_processing() -> None:
         ip prefix-list TEST_PL_1 seq 30 permit 10.1.32.0/24 eq 32
         ip prefix-list TEST_PL_2 seq 10 permit 10.1.33.0/24
         ip prefix-list TEST_PL_3 seq 10 permit 10.1.34.0/24 ge 25 le 26
-        """
+        """,
     ).strip()
     target_config = dedent(
         """
         ip prefix-list TEST_PL_1 seq 10 permit 10.1.30.0/24 eq 32
         ip prefix-list TEST_PL_1 seq 30 permit 10.1.32.0/24 eq 32
         ip prefix-list TEST_PL_3 seq 10 permit 10.0.36.0/24
-        """
+        """,
     ).strip()
     diff_config = dedent(
         """
@@ -253,7 +253,7 @@ def test_arista_prefix_list_post_processing() -> None:
         !
         no ip prefix-list TEST_PL_2 seq 10
         !
-        """
+        """,
     ).strip()
 
     diff_patch = dedent(
@@ -262,9 +262,9 @@ def test_arista_prefix_list_post_processing() -> None:
         ip prefix-list TEST_PL_3 seq 10 permit 10.0.36.0/24
         no ip prefix-list TEST_PL_1 seq 20
         no ip prefix-list TEST_PL_2 seq 10
-        """
+        """,
     ).strip()
-    parser = CTreeParser(vendor=Vendor.ARISTA)
+    parser = CTreeParser(platform=Platform.ARISTA_EOS)
 
     current = parser.parse(current_config)
     target = parser.parse(target_config)
@@ -286,13 +286,13 @@ def test_arista_user_post_processing_1() -> None:
         """
         username user1 privilege 15 role network-admin secret
         username user2 privilege 15 role network-admin secret
-        """
+        """,
     ).strip()
     current_config = dedent(
         """
         username user1 privilege 15 role network-admin secret sha512 some_password_hash_1
         username user2 privilege 15 role network-admin secret sha512 some_password_hash_2
-        """
+        """,
     ).strip()
     diff_config_raw = dedent(
         """
@@ -304,10 +304,10 @@ def test_arista_user_post_processing_1() -> None:
         !
         no username user2 privilege 15 role network-admin secret sha512 some_password_hash_2
         !
-        """
+        """,
     ).strip()
     diff_config_processed = ""
-    parser = CTreeParser(Vendor.ARISTA)
+    parser = CTreeParser(Platform.ARISTA_EOS)
     target = parser.parse(target_config)
     current = parser.parse(current_config)
     diff_raw = CTreeDiffer.diff(current, target, post_proc_rules=[])
@@ -323,13 +323,13 @@ def test_arista_user_post_processing_2() -> None:
         """
         username user1 privilege 15 role network-admin secret P@ssw0rd
         username user2 privilege 15 role network-admin secret
-        """
+        """,
     ).strip()
     current_config = dedent(
         """
         username user1 privilege 15 role network-admin secret sha512 some_password_hash_1
         username user2 privilege 15 role network-admin secret sha512 some_password_hash_2
-        """
+        """,
     ).strip()
     diff_config_raw = dedent(
         """
@@ -341,15 +341,15 @@ def test_arista_user_post_processing_2() -> None:
         !
         no username user2 privilege 15 role network-admin secret sha512 some_password_hash_2
         !
-        """
+        """,
     ).strip()
     diff_config_processed = dedent(
         """
         username user1 privilege 15 role network-admin secret P@ssw0rd
         !
-        """
+        """,
     ).strip()
-    parser = CTreeParser(Vendor.ARISTA)
+    parser = CTreeParser(Platform.ARISTA_EOS)
     target = parser.parse(target_config)
     current = parser.parse(current_config)
     diff_raw = CTreeDiffer.diff(current, target, post_proc_rules=[])
@@ -365,7 +365,7 @@ def test_arista_user_post_processing_3() -> None:
         """
         username user1 privilege 15 role network-admin secret P@ssw0rd
         username user2 privilege 15 role network-admin secret
-        """
+        """,
     ).strip()
     current_config = dedent(
         """
@@ -373,7 +373,7 @@ def test_arista_user_post_processing_3() -> None:
         username user2 privilege 15 role network-admin secret sha512 some_password_hash_2
         username user3 privilege 15 role network-admin secret sha512 some_password_hash_3
         username user3 description some-test
-        """
+        """,
     ).strip()
     diff_config_raw = dedent(
         """
@@ -389,7 +389,7 @@ def test_arista_user_post_processing_3() -> None:
         !
         no username user3 description some-test
         !
-        """
+        """,
     ).strip()
     diff_config_processed = dedent(
         """
@@ -397,9 +397,9 @@ def test_arista_user_post_processing_3() -> None:
         !
         no username user3
         !
-        """
+        """,
     ).strip()
-    parser = CTreeParser(Vendor.ARISTA)
+    parser = CTreeParser(Platform.ARISTA_EOS)
     target = parser.parse(target_config)
     current = parser.parse(current_config)
     diff_raw = CTreeDiffer.diff(current, target, post_proc_rules=[])
@@ -416,14 +416,14 @@ def test_arista_user_post_processing_4() -> None:
         username user1 privilege 15 role network-admin secret P@ssw0rd
         username user2 privilege 15 role network-admin secret
         username user4 privilege 15 role network-admin secret P@ssw0rd
-        """
+        """,
     ).strip()
     current_config = dedent(
         """
         username user1 privilege 15 role network-admin secret sha512 some_password_hash_1
         username user2 privilege 15 role network-admin secret sha512 some_password_hash_2
         username user3 privilege 15 role network-admin secret sha512 some_password_hash_3
-        """
+        """,
     ).strip()
     diff_config_raw = dedent(
         """
@@ -439,7 +439,7 @@ def test_arista_user_post_processing_4() -> None:
         !
         no username user3 privilege 15 role network-admin secret sha512 some_password_hash_3
         !
-        """
+        """,
     ).strip()
     diff_config_processed = dedent(
         """
@@ -449,9 +449,9 @@ def test_arista_user_post_processing_4() -> None:
         !
         no username user3
         !
-        """
+        """,
     ).strip()
-    parser = CTreeParser(Vendor.ARISTA)
+    parser = CTreeParser(Platform.ARISTA_EOS)
     target = parser.parse(target_config)
     current = parser.parse(current_config)
     diff_raw = CTreeDiffer.diff(current, target, post_proc_rules=[])
@@ -494,7 +494,7 @@ def test_arista_postproc_bgp_1() -> None:
            neighbor 192.168.0.3 peer group PEER_GROUP_3
            neighbor 192.168.0.3 remote-as 12345
         !
-        """
+        """,
     ).strip()
     diff_config = dedent(
         """
@@ -527,7 +527,7 @@ def test_arista_postproc_bgp_1() -> None:
            address-family evpn
               neighbor PEER_GROUP_3 activate
         !
-        """
+        """,
     ).strip()
     diff_patch = dedent(
         """
@@ -563,10 +563,10 @@ def test_arista_postproc_bgp_1() -> None:
         neighbor PEER_GROUP_3 activate
         exit
         exit
-        """
+        """,
     ).strip()
 
-    parser = CTreeParser(Vendor.ARISTA)
+    parser = CTreeParser(Platform.ARISTA_EOS)
     current = parser.parse(current_config)
     target = parser.parse(target_config)
     diff = CTreeDiffer.diff(current, target)
@@ -593,7 +593,7 @@ def test_arista_postproc_bgp_2() -> None:
               neighbor 1.2.3.4 peer group GROUP-PEER
               neighbor 1.2.3.4 shutdown
         !
-        """
+        """,
     )
     target_config = dedent(
         """
@@ -604,7 +604,7 @@ def test_arista_postproc_bgp_2() -> None:
            vrf LAN
               neighbor 1
         !
-        """
+        """,
     ).strip()
     diff_config_raw = dedent(
         """
@@ -621,7 +621,7 @@ def test_arista_postproc_bgp_2() -> None:
               no neighbor 1.2.3.4 peer group GROUP-PEER
               no neighbor 1.2.3.4 shutdown
         !
-        """
+        """,
     ).strip()
     diff_config = dedent(
         """
@@ -631,10 +631,10 @@ def test_arista_postproc_bgp_2() -> None:
               no neighbor 1.2.3.4 peer group GROUP-PEER
               no neighbor 1.2.3.4 shutdown
         !
-        """
+        """,
     ).strip()
 
-    parser = CTreeParser(Vendor.ARISTA)
+    parser = CTreeParser(Platform.ARISTA_EOS)
     current = parser.parse(current_config)
     target = parser.parse(target_config)
     diff_raw = CTreeDiffer.diff(current, target, post_proc_rules=[])
@@ -649,14 +649,14 @@ def test_arista_postproc_tacacs_key_1() -> None:
         tacacs-server timeout 3
         tacacs-server key
         tacacs-server host 1.2.3.4 vrf MGMT
-        """
+        """,
     ).strip()
     current_config = dedent(
         """
         tacacs-server timeout 3
         tacacs-server key 7 secret_hash
         tacacs-server host 1.2.3.4 vrf MGMT
-        """
+        """,
     ).strip()
     diff_config_raw = dedent(
         """
@@ -664,10 +664,10 @@ def test_arista_postproc_tacacs_key_1() -> None:
         !
         no tacacs-server key 7 secret_hash
         !
-        """
+        """,
     ).strip()
     diff_config_processed = ""
-    parser = CTreeParser(Vendor.ARISTA)
+    parser = CTreeParser(Platform.ARISTA_EOS)
     target = parser.parse(target_config)
     current = parser.parse(current_config)
     diff_raw = CTreeDiffer.diff(current, target, post_proc_rules=[])
@@ -683,14 +683,14 @@ def test_arista_postproc_tacacs_key_2() -> None:
         tacacs-server timeout 3
         tacacs-server key P@ssw0rd
         tacacs-server host 1.2.3.4 vrf MGMT
-        """
+        """,
     ).strip()
     current_config = dedent(
         """
         tacacs-server timeout 3
         tacacs-server key 7 secret_hash
         tacacs-server host 1.2.3.4 vrf MGMT
-        """
+        """,
     ).strip()
     diff_config_raw = dedent(
         """
@@ -698,15 +698,15 @@ def test_arista_postproc_tacacs_key_2() -> None:
         !
         no tacacs-server key 7 secret_hash
         !
-        """
+        """,
     ).strip()
     diff_config_processed = dedent(
         """
         tacacs-server key P@ssw0rd
         !
-        """
+        """,
     ).strip()
-    parser = CTreeParser(Vendor.ARISTA)
+    parser = CTreeParser(Platform.ARISTA_EOS)
     target = parser.parse(target_config)
     current = parser.parse(current_config)
     diff_raw = CTreeDiffer.diff(current, target, post_proc_rules=[])
@@ -722,7 +722,7 @@ def test_arista_postproc_aaa() -> None:
         aaa authentication login default group group2 local
         aaa authentication login console none
         aaa authentication enable default none
-        """
+        """,
     ).strip()
     current_config = dedent(
         """
@@ -730,7 +730,7 @@ def test_arista_postproc_aaa() -> None:
         aaa authentication login console local
         aaa authentication enable default none
         aaa authentication policy on-success log
-        """
+        """,
     ).strip()
     diff_config_raw = dedent(
         """
@@ -744,7 +744,7 @@ def test_arista_postproc_aaa() -> None:
         !
         no aaa authentication policy on-success log
         !
-        """
+        """,
     ).strip()
     diff_config_processed = dedent(
         """
@@ -754,9 +754,9 @@ def test_arista_postproc_aaa() -> None:
         !
         no aaa authentication policy on-success log
         !
-        """
+        """,
     ).strip()
-    parser = CTreeParser(Vendor.ARISTA)
+    parser = CTreeParser(Platform.ARISTA_EOS)
     target = parser.parse(target_config)
     current = parser.parse(current_config)
     diff_raw = CTreeDiffer.diff(current, target, post_proc_rules=[])
@@ -774,7 +774,7 @@ def test_huawei_interface_post_processing_1() -> None:
            description test
            ip address 192.168.0.1/24
         !
-        """
+        """,
     ).strip()
     target_config = dedent(
         """
@@ -783,7 +783,7 @@ def test_huawei_interface_post_processing_1() -> None:
            ip address 192.168.2.1/24 secondary
            ip address 192.168.1.1/24
         !
-        """
+        """,
     ).strip()
     diff_config = dedent(
         """
@@ -792,10 +792,10 @@ def test_huawei_interface_post_processing_1() -> None:
            ip address 192.168.1.1/24
            ip address 192.168.2.1/24 secondary
         !
-        """
+        """,
     ).strip()
 
-    parser = CTreeParser(Vendor.ARISTA)
+    parser = CTreeParser(Platform.ARISTA_EOS)
 
     current = parser.parse(current_config)
     target = parser.parse(target_config)
@@ -810,13 +810,13 @@ def test_arista_postproc_snmp_1() -> None:
         """
         snmp-server community public12345 ro
         snmp-server vrf MGMT
-        """
+        """,
     )
     target_config = dedent(
         """
         snmp-server community public54321 ro
         snmp-server vrf MGMT
-        """
+        """,
     )
     diff_config = dedent(
         """
@@ -824,14 +824,14 @@ def test_arista_postproc_snmp_1() -> None:
         !
         snmp-server community public54321 ro
         !
-        """
+        """,
     ).strip()
 
     tagging_rules = TaggingRulesDict(
-        {Vendor.ARISTA: [{"regex": r"^(?:no )?snmp-server\s+", "tags": ["snmp"]}]},
+        {Platform.ARISTA_EOS: [{"regex": r"^(?:no )?snmp-server\s+", "tags": ["snmp"]}]},
     )
 
-    parser = CTreeParser(Vendor.ARISTA, tagging_rules=tagging_rules)
+    parser = CTreeParser(Platform.ARISTA_EOS, tagging_rules=tagging_rules)
     current = parser.parse(current_config)
     target = parser.parse(target_config)
     diff = CTreeDiffer.diff(current, target)
@@ -847,23 +847,23 @@ def test_arista_postproc_snmp_2() -> None:
         """
         snmp-server community public12345 ro
         snmp-server vrf MGMT
-        """
+        """,
     )
     target_config = dedent(
         """
         snmp-server community  ro
         snmp-server community private12345 rw
         snmp-server vrf MGMT
-        """
+        """,
     )
     diff_config = dedent(
         """
         snmp-server community private12345 rw
         !
-        """
+        """,
     ).strip()
 
-    parser = CTreeParser(Vendor.ARISTA)
+    parser = CTreeParser(Platform.ARISTA_EOS)
     current = parser.parse(current_config)
     target = parser.parse(target_config)
     diff = CTreeDiffer.diff(current, target)
@@ -877,7 +877,7 @@ def test_arista_enable_password_post_processing() -> None:
     diff_patch_1 = ""
     diff_patch_2 = "enable password new-password"
 
-    parser = CTreeParser(vendor=Vendor.ARISTA)
+    parser = CTreeParser(platform=Platform.ARISTA_EOS)
 
     current = parser.parse(current_config)
     target_1 = parser.parse(target_config_1)

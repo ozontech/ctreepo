@@ -1,6 +1,6 @@
 from textwrap import dedent
 
-from ctreepo import CTreeDiffer, CTreeParser, CTreeSearcher, Vendor
+from ctreepo import CTreeDiffer, CTreeParser, CTreeSearcher, Platform
 from ctreepo.parser import TaggingRulesDict
 
 
@@ -12,29 +12,29 @@ def test_huawei_bridge_domain_pre_tag_case_1() -> None:
          statistics enable
          vlan 100 access-port interface Eth-Trunk1
         #
-        """
+        """,
     )
     target_config = dedent(
         """
         bridge-domain 100
          statistics enable
         #
-        """
+        """,
     )
     pre_patch = dedent(
         """
         bridge-domain 100
         undo vlan 100 access-port interface Eth-Trunk1
         quit
-        """
+        """,
     ).strip()
     bd_patch = ""
 
-    tagging_rules_dict: dict[Vendor, list[dict[str, str | list[str]]]] = {
-        Vendor.HUAWEI: [{"regex": r"^bridge-domain \d+$", "tags": ["bd"]}]
+    tagging_rules_dict: dict[Platform, list[dict[str, str | list[str]]]] = {
+        Platform.HUAWEI_VRP: [{"regex": r"^bridge-domain \d+$", "tags": ["bd"]}],
     }
     tagging_rules = TaggingRulesDict(tagging_rules_dict)
-    parser = CTreeParser(Vendor.HUAWEI, tagging_rules=tagging_rules)
+    parser = CTreeParser(Platform.HUAWEI_VRP, tagging_rules=tagging_rules)
     current = parser.parse(current_config)
     target = parser.parse(target_config)
     diff = CTreeDiffer.diff(current, target)
@@ -54,7 +54,7 @@ def test_huawei_bridge_domain_pre_tag_case_2() -> None:
          statistics enable
          vlan 100 access-port interface Eth-Trunk1
         #
-        """
+        """,
     )
     target_config = dedent(
         """
@@ -62,28 +62,28 @@ def test_huawei_bridge_domain_pre_tag_case_2() -> None:
          statistics enable
          vlan 100 access-port interface Eth-Trunk2
         #
-        """
+        """,
     )
     pre_patch = dedent(
         """
         bridge-domain 100
         undo vlan 100 access-port interface Eth-Trunk1
         quit
-        """
+        """,
     ).strip()
     bd_patch = dedent(
         """
         bridge-domain 100
         vlan 100 access-port interface Eth-Trunk2
         quit
-        """
+        """,
     ).strip()
 
-    tagging_rules_dict: dict[Vendor, list[dict[str, str | list[str]]]] = {
-        Vendor.HUAWEI: [{"regex": r"^bridge-domain \d+$", "tags": ["bd"]}]
+    tagging_rules_dict: dict[Platform, list[dict[str, str | list[str]]]] = {
+        Platform.HUAWEI_VRP: [{"regex": r"^bridge-domain \d+$", "tags": ["bd"]}],
     }
     tagging_rules = TaggingRulesDict(tagging_rules_dict)
-    parser = CTreeParser(Vendor.HUAWEI, tagging_rules=tagging_rules)
+    parser = CTreeParser(Platform.HUAWEI_VRP, tagging_rules=tagging_rules)
     current = parser.parse(current_config)
     target = parser.parse(target_config)
     diff = CTreeDiffer.diff(current, target)

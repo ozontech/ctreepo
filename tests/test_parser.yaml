@@ -1,5 +1,5 @@
 tagging-rules:
-  huawei:
+  huawei_vrp:
     - regex: ^ip vpn-instance (\S+)$
       tags:
         - vpn
@@ -20,7 +20,7 @@ tagging-rules:
     - regex: ^ip vpn-instance (LAN) .* route-distinguisher (\S+)
       tags:
         - rd
-  arista:
+  arista_eos:
     - regex: ^interface (\S+)$
       tags:
         - interface

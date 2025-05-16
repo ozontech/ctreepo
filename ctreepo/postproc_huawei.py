@@ -2,7 +2,7 @@ import re
 from typing import Iterator
 
 from .ctree import CTree
-from .models import Vendor
+from .models import Platform
 from .postproc import CTreePostProc, register_rule
 
 __all__ = (
@@ -63,7 +63,7 @@ def _expand_bd_interfaces(line: str) -> Iterator[str]:
         yield prefix + str(num)
 
 
-@register_rule(Vendor.HUAWEI)
+@register_rule(Platform.HUAWEI_VRP)
 class DeleteNoValue(CTreePostProc):
     @classmethod
     def _process(cls, ct: CTree) -> set[CTree]:
@@ -97,7 +97,7 @@ class DeleteNoValue(CTreePostProc):
             node.delete()
 
 
-@register_rule(Vendor.HUAWEI)
+@register_rule(Platform.HUAWEI_VRP)
 class HuaweiPostProcAAA(CTreePostProc):
     @classmethod
     def process(cls, ct: CTree) -> None:
@@ -177,7 +177,7 @@ class HuaweiPostProcAAA(CTreePostProc):
             aaa.delete()
 
 
-@register_rule(Vendor.HUAWEI)
+@register_rule(Platform.HUAWEI_VRP)
 class HuaweiPostProcBGP(CTreePostProc):
     @classmethod
     def _process_af(cls, ct: CTree) -> None:
@@ -207,7 +207,7 @@ class HuaweiPostProcBGP(CTreePostProc):
 
 
 #!должно быть выше интерфейсов
-@register_rule(Vendor.HUAWEI)
+@register_rule(Platform.HUAWEI_VRP)
 class HuaweiPostProcBridgeDomain(CTreePostProc):
     @classmethod
     def _process_bd(cls, ct: CTree) -> None:
@@ -257,7 +257,7 @@ class HuaweiPostProcBridgeDomain(CTreePostProc):
             cls._process_bd(child)
 
 
-@register_rule(Vendor.HUAWEI)
+@register_rule(Platform.HUAWEI_VRP)
 class HuaweiPostProcInterfaceChangeLinkType(CTreePostProc):
     @classmethod
     def _undo_link_type(cls, ct: CTree, link_type: str) -> None:
@@ -328,7 +328,7 @@ class HuaweiPostProcInterfaceChangeLinkType(CTreePostProc):
                 cls._reorder(node)
 
 
-@register_rule(Vendor.HUAWEI)
+@register_rule(Platform.HUAWEI_VRP)
 class HuaweiPostProcInterfaceUnrangeVlans(CTreePostProc):
     @classmethod
     def _process(cls, ct: CTree) -> None:
@@ -370,7 +370,7 @@ class HuaweiPostProcInterfaceUnrangeVlans(CTreePostProc):
                 cls._process(node)
 
 
-@register_rule(Vendor.HUAWEI)
+@register_rule(Platform.HUAWEI_VRP)
 class HuaweiPostProcInterfaceQoSdrr(CTreePostProc):
     @classmethod
     def _process(cls, ct: CTree) -> None:
@@ -391,7 +391,7 @@ class HuaweiPostProcInterfaceQoSdrr(CTreePostProc):
                 cls._process(node)
 
 
-@register_rule(Vendor.HUAWEI)
+@register_rule(Platform.HUAWEI_VRP)
 class HuaweiPostProcInterface(CTreePostProc):
     @classmethod
     def _process_interface(cls, ct: CTree) -> None:
@@ -464,7 +464,7 @@ class HuaweiPostProcInterface(CTreePostProc):
                     node.line: node
                     for node in ct.children.values()
                     if not node.line.startswith("undo ") and not node.line.endswith("portswitch")
-                }
+                },
             )
             ct.children = new_order
 
@@ -485,7 +485,7 @@ class HuaweiPostProcInterface(CTreePostProc):
                     main_if.move_after(node)
 
 
-@register_rule(Vendor.HUAWEI)
+@register_rule(Platform.HUAWEI_VRP)
 class HuaweiPostProcPrefixList(CTreePostProc):
     @classmethod
     def process(cls, ct: CTree) -> None:
@@ -509,7 +509,7 @@ class HuaweiPostProcPrefixList(CTreePostProc):
         ct.rebuild()
 
 
-@register_rule(Vendor.HUAWEI)
+@register_rule(Platform.HUAWEI_VRP)
 class HuaweiPostProcRoutePolicy(CTreePostProc):
     @classmethod
     def process(cls, ct: CTree) -> None:
@@ -520,7 +520,7 @@ class HuaweiPostProcRoutePolicy(CTreePostProc):
         ct.rebuild()
 
 
-@register_rule(Vendor.HUAWEI)
+@register_rule(Platform.HUAWEI_VRP)
 class HuaweiPostProcRadius(CTreePostProc):
     @classmethod
     def _process_radius_section(cls, radius: CTree) -> None:
@@ -553,7 +553,7 @@ class HuaweiPostProcRadius(CTreePostProc):
             cls._process_radius_section(section)
 
 
-@register_rule(Vendor.HUAWEI)
+@register_rule(Platform.HUAWEI_VRP)
 class HuaweiPostProcTacacs(CTreePostProc):
     @classmethod
     def process(cls, ct: CTree) -> None:
@@ -582,7 +582,7 @@ class HuaweiPostProcTacacs(CTreePostProc):
             elif not node.line.startswith("undo ") and " shared-key cipher " in node.line:
                 lines_to_delete.append(f"undo {node.line}")
         nodes_to_delete.update(
-            [node for node in tacacs.children.values() if node.line.startswith(tuple(lines_to_delete))]
+            [node for node in tacacs.children.values() if node.line.startswith(tuple(lines_to_delete))],
         )
         for node in nodes_to_delete:
             node.delete()
@@ -597,7 +597,7 @@ class HuaweiPostProcTacacs(CTreePostProc):
             if node.line.startswith("undo ") and " shared-key cipher " in node.line:
                 lines_to_delete.append(" ".join(node.line.split()[:-2]))
         nodes_to_delete.update(
-            [node for node in tacacs.children.values() if node.line.startswith(tuple(lines_to_delete))]
+            [node for node in tacacs.children.values() if node.line.startswith(tuple(lines_to_delete))],
         )
         for node in nodes_to_delete:
             node.delete()
@@ -606,7 +606,7 @@ class HuaweiPostProcTacacs(CTreePostProc):
             tacacs.delete()
 
 
-@register_rule(Vendor.HUAWEI)
+@register_rule(Platform.HUAWEI_VRP)
 class HuaweiPostProcSNMP(CTreePostProc):
     @classmethod
     def process(cls, ct: CTree) -> None:
@@ -624,7 +624,7 @@ class HuaweiPostProcSNMP(CTreePostProc):
                         n
                         for n in ct.children.values()
                         if n.line.startswith(f"undo {prefix}") and n.line.endswith(postfix)
-                    ]
+                    ],
                 )
             elif node.line.startswith("snmp-agent community ") and node.line.endswith("cipher"):
                 nodes_to_delete.add(node)
@@ -633,7 +633,7 @@ class HuaweiPostProcSNMP(CTreePostProc):
                         n
                         for n in ct.children.values()
                         if n.line.startswith(f"undo {node.line}") and len(n.line.split()) == 6
-                    ]
+                    ],
                 )
             # если удаляем community, тогда в начало это переносим, иначе могут быть конфликты
             elif node.line.startswith("undo snmp-agent community "):

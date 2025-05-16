@@ -2,7 +2,7 @@ from typing import Any
 
 from .ctree import CTree
 from .factory import ctree_class
-from .models import Vendor
+from .models import Platform
 
 __all__ = ("CTreeSerializer",)
 
@@ -22,8 +22,8 @@ class CTreeSerializer:
         return result | {"children": children}
 
     @classmethod
-    def from_dict(cls, vendor: Vendor, data: dict[str, Any], parent: CTree | None = None) -> CTree:
-        _ct_class = ctree_class(vendor)
+    def from_dict(cls, platform: Platform, data: dict[str, Any], parent: CTree | None = None) -> CTree:
+        _ct_class = ctree_class(platform)
         node = _ct_class(
             line=data.get("line", ""),
             tags=data.get("tags", []),
@@ -32,5 +32,5 @@ class CTreeSerializer:
         )
         node.undo_line = data.get("undo_line", "")
         for child in data.get("children", {}).values():
-            cls.from_dict(vendor, child, node)
+            cls.from_dict(platform, child, node)
         return node

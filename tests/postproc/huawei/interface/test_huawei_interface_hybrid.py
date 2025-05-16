@@ -1,6 +1,6 @@
 from textwrap import dedent
 
-from ctreepo import CTreeDiffer, CTreeParser, Vendor
+from ctreepo import CTreeDiffer, CTreeParser, Platform
 
 
 def test_huawei_interface_hybrid_change_vlan() -> None:
@@ -22,7 +22,7 @@ def test_huawei_interface_hybrid_change_vlan() -> None:
         interface Eth-Trunk5
          port hybrid tagged vlan 10 to 15
         #
-        """
+        """,
     ).strip()
     target_config = dedent(
         """
@@ -41,7 +41,7 @@ def test_huawei_interface_hybrid_change_vlan() -> None:
         interface Eth-Trunk5
          port hybrid tagged vlan 10 to 15 20
         #
-        """
+        """,
     ).strip()
     diff_config_raw = dedent(
         """
@@ -65,7 +65,7 @@ def test_huawei_interface_hybrid_change_vlan() -> None:
          undo port hybrid tagged vlan 10 to 15
          port hybrid tagged vlan 10 to 15 20
         #
-        """
+        """,
     ).strip()
     diff_config = dedent(
         """
@@ -88,10 +88,10 @@ def test_huawei_interface_hybrid_change_vlan() -> None:
         interface Eth-Trunk5
          port hybrid tagged vlan 10 to 15 20
         #
-        """
+        """,
     ).strip()
 
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
 
     current = parser.parse(current_config)
     target = parser.parse(target_config)

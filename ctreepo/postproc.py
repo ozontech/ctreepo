@@ -2,7 +2,7 @@ import abc
 from typing import Any, Callable
 
 from .ctree import CTree
-from .models import Vendor
+from .models import Platform
 
 __all__ = (
     "register_rule",
@@ -18,13 +18,13 @@ class CTreePostProc(abc.ABC):
         """Пост-обработка конфигурации, например изменение, добавление, удаление команд."""
 
 
-_REGISTRY: dict[Vendor, list[type[CTreePostProc]]] = {vendor: [] for vendor in Vendor}
+_REGISTRY: dict[Platform, list[type[CTreePostProc]]] = {platform: [] for platform in Platform}
 
 
-def register_rule(vendor: Vendor) -> Callable[[type[CTreePostProc]], Any]:
+def register_rule(platform: Platform) -> Callable[[type[CTreePostProc]], Any]:
     def wrapper(cls: type[CTreePostProc]) -> type[CTreePostProc]:
-        if vendor in _REGISTRY and cls not in _REGISTRY[vendor]:
-            _REGISTRY[vendor].append(cls)
+        if platform in _REGISTRY and cls not in _REGISTRY[platform]:
+            _REGISTRY[platform].append(cls)
         return cls
 
     return wrapper

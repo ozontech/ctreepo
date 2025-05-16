@@ -2,7 +2,7 @@ from textwrap import dedent
 
 import pytest
 
-from ctreepo import CTreeDiffer, CTreeParser, Vendor
+from ctreepo import CTreeDiffer, CTreeParser, Platform
 
 
 @pytest.mark.parametrize(
@@ -14,14 +14,14 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor
                 snmp-agent
                 snmp-agent sys-info version v2c v3
                 snmp-agent community read public12345 mib-view device42 acl 1234
-                """
+                """,
             ),
             dedent(
                 """
                 snmp-agent
                 snmp-agent sys-info version v2c v3
                 snmp-agent community read <<no-value>> mib-view device42 acl 1234
-                """
+                """,
             ),
             "",
         ),
@@ -32,20 +32,20 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor
                 snmp-agent sys-info version v2c v3
                 snmp-agent community read public12345 mib-view device42 acl 1234
                 snmp-agent community read 12345public mib-view device42 acl 5432
-                """
+                """,
             ),
             dedent(
                 """
                 snmp-agent
                 snmp-agent sys-info version v2c v3
                 snmp-agent community read <<no-value>> mib-view device42 acl 1234
-                """
+                """,
             ),
             dedent(
                 """
                 undo snmp-agent community read 12345public mib-view device42 acl 5432
                 #
-                """
+                """,
             ).strip(),
         ),
         (
@@ -54,14 +54,14 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor
                 hwtacacs-server template tacacs-group
                  hwtacacs-server shared-key cipher tacacs-password
                  hwtacacs-server timer response-timeout 4
-                """
+                """,
             ),
             dedent(
                 """
                 hwtacacs-server template tacacs-group
                  hwtacacs-server shared-key cipher <<no-value>>
                  hwtacacs-server timer response-timeout 5
-                """
+                """,
             ),
             dedent(
                 """
@@ -69,7 +69,7 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor
                  undo hwtacacs-server timer response-timeout 4
                  hwtacacs-server timer response-timeout 5
                 #
-                """
+                """,
             ).strip(),
         ),
         (
@@ -78,14 +78,14 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor
                 hwtacacs-server template tacacs-group
                  hwtacacs-server shared-key cipher tacacs-password
                  hwtacacs-server timer response-timeout 4
-                """
+                """,
             ),
             dedent(
                 """
                 hwtacacs-server template tacacs-group
                  hwtacacs-server shared-key cipher <<no-value>>
                  hwtacacs-server timer response-timeout 4
-                """
+                """,
             ),
             "",
         ),
@@ -101,7 +101,7 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor
                 hwtacacs-server template tacacs-group
                  hwtacacs-server shared-key cipher tacacs-password
                  hwtacacs-server timer response-timeout 4
-                """
+                """,
             ),
             dedent(
                 """
@@ -114,7 +114,7 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor
                 hwtacacs-server template tacacs-group
                  hwtacacs-server shared-key cipher <<no-value>>
                  hwtacacs-server timer response-timeout 4
-                """
+                """,
             ),
             "",
         ),
@@ -130,7 +130,7 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor
                 hwtacacs-server template tacacs-group
                  hwtacacs-server shared-key cipher tacacs-password
                  hwtacacs-server timer response-timeout 4
-                """
+                """,
             ),
             dedent(
                 """
@@ -143,19 +143,19 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor
                 hwtacacs-server template tacacs-group
                  hwtacacs-server shared-key cipher <<no-value>>
                  hwtacacs-server timer response-timeout 4
-                """
+                """,
             ),
             dedent(
                 """
                 undo snmp-agent community read public12345 mib-view device42 acl 1234
                 #
-                """
+                """,
             ).strip(),
         ),
     ],
 )
 def test_huawei_no_value_case_1(current_config: str, target_config: str, diff_config: str) -> None:
-    parser = CTreeParser(vendor=Vendor.HUAWEI)
+    parser = CTreeParser(platform=Platform.HUAWEI_VRP)
 
     current = parser.parse(current_config)
     target = parser.parse(target_config)

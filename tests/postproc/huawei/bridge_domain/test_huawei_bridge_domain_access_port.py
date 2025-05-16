@@ -1,6 +1,6 @@
 from textwrap import dedent
 
-from ctreepo import CTreeDiffer, CTreeParser, Vendor
+from ctreepo import CTreeDiffer, CTreeParser, Platform
 
 
 def test_huawei_bridge_domain_access_port() -> None:
@@ -14,7 +14,7 @@ def test_huawei_bridge_domain_access_port() -> None:
          vlan 100 access-port interface 10GE1/0/44
          vlan 100 access-port interface 10GE1/0/46 to 10GE1/0/48
         #
-        """
+        """,
     )
     target_config = dedent(
         """
@@ -27,7 +27,7 @@ def test_huawei_bridge_domain_access_port() -> None:
         bridge-domain test
          statistics enable
         #
-        """
+        """,
     )
     diff_config = dedent(
         """
@@ -40,9 +40,9 @@ def test_huawei_bridge_domain_access_port() -> None:
         bridge-domain test
          statistics enable
         #
-        """
+        """,
     ).strip()
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
     current = parser.parse(current_config)
     target = parser.parse(target_config)
     diff = CTreeDiffer.diff(current, target)

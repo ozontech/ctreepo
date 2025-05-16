@@ -1,5 +1,5 @@
 tagging-rules:
-  huawei:
+  huawei_vrp:
     - regex: ^interface (LoopBack\d+)$
       tags:
         - interface

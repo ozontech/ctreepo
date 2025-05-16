@@ -1,6 +1,6 @@
 from textwrap import dedent
 
-from ctreepo import CTreeDiffer, CTreeParser, Vendor
+from ctreepo import CTreeDiffer, CTreeParser, Platform
 
 
 def test_huawei_aaa_radius_case_1() -> None:
@@ -11,7 +11,7 @@ def test_huawei_aaa_radius_case_1() -> None:
          radius-server shared-key cipher some-secret-hash-old
          radius-server accounting 1.2.3.4 1813 source Vlanif 123 weight 123
         #
-        """
+        """,
     )
     target_config = dedent(
         """
@@ -19,23 +19,23 @@ def test_huawei_aaa_radius_case_1() -> None:
          radius-server shared-key cipher some-secret-hash-new
          radius-server accounting 1.2.3.4 1813 source Vlanif 123 weight 123
         #
-        """
+        """,
     )
     diff_config = dedent(
         """
         radius-server template my-radius-template
          radius-server shared-key cipher some-secret-hash-new
         #
-        """
+        """,
     ).strip()
     mask = dedent(
         """
         radius-server template \\S+
          radius-server shared-key cipher (?P<HASH>\\S+)
         #
-        """
+        """,
     )
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
     template = parser.parse(mask)
     current = parser.parse(current_config, template)
     target = parser.parse(target_config, template)
@@ -51,7 +51,7 @@ def test_huawei_aaa_radius_case_2() -> None:
          radius-server shared-key cipher some-secret-hash-old
          radius-server accounting 1.2.3.4 1813 source Vlanif 123 weight 123
         #
-        """
+        """,
     )
     target_config = dedent(
         """
@@ -59,7 +59,7 @@ def test_huawei_aaa_radius_case_2() -> None:
          radius-server shared-key cipher some-secret-hash-new
          radius-server accounting 1.2.3.4 1813 source Vlanif 123 weight 123
         #
-        """
+        """,
     )
     diff_config = dedent(
         """
@@ -67,10 +67,10 @@ def test_huawei_aaa_radius_case_2() -> None:
          undo radius-server shared-key
          radius-server shared-key cipher some-secret-hash-new
         #
-        """
+        """,
     ).strip()
 
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
     current = parser.parse(current_config)
     target = parser.parse(target_config)
     diff = CTreeDiffer.diff(current, target)
@@ -85,24 +85,24 @@ def test_huawei_aaa_radius_case_3() -> None:
          radius-server shared-key cipher some-secret-hash-old
          radius-server accounting 1.2.3.4 1813 source Vlanif 123 weight 123
         #
-        """
+        """,
     )
     target_config = dedent(
         """
         radius-server template my-radius-template
          radius-server accounting 1.2.3.4 1813 source Vlanif 123 weight 123
         #
-        """
+        """,
     )
     diff_config = dedent(
         """
         radius-server template my-radius-template
          undo radius-server shared-key
         #
-        """
+        """,
     ).strip()
 
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
     current = parser.parse(current_config)
     target = parser.parse(target_config)
     diff = CTreeDiffer.diff(current, target)
@@ -117,7 +117,7 @@ def test_huawei_aaa_radius_case_4() -> None:
          radius-server shared-key cipher some-secret-hash-old
          radius-server accounting 1.2.3.4 1813 source Vlanif 123 weight 123
         #
-        """
+        """,
     )
     target_config = dedent(
         """
@@ -125,11 +125,11 @@ def test_huawei_aaa_radius_case_4() -> None:
          radius-server shared-key cipher
          radius-server accounting 1.2.3.4 1813 source Vlanif 123 weight 123
         #
-        """
+        """,
     )
     diff_config = ""
 
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
     current = parser.parse(current_config)
     target = parser.parse(target_config)
     diff = CTreeDiffer.diff(current, target)

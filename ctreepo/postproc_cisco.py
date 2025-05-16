@@ -1,11 +1,11 @@
 from .ctree import CTree
-from .models import Vendor
+from .models import Platform
 from .postproc import CTreePostProc, register_rule
 
 __all__ = ("CiscoPostProcBGP",)
 
 
-@register_rule(Vendor.CISCO)
+@register_rule(Platform.CISCO_IOSXE)
 class CiscoPostProcBGP(CTreePostProc):
     @classmethod
     def _delete_nodes(cls, ct: CTree, lines_to_delete: set[str]) -> None:

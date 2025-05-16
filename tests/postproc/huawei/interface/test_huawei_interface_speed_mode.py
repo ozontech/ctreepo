@@ -1,6 +1,6 @@
 from textwrap import dedent
 
-from ctreepo import CTreeDiffer, CTreeParser, CTreeSearcher, Vendor
+from ctreepo import CTreeDiffer, CTreeParser, CTreeSearcher, Platform
 
 
 def test_huawei_interface_speed_mode_case_1() -> None:
@@ -10,7 +10,7 @@ def test_huawei_interface_speed_mode_case_1() -> None:
          description interface under test
          mtu 9198
         #
-        """
+        """,
     )
     target_config = dedent(
         """
@@ -19,7 +19,7 @@ def test_huawei_interface_speed_mode_case_1() -> None:
          port mode 10G
          mtu 9198
         #
-        """
+        """,
     )
     diff_raw = dedent(
         """
@@ -28,7 +28,7 @@ def test_huawei_interface_speed_mode_case_1() -> None:
          description new
          port mode 10G
         #
-        """
+        """,
     ).strip()
     diff_processed = dedent(
         """
@@ -39,10 +39,10 @@ def test_huawei_interface_speed_mode_case_1() -> None:
          port mode 10G
          undo shutdown
         #
-        """
+        """,
     ).strip()
 
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
     current = parser.parse(current_config)
     target = parser.parse(target_config)
     diff = CTreeDiffer.diff(current, target, post_proc_rules=[])
@@ -60,7 +60,7 @@ def test_huawei_interface_speed_mode_case_2() -> None:
          mtu 9198
          port mode 10G
         #
-        """
+        """,
     )
     target_config = dedent(
         """
@@ -68,14 +68,14 @@ def test_huawei_interface_speed_mode_case_2() -> None:
          description interface under test
          mtu 9198
         #
-        """
+        """,
     )
     diff_raw = dedent(
         """
         interface 25GE1/0/1
          undo port mode 10G
         #
-        """
+        """,
     ).strip()
     diff_processed = dedent(
         """
@@ -84,10 +84,10 @@ def test_huawei_interface_speed_mode_case_2() -> None:
          undo port mode 10G
          undo shutdown
         #
-        """
+        """,
     ).strip()
 
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
     current = parser.parse(current_config)
     target = parser.parse(target_config)
     diff = CTreeDiffer.diff(current, target, post_proc_rules=[])
@@ -105,7 +105,7 @@ def test_huawei_interface_speed_mode_case_3() -> None:
          mtu 9198
          port mode 10G
         #
-        """
+        """,
     )
     target_config = dedent(
         """
@@ -114,7 +114,7 @@ def test_huawei_interface_speed_mode_case_3() -> None:
          mtu 9198
          port mode GE
         #
-        """
+        """,
     )
     diff_raw = dedent(
         """
@@ -122,7 +122,7 @@ def test_huawei_interface_speed_mode_case_3() -> None:
          undo port mode 10G
          port mode GE
         #
-        """
+        """,
     ).strip()
     diff_processed = dedent(
         """
@@ -132,10 +132,10 @@ def test_huawei_interface_speed_mode_case_3() -> None:
          port mode GE
          undo shutdown
         #
-        """
+        """,
     ).strip()
 
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
     current = parser.parse(current_config)
     target = parser.parse(target_config)
     diff = CTreeDiffer.diff(current, target, post_proc_rules=[])
@@ -158,7 +158,7 @@ def test_huawei_interface_speed_mode_case_4() -> None:
          mtu 9198
          port mode 10G
         #
-        """
+        """,
     )
     target_config = dedent(
         """
@@ -170,7 +170,7 @@ def test_huawei_interface_speed_mode_case_4() -> None:
          description changed description
          mtu 9198
         #
-        """
+        """,
     )
     diff_raw = dedent(
         """
@@ -182,7 +182,7 @@ def test_huawei_interface_speed_mode_case_4() -> None:
          undo port mode 10G
          description changed description
         #
-        """
+        """,
     ).strip()
     patch_full = dedent(
         """
@@ -198,7 +198,7 @@ def test_huawei_interface_speed_mode_case_4() -> None:
         description changed description
         undo shutdown
         quit
-        """
+        """,
     ).strip()
     pre_patch = dedent(
         """
@@ -208,7 +208,7 @@ def test_huawei_interface_speed_mode_case_4() -> None:
         interface 25GE1/0/2
         shutdown
         quit
-        """
+        """,
     ).strip()
     main_patch = dedent(
         """
@@ -220,7 +220,7 @@ def test_huawei_interface_speed_mode_case_4() -> None:
         undo port mode 10G
         description changed description
         quit
-        """
+        """,
     ).strip()
     main_wo_skip_patch = dedent(
         """
@@ -228,11 +228,11 @@ def test_huawei_interface_speed_mode_case_4() -> None:
         undo description interface under test
         description changed description
         quit
-        """
+        """,
     ).strip()
 
     pre_wo_skip_patch = ""
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
     current = parser.parse(current_config)
     target = parser.parse(target_config)
     diff = CTreeDiffer.diff(current, target, post_proc_rules=[])

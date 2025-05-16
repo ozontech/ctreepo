@@ -1,6 +1,6 @@
 from textwrap import dedent
 
-from ctreepo import CTreeDiffer, CTreeParser, Vendor
+from ctreepo import CTreeDiffer, CTreeParser, Platform
 
 
 def test_huawei_aaa_basic() -> None:
@@ -13,7 +13,7 @@ def test_huawei_aaa_basic() -> None:
         aaa
          authorization-scheme scheme-name
           authorization-mode local if-authenticated
-        """
+        """,
     )
     target_config = dedent(
         """
@@ -36,7 +36,7 @@ def test_huawei_aaa_basic() -> None:
           hwtacacs server group-name
          domain local
           authentication-scheme local
-        """
+        """,
     ).strip()
     diff_config = dedent(
         """
@@ -58,7 +58,7 @@ def test_huawei_aaa_basic() -> None:
          domain local
           authentication-scheme local
         #
-        """
+        """,
     ).strip()
     diff_patch = dedent(
         """
@@ -89,10 +89,10 @@ def test_huawei_aaa_basic() -> None:
         authentication-scheme local
         quit
         quit
-        """
+        """,
     ).strip()
 
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
     current = parser.parse(current_config)
     target = parser.parse(target_config)
     diff = CTreeDiffer.diff(current, target)

@@ -1,6 +1,6 @@
 [project]
 name = "ctreepo"
-version = "0.3.28"
+version = "0.4.0"
 description = "CTreePO - configuration tree patch overview - Parsing, filtering and diff calculation for network device configurations"
 authors = [{ name = "Alexander Ignatov", email = "alexigna@ozon.ru" }]
 license = "Apache-2.0"
@@ -18,12 +18,12 @@ dependencies = ["pyyaml (>=6.0)"]
 
 
 [tool.poetry.group.dev.dependencies]
-black = "^24.10.0"
-ruff = "^0.8.0"
-mypy = "^1.13.0"
-pytest = "^8.3.3"
-pytest-cov = "^6.0.0"
-types-pyyaml = "^6.0.12.20240917"
+black = ">=24.10"
+ruff = ">=0.8"
+mypy = ">=1.13"
+pytest = ">=8.3"
+pytest-cov = ">=6.0"
+types-pyyaml = ">=6.0"
 
 
 [build-system]

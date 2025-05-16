@@ -1,6 +1,6 @@
 from textwrap import dedent
 
-from ctreepo import CTreeDiffer, CTreeParser, Vendor
+from ctreepo import CTreeDiffer, CTreeParser, Platform
 
 
 def test_huawei_interface_lag_members_case_1() -> None:
@@ -17,7 +17,7 @@ def test_huawei_interface_lag_members_case_1() -> None:
         interface GigabitEthernet0/0/1.200
          description sub-eth-interface-200
         #
-        """
+        """,
     ).strip()
     target_config = dedent(
         """
@@ -27,7 +27,7 @@ def test_huawei_interface_lag_members_case_1() -> None:
          description eth-interface
          eth-trunk 1
         #
-        """
+        """,
     ).strip()
     diff_config = dedent(
         """
@@ -41,7 +41,7 @@ def test_huawei_interface_lag_members_case_1() -> None:
         interface GigabitEthernet0/0/1
          eth-trunk 1
         #
-        """
+        """,
     ).strip()
     diff_config_raw = dedent(
         """
@@ -55,10 +55,10 @@ def test_huawei_interface_lag_members_case_1() -> None:
         #
         undo interface GigabitEthernet0/0/1.200
         #
-        """
+        """,
     ).strip()
 
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
 
     current = parser.parse(current_config)
     target = parser.parse(target_config)
@@ -79,7 +79,7 @@ def test_huawei_interface_lag_members_case_2() -> None:
          undo portswitch
          mtu 9198
         #
-        """
+        """,
     )
     target_config = dedent(
         """
@@ -87,7 +87,7 @@ def test_huawei_interface_lag_members_case_2() -> None:
          description interface under test
          eth-trunk 1
         #
-        """
+        """,
     )
     diff_raw = dedent(
         """
@@ -96,7 +96,7 @@ def test_huawei_interface_lag_members_case_2() -> None:
          undo mtu 9198
          eth-trunk 1
         #
-        """
+        """,
     ).strip()
     diff_processed = dedent(
         """
@@ -105,10 +105,10 @@ def test_huawei_interface_lag_members_case_2() -> None:
          portswitch
          eth-trunk 1
         #
-        """
+        """,
     ).strip()
 
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
     current = parser.parse(current_config)
     target = parser.parse(target_config)
     diff = CTreeDiffer.diff(current, target, post_proc_rules=[])
@@ -126,14 +126,14 @@ def test_huawei_interface_lag_tags() -> None:
          eth-trunk 1
          storm suppression multicast packets 1
         #
-        """
+        """,
     ).strip()
     target_config = dedent(
         """
         interface GigabitEthernet0/0/1
          description test
         #
-        """
+        """,
     ).strip()
     diff_config = dedent(
         """
@@ -142,10 +142,10 @@ def test_huawei_interface_lag_tags() -> None:
          undo storm suppression multicast packets 1
          description test
         #
-        """
+        """,
     ).strip()
 
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
 
     current = parser.parse(current_config)
     target = parser.parse(target_config)

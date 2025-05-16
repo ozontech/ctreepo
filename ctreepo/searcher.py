@@ -80,7 +80,7 @@ class CTreeSearcher:
                         include_mode=include_mode,
                         exclude_tags=exclude_tags,
                         include_children=include_children,
-                    )
+                    ),
                 )
 
         return result

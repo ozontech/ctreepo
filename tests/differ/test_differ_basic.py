@@ -1,6 +1,6 @@
 from textwrap import dedent
 
-from ctreepo import CTreeDiffer, CTreeParser, Vendor
+from ctreepo import CTreeDiffer, CTreeParser, Platform
 
 current_config = dedent(
     """
@@ -34,7 +34,7 @@ current_config = dedent(
      bridge-domain 1234
      statistics enable
     #
-    """
+    """,
 ).strip()
 target_config = dedent(
     """
@@ -55,7 +55,7 @@ target_config = dedent(
      bridge-domain 1234
      statistics enable
     #
-    """
+    """,
 ).strip()
 
 
@@ -69,7 +69,7 @@ def test_differ_wo_rules() -> None:
         #
         undo interface 25GE1/0/1.1234 mode l2
         #
-        """
+        """,
     ).strip()
     diff_patch = dedent(
         """
@@ -78,9 +78,9 @@ def test_differ_wo_rules() -> None:
         quit
         undo interface 25GE1/0/1
         undo interface 25GE1/0/1.1234 mode l2
-        """
+        """,
     ).strip()
-    parser = CTreeParser(vendor=Vendor.HUAWEI)
+    parser = CTreeParser(platform=Platform.HUAWEI_VRP)
 
     current = parser.parse(current_config)
     target = parser.parse(target_config)
@@ -100,7 +100,7 @@ def test_differ_w_rules() -> None:
         #
         undo interface 25GE1/0/1
         #
-        """
+        """,
     ).strip()
     diff_patch = dedent(
         """
@@ -109,9 +109,9 @@ def test_differ_w_rules() -> None:
         quit
         undo interface 25GE1/0/1.1234 mode l2
         undo interface 25GE1/0/1
-        """
+        """,
     ).strip()
-    parser = CTreeParser(vendor=Vendor.HUAWEI)
+    parser = CTreeParser(platform=Platform.HUAWEI_VRP)
 
     current = parser.parse(current_config)
     target = parser.parse(target_config)
@@ -132,7 +132,7 @@ def test_double_undo() -> None:
          no keepalive
         interface Loopback1
          ip address 1.2.3.4 255.255.255.255
-        """
+        """,
     )
     target_config = dedent(
         """
@@ -140,7 +140,7 @@ def test_double_undo() -> None:
         no ip dhcp bootp ignore
         interface Loopback0
          ip address 1.2.3.4 255.255.255.255
-        """
+        """,
     )
     diff_config = dedent(
         """
@@ -155,9 +155,9 @@ def test_double_undo() -> None:
         !
         no interface Loopback1
         !
-        """
+        """,
     ).strip()
-    parser = CTreeParser(Vendor.CISCO)
+    parser = CTreeParser(Platform.CISCO_IOSXE)
     current = parser.parse(current_config)
     target = parser.parse(target_config)
     diff = CTreeDiffer.diff(current, target)
@@ -175,7 +175,7 @@ def test_rule_with_undo() -> None:
          rule 10 permit ip source 192.168.0.0 0.0.0.255
          rule 10 description mgmt-network
          rule 15 permit tcp destination-port range 1024 2048
-        """
+        """,
     )
     target_str = dedent(
         """
@@ -186,7 +186,7 @@ def test_rule_with_undo() -> None:
          rule 10 permit ip source 192.168.1.0 0.0.0.255
          rule 10 description old mgmt-network
          rule 15 permit tcp destination-port range 1024 2048
-        """
+        """,
     )
     template_str = dedent(
         r"""
@@ -197,7 +197,7 @@ def test_rule_with_undo() -> None:
         acl name \S+ \d+
          rule (\d+) description (?P<DESCRIPTION>.*)    UNDO>> undo rule \1 description
          rule (\d+) (?P<RULE>.*)                       UNDO>> undo rule \1
-        """
+        """,
     )
     diff_config_raw = dedent(
         """
@@ -214,7 +214,7 @@ def test_rule_with_undo() -> None:
          rule 10 permit ip source 192.168.1.0 0.0.0.255
          rule 10 description old mgmt-network
         #
-        """
+        """,
     ).strip()
     diff_config = dedent(
         """
@@ -227,9 +227,9 @@ def test_rule_with_undo() -> None:
          rule 10 permit ip source 192.168.1.0 0.0.0.255
          rule 10 description old mgmt-network
         #
-        """
+        """,
     ).strip()
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
 
     template = parser.parse(template_str)
     current = parser.parse(current_str, template)

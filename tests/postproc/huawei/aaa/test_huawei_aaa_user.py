@@ -1,6 +1,6 @@
 from textwrap import dedent
 
-from ctreepo import CTreeDiffer, CTreeParser, Vendor
+from ctreepo import CTreeDiffer, CTreeParser, Platform
 
 
 def test_huawei_aaa_user_case_1() -> None:
@@ -15,7 +15,7 @@ def test_huawei_aaa_user_case_1() -> None:
          local-user user2@default service-type terminal ssh
          local-user user2@default level 3
         #
-        """
+        """,
     ).strip()
     current_config = dedent(
         """
@@ -27,7 +27,7 @@ def test_huawei_aaa_user_case_1() -> None:
          local-user user2@default service-type terminal ssh
          local-user user2@default level 3
         #
-        """
+        """,
     ).strip()
     diff_config_raw = dedent(
         """
@@ -37,10 +37,10 @@ def test_huawei_aaa_user_case_1() -> None:
          local-user user1@default password irreversible-cipher
          local-user user2@default password irreversible-cipher
         #
-        """
+        """,
     ).strip()
     diff_config_processed = ""
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
     target = parser.parse(target_config)
     current = parser.parse(current_config)
     diff_raw = CTreeDiffer.diff(current, target, post_proc_rules=[])
@@ -62,7 +62,7 @@ def test_huawei_aaa_user_case_2() -> None:
          local-user user2@default service-type terminal ssh
          local-user user2@default level 3
         #
-        """
+        """,
     ).strip()
     current_config = dedent(
         """
@@ -74,7 +74,7 @@ def test_huawei_aaa_user_case_2() -> None:
          local-user user2@default service-type terminal ssh
          local-user user2@default level 3
         #
-        """
+        """,
     ).strip()
     diff_config_raw = dedent(
         """
@@ -84,16 +84,16 @@ def test_huawei_aaa_user_case_2() -> None:
          local-user user1@default password irreversible-cipher P@ssw0rd
          local-user user2@default password irreversible-cipher
         #
-        """
+        """,
     ).strip()
     diff_config_processed = dedent(
         """
         aaa
          local-user user1@default password irreversible-cipher P@ssw0rd
         #
-        """
+        """,
     ).strip()
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
     target = parser.parse(target_config)
     current = parser.parse(current_config)
     diff_raw = CTreeDiffer.diff(current, target, post_proc_rules=[])
@@ -115,7 +115,7 @@ def test_huawei_aaa_user_case_3() -> None:
          local-user user2@default service-type terminal ssh
          local-user user2@default level 3
         #
-        """
+        """,
     ).strip()
     current_config = dedent(
         """
@@ -130,7 +130,7 @@ def test_huawei_aaa_user_case_3() -> None:
          local-user user3@default service-type terminal ssh
          local-user user3@default level 3
         #
-        """
+        """,
     ).strip()
     diff_config_raw = dedent(
         """
@@ -143,7 +143,7 @@ def test_huawei_aaa_user_case_3() -> None:
          local-user user1@default password irreversible-cipher P@ssw0rd
          local-user user2@default password irreversible-cipher
         #
-        """
+        """,
     ).strip()
     diff_config_processed = dedent(
         """
@@ -151,10 +151,10 @@ def test_huawei_aaa_user_case_3() -> None:
          undo local-user user3@default
          local-user user1@default password irreversible-cipher P@ssw0rd
         #
-        """
+        """,
     ).strip()
 
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
     target = parser.parse(target_config)
     current = parser.parse(current_config)
     diff_raw = CTreeDiffer.diff(current, target, post_proc_rules=[])
@@ -179,7 +179,7 @@ def test_huawei_aaa_user_case_4() -> None:
          local-user user4@default service-type terminal ssh
          local-user user4@default level 3
         #
-        """
+        """,
     ).strip()
     current_config = dedent(
         """
@@ -194,7 +194,7 @@ def test_huawei_aaa_user_case_4() -> None:
          local-user user3@default service-type terminal ssh
          local-user user3@default level 3
         #
-        """
+        """,
     ).strip()
     diff_config_raw = dedent(
         """
@@ -210,7 +210,7 @@ def test_huawei_aaa_user_case_4() -> None:
          local-user user4@default service-type terminal ssh
          local-user user4@default level 3
         #
-        """
+        """,
     ).strip()
     diff_config_processed = dedent(
         """
@@ -221,10 +221,10 @@ def test_huawei_aaa_user_case_4() -> None:
          local-user user4@default service-type terminal ssh
          local-user user4@default level 3
         #
-        """
+        """,
     ).strip()
 
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
     target = parser.parse(target_config)
     current = parser.parse(current_config)
     diff_raw = CTreeDiffer.diff(current, target, post_proc_rules=[])
@@ -246,7 +246,7 @@ def test_huawei_aaa_user_case_5() -> None:
          local-user user2@default service-type terminal ssh
          local-user user2@default level 1
         #
-        """
+        """,
     ).strip()
     current_config = dedent(
         """
@@ -258,7 +258,7 @@ def test_huawei_aaa_user_case_5() -> None:
          local-user user2@default service-type terminal ssh
          local-user user2@default level 3
         #
-        """
+        """,
     ).strip()
     diff_config_raw = dedent(
         """
@@ -270,7 +270,7 @@ def test_huawei_aaa_user_case_5() -> None:
          local-user user2@default password irreversible-cipher
          local-user user2@default level 1
         #
-        """
+        """,
     ).strip()
     diff_config_processed = dedent(
         """
@@ -279,10 +279,10 @@ def test_huawei_aaa_user_case_5() -> None:
          local-user user1@default password irreversible-cipher P@ssw0rd
          local-user user2@default level 1
         #
-        """
+        """,
     ).strip()
 
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
     target = parser.parse(target_config)
     current = parser.parse(current_config)
     diff_raw = CTreeDiffer.diff(current, target, post_proc_rules=[])
@@ -310,7 +310,7 @@ def test_huawei_aaa_user_case_6() -> None:
          local-user user3@default service-type terminal ssh
          local-user user3@default level 1
         #
-        """
+        """,
     ).strip()
     current_config = dedent(
         """
@@ -322,7 +322,7 @@ def test_huawei_aaa_user_case_6() -> None:
          local-user user3@default service-type terminal ssh
          local-user user3@default level 3
         #
-        """
+        """,
     ).strip()
     diff_config_raw = dedent(
         """
@@ -337,7 +337,7 @@ def test_huawei_aaa_user_case_6() -> None:
          local-user user3@default password irreversible-cipher
          local-user user3@default level 1
         #
-        """
+        """,
     ).strip()
     diff_config_processed = dedent(
         """
@@ -346,10 +346,10 @@ def test_huawei_aaa_user_case_6() -> None:
          local-user user2@default password irreversible-cipher P@ssw0rd
          local-user user3@default level 1
         #
-        """
+        """,
     ).strip()
 
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
     target = parser.parse(target_config)
     current = parser.parse(current_config)
     diff_raw = CTreeDiffer.diff(current, target, post_proc_rules=[])

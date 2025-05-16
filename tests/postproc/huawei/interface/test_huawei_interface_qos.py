@@ -1,6 +1,6 @@
 from textwrap import dedent
 
-from ctreepo import CTreeDiffer, CTreeParser, Vendor
+from ctreepo import CTreeDiffer, CTreeParser, Platform
 
 
 def test_huawei_interface_qos_drr_delete() -> None:
@@ -22,7 +22,7 @@ def test_huawei_interface_qos_drr_delete() -> None:
          qos queue 4 drr weight 50
          qos queue 1 ecn
         #
-        """
+        """,
     ).strip()
     target_config = dedent(
         """
@@ -32,7 +32,7 @@ def test_huawei_interface_qos_drr_delete() -> None:
          mtu 9198
          description TEST-DESCRIPTION-2
         #
-        """
+        """,
     ).strip()
     diff_config = dedent(
         """
@@ -45,7 +45,7 @@ def test_huawei_interface_qos_drr_delete() -> None:
          undo qos queue 1 ecn
          description TEST-DESCRIPTION-2
         #
-        """
+        """,
     ).strip()
     diff_patch = dedent(
         """
@@ -58,9 +58,9 @@ def test_huawei_interface_qos_drr_delete() -> None:
         undo qos queue 1 ecn
         description TEST-DESCRIPTION-2
         quit
-        """
+        """,
     ).strip()
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
 
     current = parser.parse(current_config)
     target = parser.parse(target_config)

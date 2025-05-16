@@ -1,6 +1,6 @@
 from textwrap import dedent
 
-from ctreepo import CTreeDiffer, CTreeParser, Vendor
+from ctreepo import CTreeDiffer, CTreeParser, Platform
 
 
 def test_huawei_route_policy_delete() -> None:
@@ -55,7 +55,7 @@ def test_huawei_route_policy_delete() -> None:
         route-policy RP_NAME_3 permit node 5
          apply community community-list CL_NAME_2 additive
         #
-        """
+        """,
     ).strip()
     target_config = dedent(
         """
@@ -99,7 +99,7 @@ def test_huawei_route_policy_delete() -> None:
         route-policy RP_NAME_3 permit node 5
          apply community community-list CL_NAME_2 additive
         #
-        """
+        """,
     ).strip()
     diff_config = dedent(
         """
@@ -114,7 +114,7 @@ def test_huawei_route_policy_delete() -> None:
         #
         undo route-policy RP_NAME_2 node 20
         #
-        """
+        """,
     ).strip()
     diff_patch = dedent(
         """
@@ -126,9 +126,9 @@ def test_huawei_route_policy_delete() -> None:
         undo route-policy RP_NAME_1 node 20
         undo route-policy RP_NAME_2 node 10
         undo route-policy RP_NAME_2 node 20
-        """
+        """,
     ).strip()
-    parser = CTreeParser(vendor=Vendor.HUAWEI)
+    parser = CTreeParser(platform=Platform.HUAWEI_VRP)
 
     current = parser.parse(current_config)
     target = parser.parse(target_config)

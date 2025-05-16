@@ -2,7 +2,7 @@ from textwrap import dedent
 
 import pytest
 
-from ctreepo import CTreeDiffer, CTreeParser, Vendor
+from ctreepo import CTreeDiffer, CTreeParser, Platform
 
 
 @pytest.mark.parametrize(
@@ -20,7 +20,7 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor
                  port trunk allow-pass vlan 2 to 99 101 to 199 201 to 299
                  stp edged-port enable
                 #
-                """
+                """,
             ),
             dedent(
                 """
@@ -32,7 +32,7 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor
                  port hybrid untagged vlan 200
                  stp edged-port enable
                 #
-                """
+                """,
             ),
             dedent(
                 """
@@ -43,7 +43,7 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor
                  port hybrid tagged vlan 2 to 99 101 to 199 201 to 299
                  port hybrid untagged vlan 200
                 #
-                """
+                """,
             ).strip(),
         ),
         # trunk -> access
@@ -58,7 +58,7 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor
                  port trunk allow-pass vlan 2 to 99 101 to 199 201 to 299
                  stp edged-port enable
                 #
-                """
+                """,
             ),
             dedent(
                 """
@@ -68,7 +68,7 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor
                  port default vlan 200
                  stp edged-port enable
                 #
-                """
+                """,
             ),
             dedent(
                 """
@@ -77,7 +77,7 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor
                  port link-type access
                  port default vlan 200
                 #
-                """
+                """,
             ).strip(),
         ),
         # access -> hybrid
@@ -90,7 +90,7 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor
                  port default vlan 200
                  stp edged-port enable
                 #
-                """
+                """,
             ),
             dedent(
                 """
@@ -102,7 +102,7 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor
                  port hybrid untagged vlan 200
                  stp edged-port enable
                 #
-                """
+                """,
             ),
             dedent(
                 """
@@ -113,7 +113,7 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor
                  port hybrid tagged vlan 2 to 99 101 to 199 201 to 299
                  port hybrid untagged vlan 200
                 #
-                """
+                """,
             ).strip(),
         ),
         # access -> trunk
@@ -126,7 +126,7 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor
                  port default vlan 200
                  stp edged-port enable
                 #
-                """
+                """,
             ),
             dedent(
                 """
@@ -138,7 +138,7 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor
                  port trunk allow-pass vlan 2 to 99 101 to 199 201 to 299
                  stp edged-port enable
                 #
-                """
+                """,
             ),
             dedent(
                 """
@@ -149,7 +149,7 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor
                  undo port trunk allow-pass vlan 1
                  port trunk allow-pass vlan 2 to 99 101 to 199 201 to 299
                 #
-                """
+                """,
             ).strip(),
         ),
         # hybrid -> trunk
@@ -164,7 +164,7 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor
                  port hybrid untagged vlan 200
                  stp edged-port enable
                 #
-                """
+                """,
             ),
             dedent(
                 """
@@ -176,7 +176,7 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor
                  port trunk allow-pass vlan 2 to 99 101 to 199 201 to 299
                  stp edged-port enable
                 #
-                """
+                """,
             ),
             dedent(
                 """
@@ -187,7 +187,7 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor
                  undo port trunk allow-pass vlan 1
                  port trunk allow-pass vlan 2 to 99 101 to 199 201 to 299
                 #
-                """
+                """,
             ).strip(),
         ),
         # hybrid -> access
@@ -202,7 +202,7 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor
                  port hybrid untagged vlan 200
                  stp edged-port enable
                 #
-                """
+                """,
             ),
             dedent(
                 """
@@ -212,7 +212,7 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor
                  port default vlan 200
                  stp edged-port enable
                 #
-                """
+                """,
             ),
             dedent(
                 """
@@ -221,7 +221,7 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor
                  port link-type access
                  port default vlan 200
                 #
-                """
+                """,
             ).strip(),
         ),
         # shuffled commands (trunk -> hybrid)
@@ -236,7 +236,7 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor
                  port trunk allow-pass vlan 2 to 99 101 to 199 201 to 299
                  stp edged-port enable
                 #
-                """
+                """,
             ),
             dedent(
                 """
@@ -248,7 +248,7 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor
                  port hybrid untagged vlan 200
                  stp edged-port enable
                 #
-                """
+                """,
             ),
             dedent(
                 """
@@ -259,7 +259,7 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor
                  port hybrid tagged vlan 2 to 99 101 to 199 201 to 299
                  port hybrid untagged vlan 200
                 #
-                """
+                """,
             ).strip(),
         ),
         (
@@ -272,7 +272,7 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor
                  port trunk allow-pass vlan 2 to 4094
                  stp edged-port enable
                 #
-                """
+                """,
             ),
             dedent(
                 """
@@ -284,7 +284,7 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor
                  port trunk allow-pass vlan 100 to 199 201 to 299 500
                  stp edged-port enable
                 #
-                """
+                """,
             ),
             dedent(
                 """
@@ -293,13 +293,13 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor
                  undo port trunk allow-pass vlan 1
                  port trunk allow-pass vlan 100 to 199 201 to 299 500
                 #
-                """
+                """,
             ).strip(),
         ),
     ],
 )
 def test_huawei_interface_change_link_type(current_config: str, target_config: str, diff_config: str) -> None:
-    parser = CTreeParser(vendor=Vendor.HUAWEI)
+    parser = CTreeParser(platform=Platform.HUAWEI_VRP)
 
     current = parser.parse(current_config)
     target = parser.parse(target_config)

@@ -1,6 +1,6 @@
 from textwrap import dedent
 
-from ctreepo import CTreeDiffer, CTreeParser, Vendor
+from ctreepo import CTreeDiffer, CTreeParser, Platform
 
 
 def test_huawei_interface_ip_secondary_order() -> None:
@@ -11,7 +11,7 @@ def test_huawei_interface_ip_secondary_order() -> None:
          description test
          ip address 192.168.0.1 255.255.255.0
         #
-        """
+        """,
     ).strip()
     target_config = dedent(
         """
@@ -20,7 +20,7 @@ def test_huawei_interface_ip_secondary_order() -> None:
          ip address 192.168.2.1 255.255.255.0 sub
          ip address 192.168.1.1 255.255.255.0
         #
-        """
+        """,
     ).strip()
     diff_config = dedent(
         """
@@ -29,10 +29,10 @@ def test_huawei_interface_ip_secondary_order() -> None:
          ip address 192.168.1.1 255.255.255.0
          ip address 192.168.2.1 255.255.255.0 sub
         #
-        """
+        """,
     ).strip()
 
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
 
     current = parser.parse(current_config)
     target = parser.parse(target_config)

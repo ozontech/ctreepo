@@ -1,6 +1,6 @@
 from textwrap import dedent
 
-from ctreepo import CTreeDiffer, CTreeParser, Vendor
+from ctreepo import CTreeDiffer, CTreeParser, Platform
 from ctreepo.parser import TaggingRulesDict
 
 
@@ -11,14 +11,14 @@ def test_huawei_snmp_pre() -> None:
         snmp-agent community read cipher public12345 mib-view iso-view alias __CommunityRO
         snmp-agent sys-info location my-location
         snmp-agent sys-info version v2c v3
-        """
+        """,
     )
     target_config = dedent(
         """
         snmp-agent community read cipher private54321 mib-view iso-view alias __CommunityRO
         snmp-agent sys-info location my-location
         snmp-agent sys-info version v2c v3
-        """
+        """,
     )
     diff_config = dedent(
         """
@@ -26,14 +26,14 @@ def test_huawei_snmp_pre() -> None:
         #
         snmp-agent community read cipher private54321 mib-view iso-view alias __CommunityRO
         #
-        """
+        """,
     ).strip()
 
     tagging_rules = TaggingRulesDict(
-        {Vendor.HUAWEI: [{"regex": r"^(?:undo )?snmp-agent", "tags": ["snmp"]}]},
+        {Platform.HUAWEI_VRP: [{"regex": r"^(?:undo )?snmp-agent", "tags": ["snmp"]}]},
     )
 
-    parser = CTreeParser(Vendor.HUAWEI, tagging_rules=tagging_rules)
+    parser = CTreeParser(Platform.HUAWEI_VRP, tagging_rules=tagging_rules)
     current = parser.parse(current_config)
     target = parser.parse(target_config)
     diff = CTreeDiffer.diff(current, target)

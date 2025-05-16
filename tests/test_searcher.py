@@ -3,7 +3,7 @@ from typing import Literal
 
 import pytest
 
-from ctreepo import CTree, CTreeParser, CTreeSearcher, CTreeSerializer, Vendor, ctree_factory
+from ctreepo import CTree, CTreeParser, CTreeSearcher, CTreeSerializer, Platform, ctree_factory
 from ctreepo.parser import TaggingRulesDict
 
 config = dedent(
@@ -35,14 +35,14 @@ config = dedent(
      radius-server shared-key cipher secret_password
      radius-server algorithm loading-share
     #
-    """
+    """,
 ).strip()
 
 
 @pytest.fixture(scope="session")
 def get_config_tree() -> CTree:
-    tagging_rules_dict: dict[Vendor, list[dict[str, str | list[str]]]] = {
-        Vendor.HUAWEI: [
+    tagging_rules_dict: dict[Platform, list[dict[str, str | list[str]]]] = {
+        Platform.HUAWEI_VRP: [
             {"regex": r"^ip vpn-instance (\S+)$", "tags": ["vpn"]},
             {"regex": r"^ip vpn-instance (\S+) .* export-extcommunity evpn", "tags": ["rt"]},
             {"regex": r"^interface (\S+)$", "tags": ["interface"]},
@@ -52,7 +52,7 @@ def get_config_tree() -> CTree:
         ],
     }
     loader = TaggingRulesDict(tagging_rules_dict)
-    parser = CTreeParser(vendor=Vendor.HUAWEI, tagging_rules=loader)
+    parser = CTreeParser(platform=Platform.HUAWEI_VRP, tagging_rules=loader)
     root = parser.parse(config)
     return root
 
@@ -66,7 +66,7 @@ def test_string(get_config_tree: CTree) -> None:
         interface gi0/0/1
          ip address 1.1.1.1 255.255.255.252
         #
-        """
+        """,
     ).strip()
     filtered_dict = {
         "line": "",
@@ -86,7 +86,7 @@ def test_string(get_config_tree: CTree) -> None:
                         "template": "",
                         "undo_line": "",
                         "children": {},
-                    }
+                    },
                 },
             },
             "interface gi0/0/1": {
@@ -101,7 +101,7 @@ def test_string(get_config_tree: CTree) -> None:
                         "template": "",
                         "undo_line": "",
                         "children": {},
-                    }
+                    },
                 },
             },
         },
@@ -131,7 +131,7 @@ def test_regex(get_config_tree: CTree) -> None:
         interface gi0/0/1
          ip address 1.1.1.1 255.255.255.252
         #
-        """
+        """,
     ).strip()
     filtered_dict = {
         "line": "",
@@ -164,9 +164,9 @@ def test_regex(get_config_tree: CTree) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
-                    }
+                    },
                 },
             },
             "ip vpn-instance LAN": {
@@ -187,9 +187,9 @@ def test_regex(get_config_tree: CTree) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
-                    }
+                    },
                 },
             },
             "interface gi0/0/0": {
@@ -204,7 +204,7 @@ def test_regex(get_config_tree: CTree) -> None:
                         "template": "",
                         "undo_line": "",
                         "children": {},
-                    }
+                    },
                 },
             },
             "interface gi0/0/1": {
@@ -219,7 +219,7 @@ def test_regex(get_config_tree: CTree) -> None:
                         "template": "",
                         "undo_line": "",
                         "children": {},
-                    }
+                    },
                 },
             },
         },
@@ -241,7 +241,7 @@ def test_tag(get_config_tree: CTree) -> None:
           vpn-target 123:123 import-extcommunity evpn
          vxlan vni 123
         #
-        """
+        """,
     ).strip()
     filtered_dict = {
         "line": "",
@@ -261,7 +261,7 @@ def test_tag(get_config_tree: CTree) -> None:
                         "template": "",
                         "undo_line": "",
                         "children": {},
-                    }
+                    },
                 },
             },
             "ip vpn-instance LAN": {
@@ -316,7 +316,7 @@ def test_tags_or(get_config_tree: CTree) -> None:
           vpn-target 123:123 import-extcommunity evpn
          vxlan vni 123
         #
-        """
+        """,
     ).strip()
     filtered_dict = {
         "line": "",
@@ -342,9 +342,9 @@ def test_tags_or(get_config_tree: CTree) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
-                    }
+                    },
                 },
             },
             "ip vpn-instance LAN": {
@@ -406,7 +406,7 @@ def test_tags_and(get_config_tree: CTree) -> None:
          ipv4-family
           route-distinguisher 192.168.0.1:123
         #
-        """
+        """,
     ).strip()
     filtered_dict = {
         "line": "",
@@ -451,7 +451,7 @@ def test_tags_exclude(get_config_tree: CTree) -> None:
         ip vpn-instance MGMT
          ipv4-family
         #
-        """
+        """,
     ).strip()
 
     root = get_config_tree
@@ -465,7 +465,7 @@ def test_string_tags_and(get_config_tree: CTree) -> None:
         interface gi0/0/0
          ip address 1.1.1.1 255.255.255.252
         #
-        """
+        """,
     ).strip()
     filtered_dict = {
         "line": "",
@@ -485,7 +485,7 @@ def test_string_tags_and(get_config_tree: CTree) -> None:
                         "template": "",
                         "undo_line": "",
                         "children": {},
-                    }
+                    },
                 },
             },
         },
@@ -505,7 +505,7 @@ def test_string_tags_or(get_config_tree: CTree) -> None:
         interface gi0/0/1
          ip address 1.1.1.1 255.255.255.252
         #
-        """
+        """,
     ).strip()
     filtered_dict = {
         "line": "",
@@ -525,7 +525,7 @@ def test_string_tags_or(get_config_tree: CTree) -> None:
                         "template": "",
                         "undo_line": "",
                         "children": {},
-                    }
+                    },
                 },
             },
             "interface gi0/0/1": {
@@ -547,7 +547,10 @@ def test_string_tags_or(get_config_tree: CTree) -> None:
     }
     root = get_config_tree
     filtered_root = CTreeSearcher.search(
-        root, string=r"(?:\d+\.){3}\d+", include_tags=["gi0/0/0", "gi0/0/1"], include_mode="or"
+        root,
+        string=r"(?:\d+\.){3}\d+",
+        include_tags=["gi0/0/0", "gi0/0/1"],
+        include_mode="or",
     )
     assert filtered_root.config == filtered_config
     assert CTreeSerializer.to_dict(filtered_root) == filtered_dict
@@ -574,7 +577,7 @@ def test_null_string(get_config_tree: CTree) -> None:
 def test_null_empty(get_config_tree: CTree) -> None:
     root = get_config_tree
     filtered_root = CTreeSearcher.search(root)
-    assert filtered_root == ctree_factory(vendor=root.vendor)
+    assert filtered_root == ctree_factory(platform=root.platform)
 
 
 def test_children(get_config_tree: CTree) -> None:
@@ -586,7 +589,7 @@ def test_children(get_config_tree: CTree) -> None:
         ip vpn-instance LAN
          ipv4-family
         #
-        """
+        """,
     ).strip()
     with_children_config = dedent(
         """
@@ -600,7 +603,7 @@ def test_children(get_config_tree: CTree) -> None:
           vpn-target 123:123 export-extcommunity evpn
           vpn-target 123:123 import-extcommunity evpn
         #
-        """
+        """,
     ).strip()
     root = get_config_tree
     without_children = CTreeSearcher.search(ct=root, string="ipv4-family", include_children=False)
@@ -624,7 +627,7 @@ def test_exclude_children_by_tag() -> None:
           neighbor CSC route-map rm_CSC_PE_in in
          exit-address-family
         !
-        """
+        """,
     )
     bgp_all_str = dedent(
         """
@@ -635,7 +638,7 @@ def test_exclude_children_by_tag() -> None:
           neighbor CSC send-community both
           neighbor CSC route-map rm_CSC_PE_in in
         !
-        """
+        """,
     ).strip()
     bgp_rm_attach_str = dedent(
         """
@@ -643,7 +646,7 @@ def test_exclude_children_by_tag() -> None:
          address-family ipv4
           neighbor CSC route-map rm_CSC_PE_in in
         !
-        """
+        """,
     ).strip()
     bgp_no_rm_str = dedent(
         """
@@ -653,7 +656,7 @@ def test_exclude_children_by_tag() -> None:
          address-family ipv4
           neighbor CSC send-community both
         !
-        """
+        """,
     ).strip()
     bgp_no_rm_exclude_str = dedent(
         """
@@ -667,13 +670,13 @@ def test_exclude_children_by_tag() -> None:
          address-family ipv4
           neighbor CSC send-community both
         !
-        """
+        """,
     ).strip()
     tagging_rules: list[dict[str, str | list[str]]] = [
         {"regex": r"^router bgp .* neighbor (\S+) route-map (\S+) (?:in|out)", "tags": ["rm-attach"]},
         {"regex": r"^router bgp \d+$", "tags": ["bgp"]},
     ]
-    parser = CTreeParser(Vendor.CISCO, TaggingRulesDict({Vendor.CISCO: tagging_rules}))
+    parser = CTreeParser(Platform.CISCO_IOSXE, TaggingRulesDict({Platform.CISCO_IOSXE: tagging_rules}))
     root = parser.parse(config_str)
 
     # c "neighbor CSC route-map rm_CSC_PE_in in", встречаем bgp секцию и помещаем
@@ -712,13 +715,13 @@ def test_wrong_tag_include_mode() -> None:
         interface Ethernet1
          load-interval 30
         !
-        """
+        """,
     )
 
     tagging_rules: list[dict[str, str | list[str]]] = [
         {"regex": r"^interface (\S+)", "tags": ["eth"]},
     ]
-    parser = CTreeParser(Vendor.CISCO, TaggingRulesDict({Vendor.CISCO: tagging_rules}))
+    parser = CTreeParser(Platform.CISCO_IOSXE, TaggingRulesDict({Platform.CISCO_IOSXE: tagging_rules}))
     root = parser.parse(config)
 
     with pytest.raises(ValueError) as exc:
@@ -744,7 +747,7 @@ def test_wrong_tag_include_mode() -> None:
                 interface Ethernet1
                  load-interval 30
                 !
-                """
+                """,
             ).strip(),
         ),
         (
@@ -759,7 +762,7 @@ def test_wrong_tag_include_mode() -> None:
                 interface Ethernet3
                  load-interval 30
                 !
-                """
+                """,
             ).strip(),
         ),
         (
@@ -774,7 +777,7 @@ def test_wrong_tag_include_mode() -> None:
                 interface GigabitEthernet1
                  load-interval 30
                 !
-                """
+                """,
             ).strip(),
         ),
         (
@@ -792,7 +795,7 @@ def test_wrong_tag_include_mode() -> None:
                 interface GigabitEthernet1
                  load-interval 30
                 !
-                """
+                """,
             ).strip(),
         ),
         (
@@ -810,7 +813,7 @@ def test_wrong_tag_include_mode() -> None:
                 interface Ethernet3
                  load-interval 30
                 !
-                """
+                """,
             ).strip(),
         ),
         (
@@ -822,7 +825,7 @@ def test_wrong_tag_include_mode() -> None:
                 interface Ethernet2
                  load-interval 30
                 !
-                """
+                """,
             ).strip(),
         ),
         (
@@ -837,7 +840,7 @@ def test_wrong_tag_include_mode() -> None:
                 interface Ethernet3
                  load-interval 30
                 !
-                """
+                """,
             ).strip(),
         ),
         (
@@ -852,7 +855,7 @@ def test_wrong_tag_include_mode() -> None:
                 interface GigabitEthernet1
                  load-interval 30
                 !
-                """
+                """,
             ).strip(),
         ),
         (
@@ -864,7 +867,7 @@ def test_wrong_tag_include_mode() -> None:
                 interface Ethernet2
                  load-interval 30
                 !
-                """
+                """,
             ).strip(),
         ),
     ],
@@ -895,7 +898,7 @@ def test_regex_include_tag(
         interface GigabitEthernet3
          load-interval 30
         !
-        """
+        """,
     )
 
     tagging_rules: list[dict[str, str | list[str]]] = [
@@ -903,7 +906,7 @@ def test_regex_include_tag(
         {"regex": r"^interface ((?:Gigabit)?Ethernet3)", "tags": ["eth", "e3"]},
         {"regex": r"^interface (\S+)", "tags": ["eth"]},
     ]
-    parser = CTreeParser(Vendor.CISCO, TaggingRulesDict({Vendor.CISCO: tagging_rules}))
+    parser = CTreeParser(Platform.CISCO_IOSXE, TaggingRulesDict({Platform.CISCO_IOSXE: tagging_rules}))
     root = parser.parse(config)
 
     filtered = CTreeSearcher.search(
@@ -927,7 +930,7 @@ def test_regex_with_no_regex_include() -> None:
         interface Ethernet1112
          load-interval 30
         !
-        """
+        """,
     )
     expected = dedent(
         """
@@ -937,7 +940,7 @@ def test_regex_with_no_regex_include() -> None:
         interface Ethernet1112
          load-interval 30
         !
-        """
+        """,
     ).strip()
     tagging_rules: list[dict[str, str | list[str]]] = [
         {
@@ -945,7 +948,7 @@ def test_regex_with_no_regex_include() -> None:
             "tags": ["eth"],
         },
     ]
-    parser = CTreeParser(Vendor.CISCO, TaggingRulesDict({Vendor.CISCO: tagging_rules}))
+    parser = CTreeParser(Platform.CISCO_IOSXE, TaggingRulesDict({Platform.CISCO_IOSXE: tagging_rules}))
     root = parser.parse(config)
     filtered = CTreeSearcher.search(ct=root, include_tags=["Ethernet1+2", r"re:Ethernet1{3}2"])
     assert filtered.config == expected
@@ -963,14 +966,14 @@ def test_regex_with_no_regex_exclude() -> None:
         interface Ethernet1112
          load-interval 30
         !
-        """
+        """,
     )
     expected = dedent(
         """
         interface Ethernet112
          load-interval 30
         !
-        """
+        """,
     ).strip()
     tagging_rules: list[dict[str, str | list[str]]] = [
         {
@@ -978,7 +981,7 @@ def test_regex_with_no_regex_exclude() -> None:
             "tags": ["eth"],
         },
     ]
-    parser = CTreeParser(Vendor.CISCO, TaggingRulesDict({Vendor.CISCO: tagging_rules}))
+    parser = CTreeParser(Platform.CISCO_IOSXE, TaggingRulesDict({Platform.CISCO_IOSXE: tagging_rules}))
     root = parser.parse(config)
     filtered = CTreeSearcher.search(ct=root, exclude_tags=["Ethernet1+2", r"re:Ethernet1{3}2"])
     assert filtered.config == expected

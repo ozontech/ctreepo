@@ -1,6 +1,6 @@
 from textwrap import dedent
 
-from ctreepo import CTreeDiffer, CTreeParser, Vendor
+from ctreepo import CTreeDiffer, CTreeParser, Platform
 
 
 def test_huawei_interface_link_type_remove() -> None:
@@ -14,7 +14,7 @@ def test_huawei_interface_link_type_remove() -> None:
          port trunk allow-pass vlan 500 to 505
          stp edged-port enable
         #
-        """
+        """,
     ).strip()
     target_config = dedent(
         """
@@ -23,23 +23,23 @@ def test_huawei_interface_link_type_remove() -> None:
          description TEST-DESCRIPTION-1
          stp edged-port enable
         #
-        """
+        """,
     ).strip()
     diff_config = dedent(
         """
         interface GigabitEthernet0/0/1
          undo port link-type
         #
-        """
+        """,
     ).strip()
     diff_patch = dedent(
         """
         interface GigabitEthernet0/0/1
         undo port link-type
         quit
-        """
+        """,
     ).strip()
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
 
     current = parser.parse(current_config)
     target = parser.parse(target_config)
@@ -67,7 +67,7 @@ def test_huawei_interface_link_type_change() -> None:
          multicast-suppression packets 20
          broadcast-suppression packets 30
         #
-        """
+        """,
     ).strip()
 
     target_config = dedent(
@@ -86,7 +86,7 @@ def test_huawei_interface_link_type_change() -> None:
          multicast-suppression packets 20
          broadcast-suppression packets 30
         #
-        """
+        """,
     ).strip()
 
     diff_config = dedent(
@@ -99,7 +99,7 @@ def test_huawei_interface_link_type_change() -> None:
          port trunk allow-pass vlan 102 105 107
          voice-vlan 102 enable
         #
-        """
+        """,
     ).strip()
     diff_patch = dedent(
         """
@@ -111,9 +111,9 @@ def test_huawei_interface_link_type_change() -> None:
         port trunk allow-pass vlan 102 105 107
         voice-vlan 102 enable
         quit
-        """
+        """,
     ).strip()
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
 
     current = parser.parse(current_config)
     target = parser.parse(target_config)

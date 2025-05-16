@@ -1,6 +1,6 @@
 from textwrap import dedent
 
-from ctreepo import CTreeDiffer, CTreeParser, Vendor
+from ctreepo import CTreeDiffer, CTreeParser, Platform
 
 
 def test_huawei_interface_basic() -> None:
@@ -37,7 +37,7 @@ def test_huawei_interface_basic() -> None:
          bridge-domain 1234
          statistics enable
         #
-        """
+        """,
     ).strip()
 
     config_interfaces_2 = dedent(
@@ -59,7 +59,7 @@ def test_huawei_interface_basic() -> None:
          bridge-domain 1234
          statistics enable
         #
-        """
+        """,
     ).strip()
 
     diff_config = dedent(
@@ -71,7 +71,7 @@ def test_huawei_interface_basic() -> None:
         #
         undo interface 25GE1/0/1
         #
-        """
+        """,
     ).strip()
     diff_patch = dedent(
         """
@@ -80,9 +80,9 @@ def test_huawei_interface_basic() -> None:
         quit
         undo interface 25GE1/0/1.1234 mode l2
         undo interface 25GE1/0/1
-        """
+        """,
     ).strip()
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
 
     root1 = parser.parse(config_interfaces_1)
     root2 = parser.parse(config_interfaces_2)

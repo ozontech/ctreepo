@@ -2,7 +2,7 @@ from textwrap import dedent
 
 import pytest
 
-from ctreepo import CTreeDiffer, CTreeParser, Vendor, settings
+from ctreepo import CTreeDiffer, CTreeParser, Platform, settings
 
 
 @pytest.mark.parametrize(
@@ -22,7 +22,7 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor, settings
                  ip mtu 1200
                  ip address 1.2.3.4 255.255.255.0
                 #
-                """
+                """,
             ),
             dedent(
                 """
@@ -34,7 +34,7 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor, settings
                  ip mtu 1200
                  ip address 1.2.3.4 255.255.255.0
                 #
-                """
+                """,
             ),
             dedent(
                 rf"""
@@ -43,7 +43,7 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor, settings
                  ip mtu (?P<MTU>\d+)
                  load-interval (?P<INTERVAL>\d+)
                 #
-                """
+                """,
             ),
             dedent(
                 """
@@ -53,7 +53,7 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor, settings
                 interface GigabitEthernet1/0/2
                  undo description
                 #
-                """
+                """,
             ).strip(),
         ),
         # использование undo_line для undo команд
@@ -65,7 +65,7 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor, settings
                  load-interval 30
                  undo keepalive
                 #
-                """
+                """,
             ),
             dedent(
                 """
@@ -73,7 +73,7 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor, settings
                  description test description
                  load-interval 30
                 #
-                """
+                """,
             ),
             dedent(
                 rf"""
@@ -83,20 +83,20 @@ from ctreepo import CTreeDiffer, CTreeParser, Vendor, settings
                  load-interval (?P<INTERVAL>\d+)
                  undo keepalive {settings.TEMPLATE_SEPARATOR} keepalive
                 #
-                """
+                """,
             ),
             dedent(
                 """
                 interface GigabitEthernet1/0/1
                  keepalive
                 #
-                """
+                """,
             ).strip(),
         ),
     ],
 )
 def test_ctree_template_diff(current_str: str, target_str: str, template: str, diff_str: str) -> None:
-    parser = CTreeParser(vendor=Vendor.HUAWEI)
+    parser = CTreeParser(platform=Platform.HUAWEI_VRP)
 
     template_tree = parser.parse(template)
     current = parser.parse(current_str, template_tree)
@@ -121,7 +121,7 @@ def test_ctree_template_diff_ordered() -> None:
          end-filter
         #
         snmp community public
-        """
+        """,
     )
     target_str = dedent(
         """
@@ -133,7 +133,7 @@ def test_ctree_template_diff_ordered() -> None:
          end-filter
         #
         snmp community public
-        """
+        """,
     )
     template_str = dedent(
         rf"""
@@ -142,7 +142,7 @@ def test_ctree_template_diff_ordered() -> None:
         #
         (xpl route-filter (\S+))  {settings.TEMPLATE_SEPARATOR} undo \1 test > \2
         #
-        """
+        """,
     )
     diff_str = dedent(
         """
@@ -155,10 +155,10 @@ def test_ctree_template_diff_ordered() -> None:
         #
         undo xpl route-filter RP_XPL_2 test > RP_XPL_2
         #
-        """
+        """,
     ).strip()
 
-    parser = CTreeParser(vendor=Vendor.HUAWEI)
+    parser = CTreeParser(platform=Platform.HUAWEI_VRP)
 
     template = parser.parse(template_str)
     current = parser.parse(current_str, template)

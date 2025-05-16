@@ -2,9 +2,9 @@ from textwrap import dedent
 
 import pytest
 
-from ctreepo import CTree, CTreeParser, CTreeSearcher, CTreeSerializer, Vendor
+from ctreepo import CTree, CTreeParser, CTreeSearcher, CTreeSerializer, Platform
 from ctreepo.parser import TaggingRulesDict
-from ctreepo.vendors import AristaCT
+from ctreepo.platforms import AristaEOS
 
 
 @pytest.fixture(scope="function")
@@ -76,10 +76,10 @@ def root() -> CTree:
               no shutdown
         !
         end
-        """
+        """,
     )
     tagging_rules_dict = {
-        Vendor.ARISTA: [
+        Platform.ARISTA_EOS: [
             {"regex": r"^interface (\S+)$", "tags": ["interface"]},
             {"regex": r"^qos .*", "tags": ["qos"]},
             {"regex": r"^management ssh$", "tags": ["mgmt"]},
@@ -94,7 +94,7 @@ def root() -> CTree:
     }
     loader = TaggingRulesDict(tagging_rules_dict)  # type: ignore[arg-type]
     parser = CTreeParser(
-        vendor=Vendor.ARISTA,
+        platform=Platform.ARISTA_EOS,
         tagging_rules=loader,
     )
     root: CTree = parser.parse(config_str)
@@ -164,7 +164,7 @@ def test_config(root: CTree) -> None:
            vrf MGMT
               no shutdown
         !
-        """
+        """,
     ).strip()
     assert root.config == config
 
@@ -230,7 +230,7 @@ def test_patch(root: CTree) -> None:
         no shutdown
         exit
         exit
-        """
+        """,
     ).strip()
     assert root.patch == patch
 
@@ -419,7 +419,7 @@ def test_to_dict(root: CTree) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
                     },
                     "tx-queue 6": {
@@ -434,7 +434,7 @@ def test_to_dict(root: CTree) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
                     },
                     "sflow enable": {
@@ -486,7 +486,7 @@ def test_to_dict(root: CTree) -> None:
                         "template": "",
                         "undo_line": "",
                         "children": {},
-                    }
+                    },
                 },
             },
             "route-map RM_DENY deny 10": {
@@ -564,7 +564,7 @@ def test_to_dict(root: CTree) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
                     },
                 },
@@ -759,7 +759,7 @@ def test_from_dict(root: CTree) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
                     },
                     "tx-queue 6": {
@@ -774,7 +774,7 @@ def test_from_dict(root: CTree) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
                     },
                     "sflow enable": {
@@ -826,7 +826,7 @@ def test_from_dict(root: CTree) -> None:
                         "template": "",
                         "undo_line": "",
                         "children": {},
-                    }
+                    },
                 },
             },
             "route-map RM_DENY deny 10": {
@@ -904,18 +904,18 @@ def test_from_dict(root: CTree) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
                     },
                 },
             },
         },
     }
-    deserialized = CTreeSerializer.from_dict(Vendor.ARISTA, src)
+    deserialized = CTreeSerializer.from_dict(Platform.ARISTA_EOS, src)
     assert root == deserialized
 
     src["children"]["logging buffered 16000"]["tags"].append("changed")  # type: ignore[index]
-    deserialized = CTreeSerializer.from_dict(Vendor.ARISTA, src)
+    deserialized = CTreeSerializer.from_dict(Platform.ARISTA_EOS, src)
     assert root != deserialized
 
 
@@ -964,13 +964,13 @@ def test_masked_config(root: CTree) -> None:
         !
         route-map RM_DENY deny 10
         !
-        ntp authentication-key 1 md5 7 {AristaCT.masking_string}
+        ntp authentication-key 1 md5 7 {AristaEOS.masking_string}
         !
-        tacacs-server 1.2.3.4 vrf MGMT key 7 {AristaCT.masking_string}
+        tacacs-server 1.2.3.4 vrf MGMT key 7 {AristaEOS.masking_string}
         !
-        enable password sha512 {AristaCT.masking_string}
+        enable password sha512 {AristaEOS.masking_string}
         !
-        username admin privilege 15 role network-admin secret sha512 {AristaCT.masking_string}
+        username admin privilege 15 role network-admin secret sha512 {AristaEOS.masking_string}
         !
         qos map traffic-class 0 to cos 0
         !
@@ -982,7 +982,7 @@ def test_masked_config(root: CTree) -> None:
            vrf MGMT
               no shutdown
         !
-        """
+        """,
     ).strip()
     assert root.masked_config == masked_config
 
@@ -1035,10 +1035,10 @@ def test_masked_patch(root: CTree) -> None:
         exit
         route-map RM_DENY deny 10
         exit
-        ntp authentication-key 1 md5 7 {AristaCT.masking_string}
-        tacacs-server 1.2.3.4 vrf MGMT key 7 {AristaCT.masking_string}
-        enable password sha512 {AristaCT.masking_string}
-        username admin privilege 15 role network-admin secret sha512 {AristaCT.masking_string}
+        ntp authentication-key 1 md5 7 {AristaEOS.masking_string}
+        tacacs-server 1.2.3.4 vrf MGMT key 7 {AristaEOS.masking_string}
+        enable password sha512 {AristaEOS.masking_string}
+        username admin privilege 15 role network-admin secret sha512 {AristaEOS.masking_string}
         qos map traffic-class 0 to cos 0
         qos map traffic-class 1 to cos 1
         management ssh
@@ -1048,7 +1048,7 @@ def test_masked_patch(root: CTree) -> None:
         no shutdown
         exit
         exit
-        """
+        """,
     ).strip()
     assert root.masked_patch == masked_patch
 
@@ -1082,7 +1082,7 @@ def test_searcher(root: CTree) -> None:
         !
         qos map traffic-class 1 to cos 1
         !
-        """
+        """,
     ).strip()
     interface_or_qos_config = dedent(
         """
@@ -1119,7 +1119,7 @@ def test_searcher(root: CTree) -> None:
         !
         qos map traffic-class 1 to cos 1
         !
-        """
+        """,
     ).strip()
     interface_and_qos_config = dedent(
         """
@@ -1145,7 +1145,7 @@ def test_searcher(root: CTree) -> None:
            tx-queue 6
               shape rate 70 percent
         !
-        """
+        """,
     ).strip()
 
     qos = CTreeSearcher.search(root, include_tags=["qos"])

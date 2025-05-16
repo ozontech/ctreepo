@@ -1,6 +1,6 @@
 from textwrap import dedent
 
-from ctreepo import CTreeDiffer, CTreeParser, Vendor
+from ctreepo import CTreeDiffer, CTreeParser, Platform
 
 
 def test_differ_ordered_section() -> None:
@@ -23,7 +23,7 @@ def test_differ_ordered_section() -> None:
          server 10.1.0.5 vrf MGMT
          server 10.1.0.3 vrf MGMT
         #
-        """
+        """,
     ).strip()
     target_config = dedent(
         """
@@ -46,7 +46,7 @@ def test_differ_ordered_section() -> None:
          sub-line 1.3
         #
         some config
-        """
+        """,
     ).strip()
     diff_default = dedent(
         """
@@ -60,7 +60,7 @@ def test_differ_ordered_section() -> None:
         #
         some config
         #
-        """
+        """,
     ).strip()
     diff_ordered_tacacs = dedent(
         """
@@ -78,7 +78,7 @@ def test_differ_ordered_section() -> None:
         #
         some config
         #
-        """
+        """,
     ).strip()
     diff_ordered_tacacs_and_section = dedent(
         """
@@ -100,7 +100,7 @@ def test_differ_ordered_section() -> None:
         #
         some config
         #
-        """
+        """,
     ).strip()
     diff_ordered_subsection = dedent(
         """
@@ -116,7 +116,7 @@ def test_differ_ordered_section() -> None:
         #
         some config
         #
-        """
+        """,
     ).strip()
     diff_ordered_root = dedent(
         """
@@ -141,7 +141,7 @@ def test_differ_ordered_section() -> None:
         #
         undo section 1
         #
-        """
+        """,
     ).strip()
     diff_ordered_root_wo_reorder = dedent(
         """
@@ -166,10 +166,10 @@ def test_differ_ordered_section() -> None:
         #
         some config
         #
-        """
+        """,
     ).strip()
 
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
     target = parser.parse(target_config)
     current = parser.parse(current_config)
     diff = CTreeDiffer.diff(current, target)
@@ -221,7 +221,7 @@ def test_differ_ordered_root() -> None:
         dns server 1.1.1.4
         dns server 1.1.1.2
         dns domain company.ru
-        """
+        """,
     ).strip()
     target_config = dedent(
         """
@@ -231,7 +231,7 @@ def test_differ_ordered_root() -> None:
         dns server 1.1.1.3
         dns server 1.1.1.4
         dns domain company.ru
-        """
+        """,
     ).strip()
     not_ordered_diff_config = ""
     ordered_diff_config = dedent(
@@ -248,10 +248,10 @@ def test_differ_ordered_root() -> None:
         #
         dns domain company.ru
         #
-        """
+        """,
     ).strip()
 
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
     current = parser.parse(current_config)
     target = parser.parse(target_config)
     not_ordered_diff = CTreeDiffer.diff(current, target)

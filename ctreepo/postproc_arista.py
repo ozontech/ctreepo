@@ -1,5 +1,5 @@
 from .ctree import CTree
-from .models import Vendor
+from .models import Platform
 from .postproc import CTreePostProc, register_rule
 
 __all__ = (
@@ -13,7 +13,7 @@ __all__ = (
 )
 
 
-@register_rule(Vendor.ARISTA)
+@register_rule(Platform.ARISTA_EOS)
 class AristaPostProcAAA(CTreePostProc):
     @classmethod
     def process(cls, ct: CTree) -> None:
@@ -33,7 +33,7 @@ class AristaPostProcAAA(CTreePostProc):
         ct.rebuild()
 
 
-@register_rule(Vendor.ARISTA)
+@register_rule(Platform.ARISTA_EOS)
 class AristaPostProcBGP(CTreePostProc):
     @classmethod
     def process(cls, ct: CTree) -> None:
@@ -72,7 +72,7 @@ class AristaPostProcBGP(CTreePostProc):
         bgp.rebuild()
 
 
-@register_rule(Vendor.ARISTA)
+@register_rule(Platform.ARISTA_EOS)
 class AristaPostProcEnable(CTreePostProc):
     @classmethod
     def process(cls, ct: CTree) -> None:
@@ -87,7 +87,7 @@ class AristaPostProcEnable(CTreePostProc):
         ct.rebuild()
 
 
-@register_rule(Vendor.ARISTA)
+@register_rule(Platform.ARISTA_EOS)
 class AristaPostProcPrefixList(CTreePostProc):
     @classmethod
     def process(cls, ct: CTree) -> None:
@@ -128,7 +128,7 @@ class AristaPostProcPrefixList(CTreePostProc):
         ct.rebuild()
 
 
-@register_rule(Vendor.ARISTA)
+@register_rule(Platform.ARISTA_EOS)
 class AristaPostProcTacacsKey(CTreePostProc):
     @classmethod
     def process(cls, ct: CTree) -> None:
@@ -147,7 +147,7 @@ class AristaPostProcTacacsKey(CTreePostProc):
         ct.rebuild()
 
 
-@register_rule(Vendor.ARISTA)
+@register_rule(Platform.ARISTA_EOS)
 class AristaPostProcUsers(CTreePostProc):
     @classmethod
     def process(cls, ct: CTree) -> None:
@@ -189,7 +189,7 @@ class AristaPostProcUsers(CTreePostProc):
         ct.rebuild()
 
 
-@register_rule(Vendor.ARISTA)
+@register_rule(Platform.ARISTA_EOS)
 class HuaweiPostProcInterface(CTreePostProc):
     @classmethod
     def _process_interface(cls, ct: CTree) -> None:
@@ -213,7 +213,7 @@ class HuaweiPostProcInterface(CTreePostProc):
                 cls._process_interface(node)
 
 
-@register_rule(Vendor.ARISTA)
+@register_rule(Platform.ARISTA_EOS)
 class AristaPostProcSNMP(CTreePostProc):
     @classmethod
     def process(cls, ct: CTree) -> None:
@@ -227,7 +227,7 @@ class AristaPostProcSNMP(CTreePostProc):
                 nodes_to_delete.add(node)
                 prefix, postfix = node.line.split("  ")
                 nodes_to_delete.update(
-                    [n for n in ct.children.values() if n.line.startswith(f"no {prefix}") and n.line.endswith(postfix)]
+                    [n for n in ct.children.values() if n.line.startswith(f"no {prefix}") and n.line.endswith(postfix)],
                 )
             # если удаляем community, тогда в начало это переносим, иначе могут быть конфликты
             elif node.line.startswith("no snmp-server community "):

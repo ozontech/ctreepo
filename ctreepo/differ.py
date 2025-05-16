@@ -205,7 +205,7 @@ class CTreeDiffer:
 
         # пробегаем по post-proc правилам и дорабатываем diff
         if post_proc_rules is None:
-            post_proc_rules = _REGISTRY.get(root.vendor) or []
+            post_proc_rules = _REGISTRY.get(root.platform) or []
         for rule in post_proc_rules:
             rule.process(root)
 

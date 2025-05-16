@@ -1,6 +1,6 @@
 from textwrap import dedent
 
-from ctreepo import CTreeDiffer, CTreeParser, Vendor
+from ctreepo import CTreeDiffer, CTreeParser, Platform
 
 
 def test_cisco_no_post_processing() -> None:
@@ -12,7 +12,7 @@ def test_cisco_no_post_processing() -> None:
          network 192.168.100.1 0.0.0.0 area 1.2.3.4
          network 10.1.0.2 0.0.0.0 area 1.2.3.4
         !
-        """
+        """,
     )
     target_config = dedent(
         """
@@ -21,16 +21,16 @@ def test_cisco_no_post_processing() -> None:
          network 192.168.100.1 0.0.0.0 area 1.2.3.4
          network 10.1.0.2 0.0.0.0 area 1.2.3.4
         !
-        """
+        """,
     )
     diff_config = dedent(
         """
         router ospf 1
          no passive-interface default
         !
-        """
+        """,
     ).strip()
-    parser = CTreeParser(Vendor.CISCO)
+    parser = CTreeParser(Platform.CISCO_IOSXE)
 
     current = parser.parse(current_config)
     target = parser.parse(target_config)
@@ -72,7 +72,7 @@ def test_cisco_bgp_post_processing() -> None:
           redistribute connected route-map rm_OSPF2BGP
          exit-address-family
         !
-        """
+        """,
     ).strip()
     target_config = dedent(
         """
@@ -95,7 +95,7 @@ def test_cisco_bgp_post_processing() -> None:
          address-family ipv6
           redistribute connected route-map rm_OSPF2BGP
          exit-address-family
-        """
+        """,
     ).strip()
     diff_raw_config = dedent(
         """
@@ -115,7 +115,7 @@ def test_cisco_bgp_post_processing() -> None:
           no neighbor RR send-community both
           no neighbor RR advertisement-interval 0
         !
-        """
+        """,
     ).strip()
     diff_processed_config = dedent(
         """
@@ -127,9 +127,9 @@ def test_cisco_bgp_post_processing() -> None:
          address-family ipv4
           no redistribute ospf 1 route-map rm_OSPF2BGP
         !
-        """
+        """,
     ).strip()
-    parser = CTreeParser(Vendor.CISCO)
+    parser = CTreeParser(Platform.CISCO_IOSXE)
 
     current = parser.parse(current_config)
     target = parser.parse(target_config)

@@ -6,7 +6,7 @@ from collections import deque
 from typing import Deque, Self
 
 from . import settings
-from .models import Vendor
+from .models import Platform
 
 __all__ = ("CTree",)
 
@@ -24,18 +24,18 @@ class CTree:
     )
 
     @property
-    def vendor(self) -> Vendor:
-        """количество пробелов для нового уровня."""
+    def platform(self) -> Platform:
+        """Платформа устройства."""
         raise NotImplementedError("property should be overridden")
 
     @property
     def spaces(self) -> str:
-        """количество пробелов для нового уровня."""
+        """Количество пробелов для нового уровня."""
         raise NotImplementedError("property should be overridden")
 
     @property
     def section_exit(self) -> str:
-        """как выходим из секции: exit/quit/..."""
+        """Как выходим из секции: exit/quit/..."""
         raise NotImplementedError("property should be overridden")
 
     @property
@@ -325,7 +325,8 @@ class CTree:
                     nodes.appendleft(self.__class__(line=self.section_exit))
                 nodes.extendleft(list(node.children.values())[::-1])
             elif len(self.sections_require_exit) != 0 and re.fullmatch(
-                "|".join(self.sections_require_exit), node.formal_path
+                "|".join(self.sections_require_exit),
+                node.formal_path,
             ):
                 nodes.appendleft(self.__class__(line=self.section_exit))
         result = path_to_root + result + [self.section_exit] * len(path_to_root)

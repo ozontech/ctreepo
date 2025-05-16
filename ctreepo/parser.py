@@ -9,7 +9,7 @@ import yaml
 from . import settings
 from .ctree import CTree
 from .factory import ctree_class
-from .models import TaggingRule, Vendor
+from .models import Platform, TaggingRule
 
 __all__ = (
     "CTreeParser",
@@ -21,15 +21,15 @@ __all__ = (
 
 class TaggingRules(abc.ABC):
     @property
-    def rules(self) -> dict[Vendor, list[TaggingRule]]:
+    def rules(self) -> dict[Platform, list[TaggingRule]]:
         """Правила для расстановки тегов в на строки конфигурации.
 
         Формат следующий:
 
         {
-            "huawei": [ParsingRule-1, ParsingRule-2],
-            "arista": [ParsingRule-N],
-            "other_vendor": [],
+            "huawei_vrp": [ParsingRule-1, ParsingRule-2],
+            "arista_eos": [ParsingRule-N],
+            "other_platform": [],
         }
 
         ParsingRule это модель вида
@@ -43,7 +43,7 @@ class TaggingRules(abc.ABC):
         return self._rules
 
     @rules.setter
-    def rules(self, rules: dict[Vendor, list[TaggingRule]]) -> None:
+    def rules(self, rules: dict[Platform, list[TaggingRule]]) -> None:
         self._rules = rules
 
     @abc.abstractmethod
@@ -73,36 +73,36 @@ class TaggingRulesFile(TaggingRules):
         result = {}
         with open(self.filename, "r") as f:
             data = yaml.safe_load(f)
-        for vendor, rules in (data.get("tagging-rules") or {}).items():
-            if vendor not in [e.value for e in Vendor]:
+        for platform, rules in (data.get("tagging-rules") or {}).items():
+            if platform not in [e.value for e in Platform]:
                 continue
-            result[Vendor(vendor)] = [TaggingRule(**rule) for rule in rules]
+            result[Platform(platform)] = [TaggingRule(**rule) for rule in rules]
 
         self.rules = result
 
 
 class TaggingRulesDict(TaggingRules):
 
-    def __init__(self, rules_dict: dict[Vendor, list[dict[str, str | list[str]]]]) -> None:
+    def __init__(self, rules_dict: dict[Platform, list[dict[str, str | list[str]]]]) -> None:
         self.rules_dict = rules_dict
 
     def load_rules(self) -> None:
         result = {}
-        for vendor, rules in self.rules_dict.items():
-            if vendor not in [e.value for e in Vendor]:
+        for platform, rules in self.rules_dict.items():
+            if platform not in [e.value for e in Platform]:
                 continue
-            result[Vendor(vendor)] = [TaggingRule(**rule) for rule in rules]  # type: ignore[arg-type]
+            result[Platform(platform)] = [TaggingRule(**rule) for rule in rules]  # type: ignore[arg-type]
 
         self.rules = result
 
 
 class CTreeParser:
-    def __init__(self, vendor: Vendor, tagging_rules: TaggingRules | None = None) -> None:
-        self._class = ctree_class(vendor)
+    def __init__(self, platform: Platform, tagging_rules: TaggingRules | None = None) -> None:
+        self._class = ctree_class(platform)
         if tagging_rules is None:
             self.tagging_rules = []
         else:
-            self.tagging_rules = tagging_rules.rules.get(vendor, [])
+            self.tagging_rules = tagging_rules.rules.get(platform, [])
 
     def _get_template(self, line: str, template_list: list[CTree]) -> CTree:
         for template in template_list:

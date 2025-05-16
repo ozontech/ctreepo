@@ -1,6 +1,6 @@
 from textwrap import dedent
 
-from ctreepo import CTreeDiffer, CTreeParser, Vendor
+from ctreepo import CTreeDiffer, CTreeParser, Platform
 from ctreepo.postproc_huawei import HuaweiPostProcInterface, HuaweiPostProcRoutePolicy
 
 current_config = dedent(
@@ -35,7 +35,7 @@ current_config = dedent(
      bridge-domain 1234
      statistics enable
     #
-    """
+    """,
 ).strip()
 target_config = dedent(
     """
@@ -56,11 +56,11 @@ target_config = dedent(
      bridge-domain 1234
      statistics enable
     #
-    """
+    """,
 ).strip()
 
 
-def test_differ_postproc_vendor_check() -> None:
+def test_differ_postproc_platform_check() -> None:
     diff_config = dedent(
         """
         interface 25GE1/0/2
@@ -70,7 +70,7 @@ def test_differ_postproc_vendor_check() -> None:
         !
         no interface 25GE1/0/1.1234 mode l2
         !
-        """
+        """,
     ).strip()
     diff_patch = dedent(
         """
@@ -79,9 +79,9 @@ def test_differ_postproc_vendor_check() -> None:
         exit
         no interface 25GE1/0/1
         no interface 25GE1/0/1.1234 mode l2
-        """
+        """,
     ).strip()
-    parser = CTreeParser(vendor=Vendor.ARISTA)
+    parser = CTreeParser(platform=Platform.ARISTA_EOS)
 
     current = parser.parse(current_config)
     target = parser.parse(target_config)

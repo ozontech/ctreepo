@@ -2,9 +2,9 @@ from textwrap import dedent
 
 import pytest
 
-from ctreepo import CTree, CTreeParser, CTreeSearcher, CTreeSerializer, Vendor
+from ctreepo import CTree, CTreeParser, CTreeSearcher, CTreeSerializer, Platform
 from ctreepo.parser import TaggingRulesDict
-from ctreepo.vendors import HuaweiCT
+from ctreepo.platforms import HuaweiVRP
 
 
 @pytest.fixture(scope="function")
@@ -143,10 +143,10 @@ def root() -> CTree:
          end-filter
         #
         return
-        """
+        """,
     )
     tagging_rules_dict = {
-        Vendor.HUAWEI: [
+        Platform.HUAWEI_VRP: [
             {"regex": r"^interface (LoopBack\d+)$", "tags": ["interface", "loopback"]},
             {"regex": r"^interface (\S+)$", "tags": ["interface"]},
             {"regex": r"^interface (\S+) mode l2$", "tags": ["interface", "sub"]},
@@ -165,7 +165,7 @@ def root() -> CTree:
     }
     loader = TaggingRulesDict(tagging_rules_dict)  # type: ignore[arg-type]
     parser = CTreeParser(
-        vendor=Vendor.HUAWEI,
+        platform=Platform.HUAWEI_VRP,
         tagging_rules=loader,
     )
     root: CTree = parser.parse(config_str)
@@ -306,7 +306,7 @@ def test_config(root: CTree) -> None:
          endif
          end-filter
         #
-        """
+        """,
     ).strip()
     assert root.config == config
 
@@ -443,7 +443,7 @@ def test_patch(root: CTree) -> None:
         approve
         endif
         end-filter
-        """
+        """,
     ).strip()
     assert root.patch == patch
 
@@ -753,7 +753,7 @@ def test_to_dict(root: CTree) -> None:
                         "template": "",
                         "undo_line": "",
                         "children": {},
-                    }
+                    },
                 },
             },
             "route-policy RP_DENY deny node 10": {
@@ -790,7 +790,7 @@ def test_to_dict(root: CTree) -> None:
                                 "children": {},
                             },
                         },
-                    }
+                    },
                 },
             },
             "aaa": {
@@ -818,7 +818,7 @@ def test_to_dict(root: CTree) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
                     },
                     "authorization-scheme default": {
@@ -833,7 +833,7 @@ def test_to_dict(root: CTree) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
                     },
                     "authorization-scheme local": {
@@ -869,7 +869,7 @@ def test_to_dict(root: CTree) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
                     },
                     "local-user admin@local password irreversible-cipher admin-secret-key": {
@@ -1065,9 +1065,9 @@ def test_to_dict(root: CTree) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
-                    }
+                    },
                 },
             },
             "xpl extcommunity-list soo CL_SOO_1": {
@@ -1496,7 +1496,7 @@ def test_from_dict(root: CTree) -> None:
                         "template": "",
                         "undo_line": "",
                         "children": {},
-                    }
+                    },
                 },
             },
             "route-policy RP_DENY deny node 10": {
@@ -1533,7 +1533,7 @@ def test_from_dict(root: CTree) -> None:
                                 "children": {},
                             },
                         },
-                    }
+                    },
                 },
             },
             "aaa": {
@@ -1561,7 +1561,7 @@ def test_from_dict(root: CTree) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
                     },
                     "authorization-scheme default": {
@@ -1576,7 +1576,7 @@ def test_from_dict(root: CTree) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
                     },
                     "authorization-scheme local": {
@@ -1612,7 +1612,7 @@ def test_from_dict(root: CTree) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
                     },
                     "local-user admin@local password irreversible-cipher admin-secret-key": {
@@ -1808,9 +1808,9 @@ def test_from_dict(root: CTree) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
-                    }
+                    },
                 },
             },
             "xpl extcommunity-list soo CL_SOO_1": {
@@ -1930,11 +1930,11 @@ def test_from_dict(root: CTree) -> None:
             },
         },
     }
-    deserialized = CTreeSerializer.from_dict(Vendor.HUAWEI, src)
+    deserialized = CTreeSerializer.from_dict(Platform.HUAWEI_VRP, src)
     assert root == deserialized
 
     src["children"]["telnet server disable"]["tags"].append("changed")  # type: ignore[index]
-    deserialized = CTreeSerializer.from_dict(Vendor.HUAWEI, src)
+    deserialized = CTreeSerializer.from_dict(Platform.HUAWEI_VRP, src)
     assert root != deserialized
 
 
@@ -2013,42 +2013,42 @@ def test_masked_config(root: CTree) -> None:
          domain default
          domain local
           authentication-scheme local
-         local-user admin@local password irreversible-cipher {HuaweiCT.masking_string}
+         local-user admin@local password irreversible-cipher {HuaweiVRP.masking_string}
          local-user admin@local privilege level 3
          local-user admin@local service-type terminal ssh
         #
         hwtacacs-server template template-name
          hwtacacs-server authentication 5.5.5.5 vpn-instance MGMT
          hwtacacs-server authentication 6.6.6.6 vpn-instance MGMT secondary
-         hwtacacs-server shared-key cipher {HuaweiCT.masking_string}
+         hwtacacs-server shared-key cipher {HuaweiVRP.masking_string}
         #
         ssl policy policy-name
          diffie-hellman modulus 2048
          certificate load pem-cert cert.cer key-pair rsa key-file \
-cert.key.pem auth-code cipher {HuaweiCT.masking_string}
+cert.key.pem auth-code cipher {HuaweiVRP.masking_string}
         #
-        snmp-agent community read cipher {HuaweiCT.masking_string} mib-view iso-view
+        snmp-agent community read cipher {HuaweiVRP.masking_string} mib-view iso-view
         #
         ssh server-source -i all
         #
         ike peer ike_peer_name
          version 2
-         pre-shared-key cipher {HuaweiCT.masking_string}
+         pre-shared-key cipher {HuaweiVRP.masking_string}
          local-id-type fqdn
         #
         interface Tunnel0/0/0
          mtu 1300
          source LoopBack0
-         gre key cipher {HuaweiCT.masking_string}
-         nhrp authentication cipher {HuaweiCT.masking_string}
+         gre key cipher {HuaweiVRP.masking_string}
+         nhrp authentication cipher {HuaweiVRP.masking_string}
         #
         user-interface con 0
          authentication-mode password
-         set authentication password cipher {HuaweiCT.masking_string}
+         set authentication password cipher {HuaweiVRP.masking_string}
         #
         wlan ac
          security-profile name default
-          security wpa2 psk pass-phrase {HuaweiCT.masking_string} aes
+          security wpa2 psk pass-phrase {HuaweiVRP.masking_string} aes
         #
         xpl extcommunity-list soo CL_SOO_1
          123:123
@@ -2073,7 +2073,7 @@ cert.key.pem auth-code cipher {HuaweiCT.masking_string}
          endif
          end-filter
         #
-        """
+        """,
     ).strip()
     assert root.masked_config == masked_config
 
@@ -2156,40 +2156,40 @@ def test_masked_patch(root: CTree) -> None:
         domain local
         authentication-scheme local
         quit
-        local-user admin@local password irreversible-cipher {HuaweiCT.masking_string}
+        local-user admin@local password irreversible-cipher {HuaweiVRP.masking_string}
         local-user admin@local privilege level 3
         local-user admin@local service-type terminal ssh
         quit
         hwtacacs-server template template-name
         hwtacacs-server authentication 5.5.5.5 vpn-instance MGMT
         hwtacacs-server authentication 6.6.6.6 vpn-instance MGMT secondary
-        hwtacacs-server shared-key cipher {HuaweiCT.masking_string}
+        hwtacacs-server shared-key cipher {HuaweiVRP.masking_string}
         quit
         ssl policy policy-name
         diffie-hellman modulus 2048
         certificate load pem-cert cert.cer key-pair rsa key-file \
-cert.key.pem auth-code cipher {HuaweiCT.masking_string}
+cert.key.pem auth-code cipher {HuaweiVRP.masking_string}
         quit
-        snmp-agent community read cipher {HuaweiCT.masking_string} mib-view iso-view
+        snmp-agent community read cipher {HuaweiVRP.masking_string} mib-view iso-view
         ssh server-source -i all
         ike peer ike_peer_name
         version 2
-        pre-shared-key cipher {HuaweiCT.masking_string}
+        pre-shared-key cipher {HuaweiVRP.masking_string}
         local-id-type fqdn
         quit
         interface Tunnel0/0/0
         mtu 1300
         source LoopBack0
-        gre key cipher {HuaweiCT.masking_string}
-        nhrp authentication cipher {HuaweiCT.masking_string}
+        gre key cipher {HuaweiVRP.masking_string}
+        nhrp authentication cipher {HuaweiVRP.masking_string}
         quit
         user-interface con 0
         authentication-mode password
-        set authentication password cipher {HuaweiCT.masking_string}
+        set authentication password cipher {HuaweiVRP.masking_string}
         quit
         wlan ac
         security-profile name default
-        security wpa2 psk pass-phrase {HuaweiCT.masking_string} aes
+        security wpa2 psk pass-phrase {HuaweiVRP.masking_string} aes
         quit
         quit
         xpl extcommunity-list soo CL_SOO_1
@@ -2211,8 +2211,8 @@ cert.key.pem auth-code cipher {HuaweiCT.masking_string}
         approve
         endif
         end-filter
-        """
-    ).strip()  # noqa: F501
+        """,
+    ).strip()
     assert root.masked_patch == masked_patch
 
 
@@ -2233,7 +2233,7 @@ def test_searcher(root: CTree) -> None:
          qos queue 4 drr weight 50
          qos queue 1 ecn
         #
-        """
+        """,
     ).strip()
     interface_or_qos_config = dedent(
         """
@@ -2277,7 +2277,7 @@ def test_searcher(root: CTree) -> None:
          gre key cipher gre-secret-key
          nhrp authentication cipher nhrp-secret-key
         #
-        """
+        """,
     ).strip()
     interface_and_qos_config = dedent(
         """
@@ -2293,7 +2293,7 @@ def test_searcher(root: CTree) -> None:
          qos queue 4 drr weight 50
          qos queue 1 ecn
         #
-        """
+        """,
     ).strip()
 
     qos = CTreeSearcher.search(root, include_tags=["qos"])
@@ -2320,7 +2320,7 @@ def test_vty_expand() -> None:
          authentication-mode aaa
          idle-timeout 30 0
         #
-        """
+        """,
     )
     dst = dedent(
         """
@@ -2349,7 +2349,7 @@ def test_vty_expand() -> None:
          authentication-mode aaa
          idle-timeout 30 0
         #
-        """
+        """,
     )
-    config = HuaweiCT._expand_vty(src)
+    config = HuaweiVRP._expand_vty(src)
     assert config == dst

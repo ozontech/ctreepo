@@ -6,14 +6,14 @@ from textwrap import dedent
 
 import pytest
 
-from ctreepo import CTreeParser, Vendor
+from ctreepo import CTreeParser, Platform
 from ctreepo.ctree import CTree
 from ctreepo.parser import TaggingRulesFile
-from ctreepo.vendors import HuaweiCT
+from ctreepo.platforms import HuaweiVRP
 
 
 @pytest.fixture(scope="function")
-def huawei_manual_config() -> dict[str, HuaweiCT]:
+def huawei_manual_config() -> dict[str, HuaweiVRP]:
     # sflow collector 1 ip 100.64.0.1 vpn-instance MGMT
     # #
     # storm suppression statistics enable
@@ -43,33 +43,33 @@ def huawei_manual_config() -> dict[str, HuaweiCT]:
     #  radius-server shared-key cipher secret_password
     #  radius-server algorithm loading-share
 
-    root = HuaweiCT()
-    sflow = HuaweiCT("sflow collector 1 ip 100.64.0.1 vpn-instance MGMT", root)
-    storm = HuaweiCT("storm suppression statistics enable", root)
-    mgmt = HuaweiCT("ip vpn-instance MGMT", root)
-    ipv4_af_mgmt = HuaweiCT(" ipv4-family", mgmt)
-    rd_mgmt = HuaweiCT("  route-distinguisher 192.168.0.1:123", ipv4_af_mgmt)
-    lan = HuaweiCT("ip vpn-instance LAN", root)
-    ipv4_af_lan = HuaweiCT(" ipv4-family", lan)
-    rd_lan = HuaweiCT("  route-distinguisher 192.168.0.1:123", ipv4_af_lan)
-    rt_export = HuaweiCT("  vpn-target 123:123 export-extcommunity evpn", ipv4_af_lan)
-    rt_import = HuaweiCT("  vpn-target 123:123 import-extcommunity evpn", ipv4_af_lan)
-    vxlan = HuaweiCT(" vxlan vni 123", lan)
-    intf_000 = HuaweiCT("interface gi0/0/0", root)
-    description_000 = HuaweiCT(" description test", intf_000)
-    ip_000 = HuaweiCT(" ip address 1.1.1.1 255.255.255.252", intf_000)
-    intf_001 = HuaweiCT("interface gi0/0/1", root)
-    ip_001 = HuaweiCT(" ip address 1.1.1.1 255.255.255.252", intf_001)
-    load_interval_001 = HuaweiCT(" load-interval 30", intf_001)
-    ntp = HuaweiCT("ntp-service authentication-keyid 1 authentication-mode md5 cipher secret_password", root)
-    radius = HuaweiCT("radius-server template RADIUS_TEMPLATE", root)
-    radius_key = HuaweiCT(" radius-server shared-key cipher secret_password", radius)
-    radius_algorithm = HuaweiCT(" radius-server algorithm loading-share", radius)
+    root = HuaweiVRP()
+    sflow = HuaweiVRP("sflow collector 1 ip 100.64.0.1 vpn-instance MGMT", root)
+    storm = HuaweiVRP("storm suppression statistics enable", root)
+    mgmt = HuaweiVRP("ip vpn-instance MGMT", root)
+    ipv4_af_mgmt = HuaweiVRP(" ipv4-family", mgmt)
+    rd_mgmt = HuaweiVRP("  route-distinguisher 192.168.0.1:123", ipv4_af_mgmt)
+    lan = HuaweiVRP("ip vpn-instance LAN", root)
+    ipv4_af_lan = HuaweiVRP(" ipv4-family", lan)
+    rd_lan = HuaweiVRP("  route-distinguisher 192.168.0.1:123", ipv4_af_lan)
+    rt_export = HuaweiVRP("  vpn-target 123:123 export-extcommunity evpn", ipv4_af_lan)
+    rt_import = HuaweiVRP("  vpn-target 123:123 import-extcommunity evpn", ipv4_af_lan)
+    vxlan = HuaweiVRP(" vxlan vni 123", lan)
+    intf_000 = HuaweiVRP("interface gi0/0/0", root)
+    description_000 = HuaweiVRP(" description test", intf_000)
+    ip_000 = HuaweiVRP(" ip address 1.1.1.1 255.255.255.252", intf_000)
+    intf_001 = HuaweiVRP("interface gi0/0/1", root)
+    ip_001 = HuaweiVRP(" ip address 1.1.1.1 255.255.255.252", intf_001)
+    load_interval_001 = HuaweiVRP(" load-interval 30", intf_001)
+    ntp = HuaweiVRP("ntp-service authentication-keyid 1 authentication-mode md5 cipher secret_password", root)
+    radius = HuaweiVRP("radius-server template RADIUS_TEMPLATE", root)
+    radius_key = HuaweiVRP(" radius-server shared-key cipher secret_password", radius)
+    radius_algorithm = HuaweiVRP(" radius-server algorithm loading-share", radius)
 
     return locals()
 
 
-def test_basic_creation(huawei_manual_config: dict[str, HuaweiCT]) -> None:
+def test_basic_creation(huawei_manual_config: dict[str, HuaweiVRP]) -> None:
     root = huawei_manual_config
     assert str(root["root"]) == "root"
     assert root["sflow"].parent == root["root"]
@@ -81,39 +81,39 @@ def test_basic_creation(huawei_manual_config: dict[str, HuaweiCT]) -> None:
     assert root["lan"].parent == root["mgmt"].parent
 
 
-def test_eq(huawei_manual_config: dict[str, HuaweiCT]) -> None:
+def test_eq(huawei_manual_config: dict[str, HuaweiVRP]) -> None:
     # interface gi0/0/0
     #  description test
     #  ip address 1.1.1.1 255.255.255.252
     # radius-server template RADIUS_TEMPLATE
     root = huawei_manual_config
-    other_root = HuaweiCT()
-    other_intf_000 = HuaweiCT("interface gi0/0/0", other_root)
-    other_radius = HuaweiCT("radius-server template RADIUS_TEMPLATE", other_root)
+    other_root = HuaweiVRP()
+    other_intf_000 = HuaweiVRP("interface gi0/0/0", other_root)
+    other_radius = HuaweiVRP("radius-server template RADIUS_TEMPLATE", other_root)
     assert root["intf_000"] != other_intf_000
-    other_ip_000 = HuaweiCT(" ip address 1.1.1.1 255.255.255.252", other_intf_000)
-    _ = HuaweiCT(" description test", other_intf_000)
+    other_ip_000 = HuaweiVRP(" ip address 1.1.1.1 255.255.255.252", other_intf_000)
+    _ = HuaweiVRP(" description test", other_intf_000)
     assert root["root"] != other_root
     assert root["intf_000"] == other_intf_000
     assert root["ip_000"] == other_ip_000
     assert root["intf_001"] != other_intf_000
     assert root["ip_001"] != other_ip_000
     assert root["radius"] != other_radius
-    assert HuaweiCT() != NotImplemented
+    assert HuaweiVRP() != NotImplemented
 
-    other_root = HuaweiCT()
-    other_intf_000 = HuaweiCT("interface gi0/0/0", other_root)
-    _ = HuaweiCT(" ip address 1.1.1.2 255.255.255.252", other_intf_000)
-    _ = HuaweiCT(" description test", other_intf_000)
+    other_root = HuaweiVRP()
+    other_intf_000 = HuaweiVRP("interface gi0/0/0", other_root)
+    _ = HuaweiVRP(" ip address 1.1.1.2 255.255.255.252", other_intf_000)
+    _ = HuaweiVRP(" description test", other_intf_000)
     assert root["intf_000"] != other_intf_000
 
 
-def test_repr(huawei_manual_config: dict[str, HuaweiCT]) -> None:
+def test_repr(huawei_manual_config: dict[str, HuaweiVRP]) -> None:
     root = huawei_manual_config
     assert repr(root["root"]) == f"({id(root['root'])}) 'root'"
 
 
-def test_config(huawei_manual_config: dict[str, HuaweiCT]) -> None:
+def test_config(huawei_manual_config: dict[str, HuaweiVRP]) -> None:
     config = dedent(
         """
         sflow collector 1 ip 100.64.0.1 vpn-instance MGMT
@@ -145,13 +145,13 @@ def test_config(huawei_manual_config: dict[str, HuaweiCT]) -> None:
          radius-server shared-key cipher secret_password
          radius-server algorithm loading-share
         #
-        """
+        """,
     ).strip()
     root = huawei_manual_config["root"]
     assert root.config == config
 
 
-def test_masked_config(huawei_manual_config: dict[str, HuaweiCT]) -> None:
+def test_masked_config(huawei_manual_config: dict[str, HuaweiVRP]) -> None:
     masked_config = dedent(
         f"""
         sflow collector 1 ip 100.64.0.1 vpn-instance MGMT
@@ -177,19 +177,19 @@ def test_masked_config(huawei_manual_config: dict[str, HuaweiCT]) -> None:
          ip address 1.1.1.1 255.255.255.252
          load-interval 30
         #
-        ntp-service authentication-keyid 1 authentication-mode md5 cipher {HuaweiCT.masking_string}
+        ntp-service authentication-keyid 1 authentication-mode md5 cipher {HuaweiVRP.masking_string}
         #
         radius-server template RADIUS_TEMPLATE
-         radius-server shared-key cipher {HuaweiCT.masking_string}
+         radius-server shared-key cipher {HuaweiVRP.masking_string}
          radius-server algorithm loading-share
         #
-        """
+        """,
     ).strip()
     root = huawei_manual_config["root"]
     assert root.masked_config == masked_config
 
 
-def test_patch(huawei_manual_config: dict[str, HuaweiCT]) -> None:
+def test_patch(huawei_manual_config: dict[str, HuaweiVRP]) -> None:
     patch = dedent(
         """
         sflow collector 1 ip 100.64.0.1 vpn-instance MGMT
@@ -220,13 +220,13 @@ def test_patch(huawei_manual_config: dict[str, HuaweiCT]) -> None:
         radius-server shared-key cipher secret_password
         radius-server algorithm loading-share
         quit
-        """
+        """,
     ).strip()
     root = huawei_manual_config["root"]
     assert root.patch == patch
 
 
-def test_masked_patch(huawei_manual_config: dict[str, HuaweiCT]) -> None:
+def test_masked_patch(huawei_manual_config: dict[str, HuaweiVRP]) -> None:
     masked_patch = dedent(
         f"""
         sflow collector 1 ip 100.64.0.1 vpn-instance MGMT
@@ -252,40 +252,40 @@ def test_masked_patch(huawei_manual_config: dict[str, HuaweiCT]) -> None:
         ip address 1.1.1.1 255.255.255.252
         load-interval 30
         quit
-        ntp-service authentication-keyid 1 authentication-mode md5 cipher {HuaweiCT.masking_string}
+        ntp-service authentication-keyid 1 authentication-mode md5 cipher {HuaweiVRP.masking_string}
         radius-server template RADIUS_TEMPLATE
-        radius-server shared-key cipher {HuaweiCT.masking_string}
+        radius-server shared-key cipher {HuaweiVRP.masking_string}
         radius-server algorithm loading-share
         quit
-        """
+        """,
     ).strip()
     root = huawei_manual_config["root"]
     assert root.masked_patch == masked_patch
 
 
-def test_copy(huawei_manual_config: dict[str, HuaweiCT]) -> None:
-    def get_nodes_list(root: HuaweiCT) -> list[HuaweiCT]:
+def test_copy(huawei_manual_config: dict[str, HuaweiVRP]) -> None:
+    def get_nodes_list(root: HuaweiVRP) -> list[HuaweiVRP]:
         stack = deque(root.children.values())
-        nodes: list[HuaweiCT] = []
+        nodes: list[HuaweiVRP] = []
         while len(stack) > 0:
             node = stack.popleft()
-            # node = cast(HuaweiCT, node)
+            # node = cast(HuaweiVRP, node)
             nodes.append(node)
             if len(node.children) != 0:
                 stack.extendleft(list(node.children.values())[::-1])
         return nodes
 
-    root = HuaweiCT()
-    lan = HuaweiCT("ip vpn-instance LAN", root)
-    af = HuaweiCT(" ipv4-family", lan)
-    _ = HuaweiCT("  route-distinguisher 192.168.0.1:123", af)
-    _ = HuaweiCT("  vpn-target 123:123 export-extcommunity evpn", af)
-    _ = HuaweiCT("  vpn-target 123:123 import-extcommunity evpn", af)
+    root = HuaweiVRP()
+    lan = HuaweiVRP("ip vpn-instance LAN", root)
+    af = HuaweiVRP(" ipv4-family", lan)
+    _ = HuaweiVRP("  route-distinguisher 192.168.0.1:123", af)
+    _ = HuaweiVRP("  vpn-target 123:123 export-extcommunity evpn", af)
+    _ = HuaweiVRP("  vpn-target 123:123 import-extcommunity evpn", af)
 
     copy1 = root.copy()
     copy2 = root.copy()
     copy3 = huawei_manual_config["root"].children["ip vpn-instance LAN"].children["ipv4-family"].copy()
-    # copy3 = cast(HuaweiCT, copy3)
+    # copy3 = cast(HuaweiVRP, copy3)
     assert root == copy1
     assert root == copy2
     assert root == copy3
@@ -321,19 +321,19 @@ def test_merge() -> None:
           vpn-target 123:123 import-extcommunity evpn
          vxlan vni 123
         #
-        """
+        """,
     ).strip()
 
-    root1 = HuaweiCT()
-    lan = HuaweiCT("ip vpn-instance LAN", root1)
-    af = HuaweiCT(" ipv4-family", lan)
-    _ = HuaweiCT("  route-distinguisher 192.168.0.1:123", af)
-    _ = HuaweiCT("  vpn-target 123:123 export-extcommunity evpn", af)
-    _ = HuaweiCT("  vpn-target 123:123 import-extcommunity evpn", af)
+    root1 = HuaweiVRP()
+    lan = HuaweiVRP("ip vpn-instance LAN", root1)
+    af = HuaweiVRP(" ipv4-family", lan)
+    _ = HuaweiVRP("  route-distinguisher 192.168.0.1:123", af)
+    _ = HuaweiVRP("  vpn-target 123:123 export-extcommunity evpn", af)
+    _ = HuaweiVRP("  vpn-target 123:123 import-extcommunity evpn", af)
 
-    root2 = HuaweiCT()
-    lan = HuaweiCT("ip vpn-instance LAN", root2)
-    _ = HuaweiCT(" vxlan vni 123", lan)
+    root2 = HuaweiVRP()
+    lan = HuaweiVRP("ip vpn-instance LAN", root2)
+    _ = HuaweiVRP(" vxlan vni 123", lan)
     root1.merge(root2)
     assert root1.config == config
     vxlan1 = root1.children["ip vpn-instance LAN"].children["vxlan vni 123"]
@@ -347,22 +347,22 @@ def test_merge() -> None:
          description test
          undo shutdown
         #
-        """
+        """,
     ).strip()
-    root1 = HuaweiCT()
-    intf = HuaweiCT("interface gi0/0/0", root1)
-    _ = HuaweiCT(" ip address 1.1.1.1 255.255.255.252", intf)
-    _ = HuaweiCT(" description test", intf)
+    root1 = HuaweiVRP()
+    intf = HuaweiVRP("interface gi0/0/0", root1)
+    _ = HuaweiVRP(" ip address 1.1.1.1 255.255.255.252", intf)
+    _ = HuaweiVRP(" description test", intf)
 
-    root2 = HuaweiCT()
-    intf = HuaweiCT("interface gi0/0/0", root2)
-    _ = HuaweiCT(" undo shutdown", intf)
+    root2 = HuaweiVRP()
+    intf = HuaweiVRP("interface gi0/0/0", root2)
+    _ = HuaweiVRP(" undo shutdown", intf)
 
     root1.merge(root2)
     assert root1.config == config
 
 
-def test_delete(huawei_manual_config: dict[str, HuaweiCT]) -> None:
+def test_delete(huawei_manual_config: dict[str, HuaweiVRP]) -> None:
     config = dedent(
         """
         sflow collector 1 ip 100.64.0.1 vpn-instance MGMT
@@ -386,7 +386,7 @@ def test_delete(huawei_manual_config: dict[str, HuaweiCT]) -> None:
          radius-server shared-key cipher secret_password
          radius-server algorithm loading-share
         #
-        """
+        """,
     ).strip()
     root = huawei_manual_config["root"]
     node1 = root.children["ip vpn-instance MGMT"]
@@ -396,9 +396,9 @@ def test_delete(huawei_manual_config: dict[str, HuaweiCT]) -> None:
     assert root.config == config
 
 
-def test_rebuild(huawei_manual_config: dict[str, HuaweiCT]) -> None:
+def test_rebuild(huawei_manual_config: dict[str, HuaweiVRP]) -> None:
     mgmt = huawei_manual_config["mgmt"]
-    if not isinstance(mgmt, HuaweiCT) or not isinstance(mgmt.parent, HuaweiCT):
+    if not isinstance(mgmt, HuaweiVRP) or not isinstance(mgmt.parent, HuaweiVRP):
         raise AssertionError
     mgmt.line = "ip vpn-instance MGMT_NEW_NAME"
     mgmt.parent.rebuild()
@@ -406,7 +406,7 @@ def test_rebuild(huawei_manual_config: dict[str, HuaweiCT]) -> None:
 
     root = huawei_manual_config["root"]
     rd = root.children["ip vpn-instance LAN"].children["ipv4-family"].children["route-distinguisher 192.168.0.1:123"]
-    if not isinstance(rd, HuaweiCT) or not isinstance(rd.parent, HuaweiCT):
+    if not isinstance(rd, HuaweiVRP) or not isinstance(rd.parent, HuaweiVRP):
         raise AssertionError
     rd.line = "route-distinguisher 1.2.3.4:567"
     assert rd.line not in rd.parent.children.keys()
@@ -414,7 +414,7 @@ def test_rebuild(huawei_manual_config: dict[str, HuaweiCT]) -> None:
     assert rd.line in rd.parent.children.keys()
 
 
-def test_mask_line(huawei_manual_config: dict[str, HuaweiCT]) -> None:
+def test_mask_line(huawei_manual_config: dict[str, HuaweiVRP]) -> None:
     nodes = [
         huawei_manual_config["ntp"],
         huawei_manual_config["radius"].children.get("radius-server shared-key cipher secret_password"),
@@ -424,29 +424,29 @@ def test_mask_line(huawei_manual_config: dict[str, HuaweiCT]) -> None:
         "radius-server shared-key cipher secret_password",
     ]
     masked_lines = [
-        f"ntp-service authentication-keyid 1 authentication-mode md5 cipher {HuaweiCT.masking_string}",
-        f"radius-server shared-key cipher {HuaweiCT.masking_string}",
+        f"ntp-service authentication-keyid 1 authentication-mode md5 cipher {HuaweiVRP.masking_string}",
+        f"radius-server shared-key cipher {HuaweiVRP.masking_string}",
     ]
     for node, raw, masked in zip(nodes, raw_lines, masked_lines, strict=True):
-        if not isinstance(node, HuaweiCT):
+        if not isinstance(node, HuaweiVRP):
             raise AssertionError
         assert node.line == raw
         assert node.masked_line == masked
 
 
-def test_nested_config(huawei_manual_config: dict[str, HuaweiCT]) -> None:
+def test_nested_config(huawei_manual_config: dict[str, HuaweiVRP]) -> None:
     config = dedent(
         """
         ip vpn-instance LAN
          ipv4-family
           route-distinguisher 192.168.0.1:123
-        """
+        """,
     ).strip()
     rd = huawei_manual_config["rd_lan"]
     assert rd.config == config
 
 
-def test_nested_patch(huawei_manual_config: dict[str, HuaweiCT]) -> None:
+def test_nested_patch(huawei_manual_config: dict[str, HuaweiVRP]) -> None:
     patch = dedent(
         """
         ip vpn-instance LAN
@@ -455,19 +455,19 @@ def test_nested_patch(huawei_manual_config: dict[str, HuaweiCT]) -> None:
         quit
         quit
         quit
-        """
+        """,
     ).strip()
     rd = huawei_manual_config["rd_lan"]
     assert rd.patch == patch
 
 
-def test_exists_in(huawei_manual_config: dict[str, HuaweiCT]) -> None:
+def test_exists_in(huawei_manual_config: dict[str, HuaweiVRP]) -> None:
     uut = huawei_manual_config["radius"]
-    root = HuaweiCT()
-    radius = HuaweiCT("radius-server template RADIUS_TEMPLATE", root)
-    key_1 = HuaweiCT(" radius-server shared-key cipher new_secret_password", radius)
-    key_2 = HuaweiCT(" radius-server shared-key cipher secret_password", radius)
-    key_3 = HuaweiCT(" radius-server shared-key", radius)
+    root = HuaweiVRP()
+    radius = HuaweiVRP("radius-server template RADIUS_TEMPLATE", root)
+    key_1 = HuaweiVRP(" radius-server shared-key cipher new_secret_password", radius)
+    key_2 = HuaweiVRP(" radius-server shared-key cipher secret_password", radius)
+    key_3 = HuaweiVRP(" radius-server shared-key", radius)
 
     assert key_1.exists_in(uut) == ""
     assert key_1.exists_in(uut, masked=False) == ""
@@ -482,7 +482,7 @@ def test_exists_in(huawei_manual_config: dict[str, HuaweiCT]) -> None:
     assert key_3.exists_in(uut, masked=True) == ""
 
 
-def test_formal_config(huawei_manual_config: dict[str, HuaweiCT]) -> None:
+def test_formal_config(huawei_manual_config: dict[str, HuaweiVRP]) -> None:
     formal_config = dedent(
         """
         sflow collector 1 ip 100.64.0.1 vpn-instance MGMT
@@ -499,7 +499,7 @@ def test_formal_config(huawei_manual_config: dict[str, HuaweiCT]) -> None:
         ntp-service authentication-keyid 1 authentication-mode md5 cipher secret_password
         radius-server template RADIUS_TEMPLATE / radius-server shared-key cipher secret_password
         radius-server template RADIUS_TEMPLATE / radius-server algorithm loading-share
-        """
+        """,
     ).strip()
     root = huawei_manual_config["root"]
     assert root.formal_config == formal_config
@@ -508,7 +508,7 @@ def test_formal_config(huawei_manual_config: dict[str, HuaweiCT]) -> None:
         """
         interface gi0/0/0 / description test
         interface gi0/0/0 / ip address 1.1.1.1 255.255.255.252
-        """
+        """,
     ).strip()
     intf = huawei_manual_config["intf_000"]
     assert intf.formal_config == interface_formal_config
@@ -541,7 +541,7 @@ def test_reorder() -> None:
         ip ip-prefix PL_NAME_1 index 10 permit 1.2.3.0 24 greater-equal 32 less-equal 32
         #
         ip ip-prefix PL_NAME_1 index 20 permit 2.3.4.0 24
-        """
+        """,
     ).strip()
     original = dedent(
         """
@@ -566,7 +566,7 @@ def test_reorder() -> None:
         #
         ip ip-prefix PL_NAME_1 index 20 permit 2.3.4.0 24
         #
-        """
+        """,
     ).strip()
     reordered_pl_rp_bgp = dedent(
         """
@@ -591,7 +591,7 @@ def test_reorder() -> None:
          ipv4-family unicast
           import-route direct route-policy RP_CONNECTED
         #
-        """
+        """,
     ).strip()
     reordered_rp_pl_bgp = dedent(
         """
@@ -616,7 +616,7 @@ def test_reorder() -> None:
          ipv4-family unicast
           import-route direct route-policy RP_CONNECTED
         #
-        """
+        """,
     ).strip()
     reordered_bgp_pl = dedent(
         """
@@ -641,7 +641,7 @@ def test_reorder() -> None:
          if-match ip-prefix PL_NAME_1
          apply community community-list CL_NAME_1 additive
         #
-        """
+        """,
     ).strip()
 
     reordered_rp_pl_bgp_reversed = dedent(
@@ -667,7 +667,7 @@ def test_reorder() -> None:
          if-match ip-prefix PL_NAME_1
          apply community community-list CL_NAME_1 additive
         #
-        """
+        """,
     ).strip()
 
     reordered_bgp_pl_reversed = dedent(
@@ -693,10 +693,10 @@ def test_reorder() -> None:
          if-match ip-prefix PL_NAME_1
          apply community community-list CL_NAME_1 additive
         #
-        """
+        """,
     ).strip()
 
-    parser = CTreeParser(Vendor.HUAWEI, TaggingRulesFile(Path(__file__).with_suffix(".yaml")))
+    parser = CTreeParser(Platform.HUAWEI_VRP, TaggingRulesFile(Path(__file__).with_suffix(".yaml")))
 
     root = parser.parse(config)
     assert root.config == original
@@ -721,10 +721,10 @@ def test_reorder() -> None:
 
 
 def test_tag_copy() -> None:
-    root = HuaweiCT()
-    lan = HuaweiCT("level-1", root)
-    af = HuaweiCT("level-2", lan, ["af", "vpn", "LAN"])
-    rd = HuaweiCT("level-3", af, af.tags)
+    root = HuaweiVRP()
+    lan = HuaweiVRP("level-1", root)
+    af = HuaweiVRP("level-2", lan, ["af", "vpn", "LAN"])
+    rd = HuaweiVRP("level-3", af, af.tags)
 
     root_uut = rd.copy()
     rd_uut = root_uut.children["level-1"].children["level-2"].children["level-3"]
@@ -748,7 +748,7 @@ def test_subtract() -> None:
          server 10.1.0.2 vrf MGMT
          server 10.1.0.3 vrf MGMT
         #
-        """
+        """,
     ).strip()
     config2 = dedent(
         """
@@ -762,7 +762,7 @@ def test_subtract() -> None:
          server 10.1.0.4 vrf MGMT
          server 10.1.0.3 vrf MGMT
         #
-        """
+        """,
     ).strip()
     config1_config2 = dedent(
         """
@@ -771,10 +771,10 @@ def test_subtract() -> None:
         aaa group server tacacs+ group
          server 10.1.0.2 vrf MGMT
         #
-        """
+        """,
     ).strip()
     config2_config1 = ""
-    parser = CTreeParser(vendor=Vendor.HUAWEI)
+    parser = CTreeParser(platform=Platform.HUAWEI_VRP)
     root1 = parser.parse(config1)
     root2 = parser.parse(config2)
     diff = root1.subtract(root2)
@@ -798,7 +798,7 @@ def test_apply() -> None:
         section 5
          sub-line 5.1
         line 11
-        """
+        """,
     ).strip()
     diff_config = dedent(
         """
@@ -815,7 +815,7 @@ def test_apply() -> None:
         line 10
         section 5
          undo sub-line 5.1
-        """
+        """,
     ).strip()
     target_config = dedent(
         """
@@ -839,9 +839,9 @@ def test_apply() -> None:
         section 2
          sub-line 2.1
         #
-        """
+        """,
     ).strip()
-    parser = CTreeParser(vendor=Vendor.HUAWEI)
+    parser = CTreeParser(platform=Platform.HUAWEI_VRP)
     current = parser.parse(current_config)
     diff = parser.parse(diff_config)
     target = current.apply(diff)
@@ -851,7 +851,7 @@ def test_apply() -> None:
 def test_abstract_properties() -> None:
     root = CTree()
     for attr in (
-        "vendor",
+        "platform",
         "spaces",
         "section_exit",
         "section_separator",
@@ -873,7 +873,7 @@ def test_move_before() -> None:
         section 1
          sub-line 1.1
         line 3
-        """
+        """,
     ).strip()
     root_config = dedent(
         """
@@ -884,7 +884,7 @@ def test_move_before() -> None:
         #
         line 3
         #
-        """
+        """,
     ).strip()
     root_inserted = dedent(
         """
@@ -897,10 +897,10 @@ def test_move_before() -> None:
         #
         line 3
         #
-        """
+        """,
     ).strip()
 
-    parser = CTreeParser(vendor=Vendor.HUAWEI)
+    parser = CTreeParser(platform=Platform.HUAWEI_VRP)
     root = parser.parse(config)
     assert root.config == root_config
 
@@ -919,7 +919,7 @@ def test_move_after() -> None:
         line 3
         section 1
          sub-line 1.1
-        """
+        """,
     ).strip()
     root_config = dedent(
         """
@@ -930,7 +930,7 @@ def test_move_after() -> None:
         section 1
          sub-line 1.1
         #
-        """
+        """,
     ).strip()
     root_inserted = dedent(
         """
@@ -943,10 +943,10 @@ def test_move_after() -> None:
         #
         line 3
         #
-        """
+        """,
     ).strip()
 
-    parser = CTreeParser(vendor=Vendor.HUAWEI)
+    parser = CTreeParser(platform=Platform.HUAWEI_VRP)
     root = parser.parse(config)
     assert root.config == root_config
 
@@ -967,7 +967,7 @@ def test_move_incorrect() -> None:
         section 1
          sub-line 1.1
         line 3
-        """
+        """,
     ).strip()
     root_config = dedent(
         """
@@ -978,9 +978,9 @@ def test_move_incorrect() -> None:
         #
         line 3
         #
-        """
+        """,
     ).strip()
-    parser = CTreeParser(vendor=Vendor.HUAWEI)
+    parser = CTreeParser(platform=Platform.HUAWEI_VRP)
     root = parser.parse(config)
     line_1 = root.children["line 1"]
     sub_line_1 = root.children["section 1"].children["sub-line 1.1"]
@@ -1002,9 +1002,9 @@ def test_remove_tags() -> None:
         section 1
          sub-line 1.1
         line 3
-        """
+        """,
     ).strip()
-    parser = CTreeParser(vendor=Vendor.HUAWEI)
+    parser = CTreeParser(platform=Platform.HUAWEI_VRP)
     root = parser.parse(config)
     line = root.children["line 1"]
     section = root.children["section 1"]

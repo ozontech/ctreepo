@@ -2,7 +2,7 @@ from .ctree import CTree
 from .differ import CTreeDiffer
 from .environment import CTreeEnv
 from .factory import ctree_factory
-from .models import Vendor
+from .models import Platform
 from .parser import CTreeParser
 from .postproc_arista import *
 from .postproc_cisco import *
@@ -15,8 +15,8 @@ __all__ = [
     "CTree",
     "CTreeEnv",
     "ctree_factory",
-    "Vendor",
     "CTreeParser",
     "CTreeSearcher",
     "CTreeSerializer",
+    "Platform",
 ]

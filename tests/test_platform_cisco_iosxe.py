@@ -2,9 +2,9 @@ from textwrap import dedent
 
 import pytest
 
-from ctreepo import CTree, CTreeParser, CTreeSearcher, CTreeSerializer, Vendor
+from ctreepo import CTree, CTreeParser, CTreeSearcher, CTreeSerializer, Platform
 from ctreepo.parser import TaggingRulesDict
-from ctreepo.vendors import CiscoCT
+from ctreepo.platforms import CiscoIOSXE
 
 
 @pytest.fixture(scope="function")
@@ -136,10 +136,10 @@ def root() -> CTree:
         !
         !
         end
-        """
+        """,
     )
     tagging_rules_dict = {
-        Vendor.CISCO: [
+        Platform.CISCO_IOSXE: [
             {"regex": r"^interface (Loopback\d+)$", "tags": ["interface", "loopback"]},
             {"regex": r"^interface (\S+)$", "tags": ["interface"]},
             {"regex": r"^interface (\S+) / service-policy (?:input|output) (\S+)$", "tags": ["interface", "qos"]},
@@ -157,7 +157,7 @@ def root() -> CTree:
     }
     loader = TaggingRulesDict(tagging_rules_dict)  # type: ignore[arg-type]
     parser = CTreeParser(
-        vendor=Vendor.CISCO,
+        platform=Platform.CISCO_IOSXE,
         tagging_rules=loader,
     )
     root: CTree = parser.parse(config_str)
@@ -289,7 +289,7 @@ def test_config(root: CTree) -> None:
         line vty 5 15
          transport input all
         !
-        """
+        """,
     ).strip()
     assert root.config == config
 
@@ -407,7 +407,7 @@ def test_patch(root: CTree) -> None:
         line vty 5 15
         transport input all
         exit
-        """
+        """,
     ).strip()
     assert root.patch == patch
 
@@ -481,7 +481,7 @@ def test_to_dict(root: CTree) -> None:
                         "template": "",
                         "undo_line": "",
                         "children": {},
-                    }
+                    },
                 },
             },
             "aaa new-model": {
@@ -513,7 +513,7 @@ def test_to_dict(root: CTree) -> None:
                 "children": {},
             },
             "username admin privilege 15 secret 9 admin-secret-key": {
-                "line": ("username admin privilege 15 secret 9 " "admin-secret-key"),
+                "line": ("username admin privilege 15 secret 9 admin-secret-key"),
                 "tags": ["mgmt", "user", "admin"],
                 "template": "",
                 "undo_line": "",
@@ -545,9 +545,9 @@ def test_to_dict(root: CTree) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
-                    }
+                    },
                 },
             },
             "crypto pki certificate chain TP_NAME_2": {
@@ -576,7 +576,7 @@ def test_to_dict(root: CTree) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
                     },
                     "certificate ca 4321DCBA": {
@@ -599,7 +599,7 @@ def test_to_dict(root: CTree) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
                     },
                 },
@@ -688,7 +688,7 @@ def test_to_dict(root: CTree) -> None:
                         "template": "",
                         "undo_line": "",
                         "children": {},
-                    }
+                    },
                 },
             },
             "class-map match-all CM_NAME_2": {
@@ -703,7 +703,7 @@ def test_to_dict(root: CTree) -> None:
                         "template": "",
                         "undo_line": "",
                         "children": {},
-                    }
+                    },
                 },
             },
             "policy-map PL_NAME_1": {
@@ -724,7 +724,7 @@ def test_to_dict(root: CTree) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
                     },
                     "class CM_NAME_2": {
@@ -739,7 +739,7 @@ def test_to_dict(root: CTree) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
                     },
                     "class CM_NAME_3": {
@@ -754,7 +754,7 @@ def test_to_dict(root: CTree) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
                     },
                     "class CM_NAME_4": {
@@ -769,7 +769,7 @@ def test_to_dict(root: CTree) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
                     },
                     "class CM_NAME_5": {
@@ -806,7 +806,7 @@ def test_to_dict(root: CTree) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
                     },
                 },
@@ -915,7 +915,7 @@ def test_to_dict(root: CTree) -> None:
                 "template": "",
                 "undo_line": "",
                 "children": {
-                    "stopbits 1": {"line": "stopbits 1", "tags": [], "template": "", "undo_line": "", "children": {}}
+                    "stopbits 1": {"line": "stopbits 1", "tags": [], "template": "", "undo_line": "", "children": {}},
                 },
             },
             "line vty 0 4": {
@@ -930,7 +930,7 @@ def test_to_dict(root: CTree) -> None:
                         "template": "",
                         "undo_line": "",
                         "children": {},
-                    }
+                    },
                 },
             },
             "line vty 5 15": {
@@ -945,7 +945,7 @@ def test_to_dict(root: CTree) -> None:
                         "template": "",
                         "undo_line": "",
                         "children": {},
-                    }
+                    },
                 },
             },
         },
@@ -1023,7 +1023,7 @@ def test_from_dict(root: CTree) -> None:
                         "template": "",
                         "undo_line": "",
                         "children": {},
-                    }
+                    },
                 },
             },
             "aaa new-model": {
@@ -1055,7 +1055,7 @@ def test_from_dict(root: CTree) -> None:
                 "children": {},
             },
             "username admin privilege 15 secret 9 admin-secret-key": {
-                "line": ("username admin privilege 15 secret 9 " "admin-secret-key"),
+                "line": ("username admin privilege 15 secret 9 admin-secret-key"),
                 "tags": ["mgmt", "user", "admin"],
                 "template": "",
                 "undo_line": "",
@@ -1087,9 +1087,9 @@ def test_from_dict(root: CTree) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
-                    }
+                    },
                 },
             },
             "crypto pki certificate chain TP_NAME_2": {
@@ -1118,7 +1118,7 @@ def test_from_dict(root: CTree) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
                     },
                     "certificate ca 4321DCBA": {
@@ -1141,7 +1141,7 @@ def test_from_dict(root: CTree) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
                     },
                 },
@@ -1230,7 +1230,7 @@ def test_from_dict(root: CTree) -> None:
                         "template": "",
                         "undo_line": "",
                         "children": {},
-                    }
+                    },
                 },
             },
             "class-map match-all CM_NAME_2": {
@@ -1245,7 +1245,7 @@ def test_from_dict(root: CTree) -> None:
                         "template": "",
                         "undo_line": "",
                         "children": {},
-                    }
+                    },
                 },
             },
             "policy-map PL_NAME_1": {
@@ -1266,7 +1266,7 @@ def test_from_dict(root: CTree) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
                     },
                     "class CM_NAME_2": {
@@ -1281,7 +1281,7 @@ def test_from_dict(root: CTree) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
                     },
                     "class CM_NAME_3": {
@@ -1296,7 +1296,7 @@ def test_from_dict(root: CTree) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
                     },
                     "class CM_NAME_4": {
@@ -1311,7 +1311,7 @@ def test_from_dict(root: CTree) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
                     },
                     "class CM_NAME_5": {
@@ -1348,7 +1348,7 @@ def test_from_dict(root: CTree) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
                     },
                 },
@@ -1457,7 +1457,7 @@ def test_from_dict(root: CTree) -> None:
                 "template": "",
                 "undo_line": "",
                 "children": {
-                    "stopbits 1": {"line": "stopbits 1", "tags": [], "template": "", "undo_line": "", "children": {}}
+                    "stopbits 1": {"line": "stopbits 1", "tags": [], "template": "", "undo_line": "", "children": {}},
                 },
             },
             "line vty 0 4": {
@@ -1472,7 +1472,7 @@ def test_from_dict(root: CTree) -> None:
                         "template": "",
                         "undo_line": "",
                         "children": {},
-                    }
+                    },
                 },
             },
             "line vty 5 15": {
@@ -1487,16 +1487,16 @@ def test_from_dict(root: CTree) -> None:
                         "template": "",
                         "undo_line": "",
                         "children": {},
-                    }
+                    },
                 },
             },
         },
     }
-    deserialized = CTreeSerializer.from_dict(Vendor.CISCO, src)
+    deserialized = CTreeSerializer.from_dict(Platform.CISCO_IOSXE, src)
     assert root == deserialized
 
     src["children"]["line vty 5 15"]["tags"].append("changed")  # type: ignore[index]
-    deserialized = CTreeSerializer.from_dict(Vendor.CISCO, src)
+    deserialized = CTreeSerializer.from_dict(Platform.CISCO_IOSXE, src)
     assert root != deserialized
 
 
@@ -1530,7 +1530,7 @@ def test_masked_config(root: CTree) -> None:
         !
         spanning-tree extend system-id
         !
-        username admin privilege 15 secret 9 {CiscoCT.masking_string}
+        username admin privilege 15 secret 9 {CiscoIOSXE.masking_string}
         !
         crypto pki certificate chain TP_NAME_1
          certificate ca 1234ABCD
@@ -1625,7 +1625,7 @@ def test_masked_config(root: CTree) -> None:
         line vty 5 15
          transport input all
         !
-        """
+        """,
     ).strip()
     assert root.masked_config == masked_config
 
@@ -1648,7 +1648,7 @@ def test_masked_patch(root: CTree) -> None:
         aaa authentication login default local
         aaa authorization exec default local
         spanning-tree extend system-id
-        username admin privilege 15 secret 9 {CiscoCT.masking_string}
+        username admin privilege 15 secret 9 {CiscoIOSXE.masking_string}
         crypto pki certificate chain TP_NAME_1
         certificate ca 1234ABCD
         30820378 30820260 A0030201 02021017 16449497 577B9F48 1ED1DB4F 4D01F430
@@ -1743,7 +1743,7 @@ def test_masked_patch(root: CTree) -> None:
         line vty 5 15
         transport input all
         exit
-        """
+        """,
     ).strip()
     assert root.masked_patch == masked_patch
 
@@ -1775,7 +1775,7 @@ def test_searcher(root: CTree) -> None:
          class CM_NAME_6
           bandwidth percent 60
         !
-        """
+        """,
     ).strip()
     interface_or_qos_config = dedent(
         """
@@ -1812,14 +1812,14 @@ def test_searcher(root: CTree) -> None:
          class CM_NAME_6
           bandwidth percent 60
         !
-        """
+        """,
     ).strip()
     interface_and_qos_config = dedent(
         """
         interface GigabitEthernet1
          service-policy output PL_NAME_1
         !
-        """
+        """,
     ).strip()
 
     qos = CTreeSearcher.search(root, include_tags=["qos"])

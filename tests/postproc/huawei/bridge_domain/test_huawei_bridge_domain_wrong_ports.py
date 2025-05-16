@@ -2,7 +2,7 @@ from textwrap import dedent
 
 import pytest
 
-from ctreepo import CTreeDiffer, CTreeParser, Vendor
+from ctreepo import CTreeDiffer, CTreeParser, Platform
 
 
 def test_huawei_bridge_domain_wrong_ports() -> None:
@@ -12,16 +12,16 @@ def test_huawei_bridge_domain_wrong_ports() -> None:
          statistics enable
          vlan 100 access-port interface Eth-TrunkABC to Eth-TrunkCBA
         #
-        """
+        """,
     )
     target_config = dedent(
         """
         bridge-domain 100
          statistics enable
         #
-        """
+        """,
     )
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
     current = parser.parse(current_config)
     target = parser.parse(target_config)
 

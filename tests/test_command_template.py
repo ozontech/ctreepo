@@ -1,8 +1,8 @@
 from textwrap import dedent
 
-from ctreepo import CTreeEnv, Vendor
+from ctreepo import CTreeEnv, Platform
 from ctreepo.parser import CTreeParser
-from ctreepo.vendors import CiscoCT
+from ctreepo.platforms import CiscoIOSXE
 
 
 def test_parsing_with_template() -> None:
@@ -28,7 +28,7 @@ def test_parsing_with_template() -> None:
           neighbor 2.2.2.2 remote-as 11112
           neighbor 2.2.2.2 description test peer2
         !
-        """
+        """,
     )
     template_str = dedent(
         """
@@ -43,7 +43,7 @@ def test_parsing_with_template() -> None:
          address-family .*
           neighbor \\S+ description (?P<DESCRIPTION>.*)
         !
-        """
+        """,
     )
     root_config = dedent(
         """
@@ -67,10 +67,10 @@ def test_parsing_with_template() -> None:
           neighbor 2.2.2.2 remote-as 11112
           neighbor 2.2.2.2 description test peer2
         !
-        """
+        """,
     ).strip()
 
-    parser = CTreeParser(vendor=Vendor.CISCO)
+    parser = CTreeParser(platform=Platform.CISCO_IOSXE)
     template = parser.parse(template_str)
     root = parser.parse(config_str, template)
     assert root.config == root_config
@@ -111,7 +111,7 @@ def test_diff_with_template() -> None:
           neighbor 2.2.2.2 remote-as 11112
           neighbor 2.2.2.2 description test peer2
         !
-        """
+        """,
     )
     target_config = dedent(
         """
@@ -135,7 +135,7 @@ def test_diff_with_template() -> None:
           neighbor 2.2.2.2 remote-as 11112
           neighbor 2.2.2.2 description test peer2 new
         !
-        """
+        """,
     )
     template = dedent(
         """
@@ -150,7 +150,7 @@ def test_diff_with_template() -> None:
          address-family .*
           neighbor \\S+ description (?P<DESCRIPTION>.*)
         !
-        """
+        """,
     )
     diff_config = dedent(
         """
@@ -162,10 +162,10 @@ def test_diff_with_template() -> None:
           neighbor 1.1.1.1 description test peer1 new
           neighbor 2.2.2.2 description test peer2 new
         !
-        """
+        """,
     ).strip()
 
-    env = CTreeEnv(vendor=Vendor.CISCO, template=template)
+    env = CTreeEnv(platform=Platform.CISCO_IOSXE, template=template)
     current = env.parse(current_config)
     target = env.parse(target_config)
     diff = env.diff(current, target)
@@ -173,7 +173,7 @@ def test_diff_with_template() -> None:
 
 
 def test_corner_cases_with_template() -> None:
-    node = CiscoCT(
+    node = CiscoIOSXE(
         line="hostname router.my.lab",
         parent=None,
         tags=["hostname"],
@@ -181,7 +181,7 @@ def test_corner_cases_with_template() -> None:
     )
     assert node.template == r"hostname (?P<HOSTNAME>\S+)"
 
-    node = CiscoCT(
+    node = CiscoIOSXE(
         line="hostname router.my.lab",
         parent=None,
         tags=["hostname"],
@@ -197,7 +197,7 @@ def test_no_command_with_template() -> None:
          description some interface
          no some-no-command 40
         !
-        """
+        """,
     )
     target_config = dedent(
         """
@@ -205,7 +205,7 @@ def test_no_command_with_template() -> None:
          description some interface-new
          no some-no-command 50
         !
-        """
+        """,
     )
     template = dedent(
         r"""
@@ -213,7 +213,7 @@ def test_no_command_with_template() -> None:
          description (?P<DESCRIPTION>.*)
          no some-no-command (?P<VALUE>\d+)
         !
-        """
+        """,
     )
     diff_raw = dedent(
         """
@@ -223,7 +223,7 @@ def test_no_command_with_template() -> None:
          description some interface-new
          no some-no-command 50
         !
-        """
+        """,
     ).strip()
     diff_with_template = dedent(
         """
@@ -231,16 +231,16 @@ def test_no_command_with_template() -> None:
          description some interface-new
          no some-no-command 50
         !
-        """
+        """,
     ).strip()
-    env = CTreeEnv(vendor=Vendor.CISCO)
+    env = CTreeEnv(platform=Platform.CISCO_IOSXE)
     current = env.parse(current_config)
     target = env.parse(target_config)
     diff = env.diff(current, target)
     assert diff.config == diff_raw
 
     template_tree = env.parse(template)
-    env = CTreeEnv(vendor=Vendor.CISCO, template=template_tree)
+    env = CTreeEnv(platform=Platform.CISCO_IOSXE, template=template_tree)
     current = env.parse(current_config)
     target = env.parse(target_config)
     diff = env.diff(current, target)

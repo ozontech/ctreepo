@@ -1,6 +1,6 @@
 from textwrap import dedent
 
-from ctreepo import CTreeDiffer, CTreeParser, Vendor
+from ctreepo import CTreeDiffer, CTreeParser, Platform
 
 
 def test_huawei_aaa_tacacs_case_1() -> None:
@@ -14,7 +14,7 @@ def test_huawei_aaa_tacacs_case_1() -> None:
          undo hwtacacs-server user-name domain-included
          hwtacacs-server shared-key cipher old_secret_hash
         #
-        """
+        """,
     )
     target_config = dedent(
         """
@@ -25,7 +25,7 @@ def test_huawei_aaa_tacacs_case_1() -> None:
          undo hwtacacs-server user-name domain-included
          hwtacacs-server shared-key cipher
         #
-        """
+        """,
     )
     diff_raw = dedent(
         """
@@ -33,11 +33,11 @@ def test_huawei_aaa_tacacs_case_1() -> None:
          undo hwtacacs-server shared-key cipher old_secret_hash
          hwtacacs-server shared-key cipher
         #
-        """
+        """,
     ).strip()
     diff_processed = ""
 
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
     current = parser.parse(current_config)
     target = parser.parse(target_config)
     diff = CTreeDiffer.diff(current, target, post_proc_rules=[])
@@ -61,7 +61,7 @@ def test_huawei_aaa_tacacs_case_2() -> None:
          undo hwtacacs-server user-name domain-included
          hwtacacs-server shared-key cipher old_secret_hash
         #
-        """
+        """,
     )
     target_config = dedent(
         """
@@ -72,7 +72,7 @@ def test_huawei_aaa_tacacs_case_2() -> None:
          undo hwtacacs-server user-name domain-included
          hwtacacs-server shared-key cipher new_secret_hash
         #
-        """
+        """,
     )
     diff_raw = dedent(
         """
@@ -80,17 +80,17 @@ def test_huawei_aaa_tacacs_case_2() -> None:
          undo hwtacacs-server shared-key cipher old_secret_hash
          hwtacacs-server shared-key cipher new_secret_hash
         #
-        """
+        """,
     ).strip()
     diff_processed = dedent(
         """
         hwtacacs-server template group-name
          hwtacacs-server shared-key cipher new_secret_hash
         #
-        """
+        """,
     ).strip()
 
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
     current = parser.parse(current_config)
     target = parser.parse(target_config)
     diff = CTreeDiffer.diff(current, target, post_proc_rules=[])

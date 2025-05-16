@@ -1,6 +1,6 @@
 from textwrap import dedent
 
-from ctreepo import CTreeDiffer, CTreeParser, Vendor
+from ctreepo import CTreeDiffer, CTreeParser, Platform
 
 
 def test_huawei_snmp_empty() -> None:
@@ -11,7 +11,7 @@ def test_huawei_snmp_empty() -> None:
         snmp-agent community read cipher public12345
         snmp-agent sys-info location my-location
         snmp-agent sys-info version v2c v3
-        """
+        """,
     )
     target_config = dedent(
         """
@@ -20,16 +20,16 @@ def test_huawei_snmp_empty() -> None:
         snmp-agent community read cipher
         snmp-agent sys-info location my-location
         snmp-agent sys-info version v2c v3
-        """
+        """,
     )
     diff_config = dedent(
         """
         snmp-agent community read cipher public12345 mib-view iso-view alias __CommunityRO_1
         #
-        """
+        """,
     ).strip()
 
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
     current = parser.parse(current_config)
     target = parser.parse(target_config)
     diff = CTreeDiffer.diff(current, target)
