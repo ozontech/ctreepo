@@ -1,7 +1,7 @@
 import re
 from typing import Literal
 
-from .ctree import CTree
+from ctreepo.ctree import CTree
 
 __all__ = ("CTreeSearcher",)
 

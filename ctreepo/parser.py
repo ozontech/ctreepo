@@ -6,10 +6,10 @@ from pathlib import Path
 
 import yaml
 
-from . import settings
-from .ctree import CTree
-from .factory import ctree_class
-from .models import Platform, TaggingRule
+from ctreepo import settings
+from ctreepo.ctree import CTree
+from ctreepo.factory import ctree_class
+from ctreepo.models import Platform, TaggingRule
 
 __all__ = (
     "CTreeParser",

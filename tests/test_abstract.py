@@ -7,7 +7,6 @@ from textwrap import dedent
 import pytest
 
 from ctreepo import CTreeParser, Platform
-from ctreepo.ctree import CTree
 from ctreepo.parser import TaggingRulesFile
 from ctreepo.platforms import HuaweiVRP
 
@@ -846,24 +845,6 @@ def test_apply() -> None:
     diff = parser.parse(diff_config)
     target = current.apply(diff)
     assert target.config == target_config
-
-
-def test_abstract_properties() -> None:
-    root = CTree()
-    for attr in (
-        "platform",
-        "spaces",
-        "section_exit",
-        "section_separator",
-        "sections_without_exit",
-        "sections_require_exit",
-        "junk_lines",
-        "undo",
-        "mask_patterns",
-    ):
-        with pytest.raises(NotImplementedError) as exc:
-            _ = getattr(root, attr)
-        assert str(exc.value) == "property should be overridden"
 
 
 def test_move_before() -> None:

@@ -1,9 +1,9 @@
 import re
 from typing import Iterator
 
-from .ctree import CTree
-from .models import Platform
-from .postproc import CTreePostProc, register_rule
+from ctreepo.ctree import CTree
+from ctreepo.models import Platform
+from ctreepo.postproc import CTreePostProc, register_rule
 
 __all__ = (
     "HuaweiPostProcAAA",

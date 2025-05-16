@@ -3,7 +3,6 @@ from enum import StrEnum, auto
 
 __all__ = (
     "TaggingRule",
-    # "Vendor",
     "DiffAction",
     "Platform",
 )
@@ -20,12 +19,6 @@ class TaggingRule:
     #     - interface
     regex: str
     tags: list[str]
-
-
-# class Vendor(StrEnum):
-#     ARISTA = "arista"
-#     CISCO = "cisco"
-#     HUAWEI = "huawei"
 
 
 class Platform(StrEnum):

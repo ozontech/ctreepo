@@ -2,16 +2,17 @@ from __future__ import annotations
 
 import hashlib
 import re
+from abc import ABC, abstractmethod
 from collections import deque
 from typing import Deque, Self
 
-from . import settings
-from .models import Platform
+from ctreepo import settings
+from ctreepo.models import Platform
 
 __all__ = ("CTree",)
 
 
-class CTree:
+class CTree(ABC):
     __slots__ = (
         "line",  # строка настройки
         "parent",  # родитель узла
@@ -23,58 +24,54 @@ class CTree:
         "node_hash",  # хеш узла с учетом дочерних узлов
     )
 
+    # Платформа устройства
     @property
-    def platform(self) -> Platform:
-        """Платформа устройства."""
-        raise NotImplementedError("property should be overridden")
+    @abstractmethod
+    def platform(self) -> Platform: ...
 
+    # Количество пробелов для нового уровня
     @property
-    def spaces(self) -> str:
-        """Количество пробелов для нового уровня."""
-        raise NotImplementedError("property should be overridden")
+    @abstractmethod
+    def spaces(self) -> str: ...
 
+    # Как выходим из секции: exit/quit/...
     @property
-    def section_exit(self) -> str:
-        """Как выходим из секции: exit/quit/..."""
-        raise NotImplementedError("property should be overridden")
+    @abstractmethod
+    def section_exit(self) -> str: ...
 
+    # Чем разделяем блоки конфига между собой: !/#/...
     @property
-    def section_separator(self) -> str:
-        """Чем разделяем блоки конфига между собой: !/#/..."""
-        raise NotImplementedError("property should be overridden")
+    @abstractmethod
+    def section_separator(self) -> str: ...
 
+    # Список секций, из которых не нужно выходить.
+    # Некоторые секции не работают если явно выходить из них,
+    # например сертификаты в cisco, xpl в huawei.
     @property
-    def sections_without_exit(self) -> list[str]:
-        """Список секций, из которых не нужно выходить.
+    @abstractmethod
+    def sections_without_exit(self) -> list[str]: ...
 
-        Некоторые секции не работают если явно выходить из них,
-        например сертификаты в cisco, xpl в huawei.
-        """
-        raise NotImplementedError("property should be overridden")
-
+    # Секции, которые могут быть пустыми.
+    # И для них необходимо явно прописывать выход,
+    # например route-map rm_DENY deny 10.
     @property
-    def sections_require_exit(self) -> list[str]:
-        """Секции, которые могут быть пустыми.
+    @abstractmethod
+    def sections_require_exit(self) -> list[str]: ...
 
-        И для них необходимо явно прописывать выход,
-        например route-map rm_DENY deny 10.
-        """
-        raise NotImplementedError("property should be overridden")
-
+    # список линий, которые нужно игнорировать при анализе конфигурации
     @property
-    def junk_lines(self) -> list[str]:
-        """список линий, которые нужно игнорировать при анализе конфигурации."""
-        raise NotImplementedError("property should be overridden")
+    @abstractmethod
+    def junk_lines(self) -> list[str]: ...
 
+    # как убираем конфигурацию, в общем случае: no/undo/...
     @property
-    def undo(self) -> str:
-        """как убираем конфигурацию, в общем случае: no/undo/..."""
-        raise NotImplementedError("property should be overridden")
+    @abstractmethod
+    def undo(self) -> str: ...
 
+    # паттерны для маскирования строк, указываем текст перед тем, что нужно заменить
     @property
-    def mask_patterns(self) -> list[str]:
-        """паттерны для маскирования строк, указываем текст перед тем, что нужно заменить."""
-        raise NotImplementedError("property should be overridden")
+    @abstractmethod
+    def mask_patterns(self) -> list[str]: ...
 
     masking_string: str = settings.MASKING_STRING
 

@@ -1,8 +1,8 @@
 from typing import Any
 
-from .ctree import CTree
-from .factory import ctree_class
-from .models import Platform
+from ctreepo.ctree import CTree
+from ctreepo.factory import ctree_class
+from ctreepo.models import Platform
 
 __all__ = ("CTreeSerializer",)
 

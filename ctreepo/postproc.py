@@ -1,8 +1,8 @@
 import abc
 from typing import Any, Callable
 
-from .ctree import CTree
-from .models import Platform
+from ctreepo.ctree import CTree
+from ctreepo.models import Platform
 
 __all__ = (
     "register_rule",

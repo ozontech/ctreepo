@@ -15,7 +15,6 @@ def ctree_class(platform: Platform) -> type[CTree]:
         Platform.HUAWEI_VRP: HuaweiVRP,
     }
 
-    print(platform)
     if platform not in platform_map:
         raise NotImplementedError(f"unknown platform {platform}")
     else:

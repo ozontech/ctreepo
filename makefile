@@ -10,7 +10,7 @@ init-dev: init
 	poetry install --with dev
 
 lint:
-	poetry run ruff check
+	poetry run ruff check ctreepo tests examples
 
 build: init
 	poetry build

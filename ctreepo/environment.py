@@ -1,13 +1,13 @@
 from pathlib import Path
 from typing import Any, Literal
 
-from .ctree import CTree
-from .differ import CTreeDiffer
-from .models import Platform
-from .parser import CTreeParser, TaggingRulesDict, TaggingRulesFile
-from .postproc import CTreePostProc
-from .searcher import CTreeSearcher
-from .serializer import CTreeSerializer
+from ctreepo.ctree import CTree
+from ctreepo.differ import CTreeDiffer
+from ctreepo.models import Platform
+from ctreepo.parser import CTreeParser, TaggingRulesDict, TaggingRulesFile
+from ctreepo.postproc import CTreePostProc
+from ctreepo.searcher import CTreeSearcher
+from ctreepo.serializer import CTreeSerializer
 
 __all__ = ("CTreeEnv",)
 
