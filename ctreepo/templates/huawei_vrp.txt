@@ -1,0 +1,9 @@
+radius-server template \S+
+ radius-server shared-key cipher (?P<HASH>\S+)                  UNDO>> undo radius-server shared-key
+
+hwtacacs(?:-|\s)server template \S+
+ hwtacacs-server shared-key cipher (?P<HASH>\S+)                UNDO>> undo hwtacacs-server shared-key
+
+aaa
+ local-user (\S+) password irreversible-cipher (?P<HASH>\S+)    UNDO>> undo local-user \1
+ local-user (\S+) level (?P<LEVEL>\d+)                          UNDO>> undo local-user \1 level

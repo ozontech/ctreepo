@@ -1,7 +1,7 @@
 from textwrap import dedent
 
 from ctreepo import CTreeDiffer, CTreeParser, Platform
-from ctreepo.postproc_huawei import HuaweiPostProcInterface, HuaweiPostProcRoutePolicy
+from ctreepo.postproc.huawei_vrp import HuaweiVRPInterface, HuaweiVRPRoutePolicy
 
 current_config = dedent(
     """
@@ -90,8 +90,8 @@ def test_differ_postproc_platform_check() -> None:
         a=current,
         b=target,
         post_proc_rules=[
-            HuaweiPostProcRoutePolicy,
-            HuaweiPostProcInterface,
+            HuaweiVRPInterface,
+            HuaweiVRPRoutePolicy,
         ],
     )
     assert diff.config == diff_config
