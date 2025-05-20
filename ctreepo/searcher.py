@@ -127,4 +127,5 @@ class CTreeSearcher:
         )
         for node in filter_result:
             root.merge(node)
+        root.update_node_hash()
         return root
