@@ -33,4 +33,5 @@ class CTreeSerializer:
         node.undo_line = data.get("undo_line", "")
         for child in data.get("children", {}).values():
             cls.from_dict(vendor, child, node)
+        node.update_node_hash()
         return node

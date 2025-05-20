@@ -134,10 +134,14 @@ class CTreeDiffer:
                     root.rebuild(deep=True)
                 result.append(root)
             else:
-                # todo тут если потомков нет, то нет смысла делать рекурсию
                 # проваливаемся в рекурсивное сравнение потомков только если
                 # они существуют и (хеши нод разные или секция _ordered)
-                if len(child.children) != 0 and (child.node_hash != b.children[line].node_hash or _ordered):
+                if len(child.children) != 0 and (
+                    child.node_hash != b.children[line].node_hash
+                    or _ordered
+                    # если где-то забыли хеш посчитать
+                    or len(child.node_hash) == 0
+                ):
                     nested_result = cls._diff_list(
                         child,
                         b.children[line],
