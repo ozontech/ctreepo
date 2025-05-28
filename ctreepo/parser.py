@@ -8,7 +8,7 @@ import yaml
 
 from ctreepo import settings
 from ctreepo.ctree import CTree
-from ctreepo.factory import ctree_class
+from ctreepo.factory import CTreeFactory
 from ctreepo.models import Platform, TaggingRule
 
 __all__ = (
@@ -98,7 +98,7 @@ class TaggingRulesDict(TaggingRules):
 
 class CTreeParser:
     def __init__(self, platform: Platform, tagging_rules: TaggingRules | None = None) -> None:
-        self._class = ctree_class(platform)
+        self._class = CTreeFactory._PLATFORM_MAP[platform]
         if tagging_rules is None:
             self.tagging_rules = []
         else:

@@ -4,7 +4,7 @@ from ctreepo.templates import TEMPLATES
 from .ctree import CTree
 from .differ import CTreeDiffer
 from .environment import CTreeEnv
-from .factory import ctree_factory
+from .factory import CTreeFactory
 from .models import Platform
 from .parser import CTreeParser
 from .searcher import CTreeSearcher
@@ -14,7 +14,7 @@ __all__ = [
     "CTreeDiffer",
     "CTree",
     "CTreeEnv",
-    "ctree_factory",
+    "CTreeFactory",
     "CTreeParser",
     "CTreeSearcher",
     "CTreeSerializer",

@@ -1,7 +1,7 @@
 from typing import Any
 
 from ctreepo.ctree import CTree
-from ctreepo.factory import ctree_class
+from ctreepo.factory import CTreeFactory
 from ctreepo.models import Platform
 
 __all__ = ("CTreeSerializer",)
@@ -23,7 +23,7 @@ class CTreeSerializer:
 
     @classmethod
     def from_dict(cls, platform: Platform, data: dict[str, Any], parent: CTree | None = None) -> CTree:
-        _ct_class = ctree_class(platform)
+        _ct_class = CTreeFactory._PLATFORM_MAP[platform]
         node = _ct_class(
             line=data.get("line", ""),
             tags=data.get("tags", []),

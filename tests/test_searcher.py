@@ -3,7 +3,7 @@ from typing import Literal
 
 import pytest
 
-from ctreepo import CTree, CTreeParser, CTreeSearcher, CTreeSerializer, Platform, ctree_factory
+from ctreepo import CTree, CTreeFactory, CTreeParser, CTreeSearcher, CTreeSerializer, Platform
 from ctreepo.parser import TaggingRulesDict
 
 config = dedent(
@@ -577,7 +577,7 @@ def test_null_string(get_config_tree: CTree) -> None:
 def test_null_empty(get_config_tree: CTree) -> None:
     root = get_config_tree
     filtered_root = CTreeSearcher.search(root)
-    assert filtered_root == ctree_factory(platform=root.platform)
+    assert filtered_root == CTreeFactory.create(root.platform)
 
 
 def test_children(get_config_tree: CTree) -> None:
