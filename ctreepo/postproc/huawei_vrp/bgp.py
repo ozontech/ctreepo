@@ -24,7 +24,6 @@ class HuaweiVRPBGP(CTreePostProc):
 
     @classmethod
     def _delete_peers_per_level(cls, ct: CTree) -> None:
-        print(f"{ct=}")
         # на верхнем уровне ищем, что удалять, а удаляем на верхнем + дочерних
         # вызываем для секции bgp и каждой af в отдельности
         peers_to_delete: set[str] = set()
@@ -45,7 +44,6 @@ class HuaweiVRPBGP(CTreePostProc):
                 peers_to_delete.add(ip)
                 kept_node.add(node)
 
-        print(f"{peers_to_delete=}")
         # удаляем на верхнем + вложенных уровнях
         flatten_level = deque(ct.children.values())
         indx = 0
