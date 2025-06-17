@@ -1,3 +1,4 @@
+from ctreepo.ctreepo import CTreePO
 from ctreepo.postproc import register_rule
 from ctreepo.templates import TEMPLATES
 
@@ -11,6 +12,7 @@ from .searcher import CTreeSearcher
 from .serializer import CTreeSerializer
 
 __all__ = [
+    "CTreePO",
     "CTreeDiffer",
     "CTree",
     "CTreeEnv",

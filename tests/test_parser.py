@@ -181,19 +181,19 @@ def test_tags(get_dict_loader: TaggingRules) -> None:
     assert root.config == huawei_config
 
     vpn = root.children["ip vpn-instance LAN"]
-    assert set(vpn.tags) == set(["vpn", "LAN"])
+    assert set(vpn.tags) == {"vpn", "LAN"}
     assert len(vpn.tags) == 2
 
     mgmt = root.children["ip vpn-instance MGMT"]
-    assert set(mgmt.tags) == set(["vpn", "MGMT"])
+    assert set(mgmt.tags) == {"vpn", "MGMT"}
     assert len(mgmt.tags) == 2
 
     af = vpn.children["ipv4-family"]
-    assert set(af.tags) == set(["vpn", "LAN"])
+    assert set(af.tags) == {"vpn", "LAN"}
     assert len(af.tags) == 2
 
     interface = root.children["interface gi0/0/0"]
-    assert set(interface.tags) == set(["interface", "gi0/0/0"])
+    assert set(interface.tags) == {"interface", "gi0/0/0"}
     assert len(interface.tags) == 2
 
     radius = root.children["radius-server template RADIUS_TEMPLATE"]
@@ -201,19 +201,19 @@ def test_tags(get_dict_loader: TaggingRules) -> None:
     assert len(radius.tags) == 0
 
     rd = root.children["ip vpn-instance LAN"].children["ipv4-family"].children["route-distinguisher 192.168.0.1:123"]
-    assert set(rd.tags) == set(["rd", "LAN", "192.168.0.1:123"])
+    assert set(rd.tags) == {"rd", "LAN", "192.168.0.1:123"}
     assert len(rd.tags) == 3
 
     rd = root.children["ip vpn-instance MGMT"].children["ipv4-family"].children["route-distinguisher 192.168.0.1:123"]
-    assert set(rd.tags) == set(["vpn", "MGMT"])
+    assert set(rd.tags) == {"vpn", "MGMT"}
     assert len(rd.tags) == 2
 
     ip = root.children["interface gi0/0/0"].children["ip address 1.1.1.1 255.255.255.252"]
-    assert set(ip.tags) == set(["ip", "interface-1", "gi0/0/0"])
+    assert set(ip.tags) == {"ip", "interface-1", "gi0/0/0"}
     assert len(ip.tags) == 3
 
     ip = root.children["interface gi0/0/1"].children["ip address 1.1.1.1 255.255.255.252"]
-    assert set(ip.tags) == set(["ip", "interface-2", "gi0/0/1"])
+    assert set(ip.tags) == {"ip", "interface-2", "gi0/0/1"}
     assert len(ip.tags) == 3
 
 

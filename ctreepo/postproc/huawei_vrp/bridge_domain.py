@@ -39,7 +39,7 @@ class HuaweiVRPBridgeDomain(CTreePostProc):
                 if " to " in interfaces:
                     interface_range = set(_expand_bd_interfaces(interfaces))
                 else:
-                    interface_range = set((interfaces,))
+                    interface_range = {interfaces}
 
                 if node.line.startswith("undo "):
                     old_interfaces.update(interface_range)

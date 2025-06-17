@@ -67,7 +67,7 @@ from ctreepo import TEMPLATES, CTreeDiffer, CTreeParser, Platform, settings
                 aaa
                  local-user user1@default password irreversible-cipher new_password_hash_1
                 #
-                """
+                """,
             ).strip(),
         ),
         # меняем пароль для user1, не меняем для user2, на устройстве лишний пользователь
@@ -105,7 +105,7 @@ from ctreepo import TEMPLATES, CTreeDiffer, CTreeParser, Platform, settings
                  undo local-user user3@default
                  local-user user1@default password irreversible-cipher new_password_hash_1
                 #
-                """
+                """,
             ).strip(),
         ),
         # меняем пароль для user1, не меняем для user2, на устройстве не хватает пользователя и один лишний
@@ -149,7 +149,7 @@ from ctreepo import TEMPLATES, CTreeDiffer, CTreeParser, Platform, settings
                  local-user user3@default service-type terminal ssh
                  local-user user3@default level 3
                 #
-                """
+                """,
             ).strip(),
         ),
         # меняем пароль для user1, не меняем для user2, меняем level для user2
@@ -184,7 +184,7 @@ from ctreepo import TEMPLATES, CTreeDiffer, CTreeParser, Platform, settings
                  local-user user1@default password irreversible-cipher new_password_hash_1
                  local-user user2@default level 2
                 #
-                """
+                """,
             ).strip(),
         ),
     ],

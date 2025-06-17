@@ -1,0 +1,2 @@
+interface \S+
+ description (?P<DESCRIPTION>.*)        UNDO>> no description

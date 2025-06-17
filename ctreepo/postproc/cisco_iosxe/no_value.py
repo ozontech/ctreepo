@@ -31,7 +31,7 @@ class CiscoIOSXENoValue(CTreePostProc):
             node.delete()
 
         if len(ct.children) == 0 and delete_root:
-            return set((ct,))
+            return {ct}
         else:
             return set()
 

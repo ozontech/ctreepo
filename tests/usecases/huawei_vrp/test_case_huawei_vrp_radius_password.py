@@ -6,7 +6,7 @@ from ctreepo import TEMPLATES, CTreeDiffer, CTreeParser, Platform, settings
 
 
 @pytest.mark.parametrize(
-    "current_config, target_config, diff_config",
+    ("current_config", "target_config", "diff_config"),
     [
         # пароль не меняется
         (

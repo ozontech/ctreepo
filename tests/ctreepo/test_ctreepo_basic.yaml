@@ -1,0 +1,15 @@
+tagging-rules:
+  cisco_iosxe:
+    - regex: ^service .*
+      tags:
+        - service
+    - regex: ^interface (Loopback\d+)$
+      tags:
+        - interface
+        - loopback
+    - regex: ^interface (\S+)$
+      tags:
+        - interface
+    - regex: ^router bgp \d+$
+      tags:
+        - bgp
