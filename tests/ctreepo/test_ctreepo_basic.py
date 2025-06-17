@@ -6,11 +6,11 @@ import pytest
 from ctreepo import CTreePO, Platform
 from ctreepo.parser import CTreeParser
 
-with open("/Users/alexigna/projects/ozon/ctreepo/tests/ctreepo/cisco-config-current.txt", "r") as f:
+with open("./tests/ctreepo/cisco-config-current.txt", "r") as f:
     current = f.read()
 
 
-with open("/Users/alexigna/projects/ozon/ctreepo/tests/ctreepo/cisco-config-target.txt", "r") as f:
+with open("./tests/ctreepo/cisco-config-target.txt", "r") as f:
     target = f.read()
 
 

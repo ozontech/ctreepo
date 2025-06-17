@@ -18,10 +18,10 @@ class CTreePO:
         tagging_file: str | None = None,
         tagging_list: list[dict[str, str | list[str]]] | None = None,
         commands_template: str | None = None,
-        extra_sections_require_exit: list[str] | None = None,
-        extra_sections_without_exit: list[str] | None = None,
-        extra_junk_lines: list[str] | None = None,
-        extra_mask_patterns: list[str] | None = None,
+        # extra_sections_require_exit: list[str] | None = None,
+        # extra_sections_without_exit: list[str] | None = None,
+        # extra_junk_lines: list[str] | None = None,
+        # extra_mask_patterns: list[str] | None = None,
     ):
         self.platform = platform
         self.cls = CTreeFactory._PLATFORM_MAP[platform]
