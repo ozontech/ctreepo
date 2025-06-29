@@ -12,9 +12,9 @@ __all__ = ("CTreePO",)
 class CTreePO:
     def __init__(
         self,
-        current: str,
-        target: str,
         platform: Platform,
+        current_config: str = "",
+        target_config: str = "",
         tagging_file: str | None = None,
         tagging_list: list[dict[str, str | list[str]]] | None = None,
         commands_template: str | None = None,
@@ -33,14 +33,32 @@ class CTreePO:
 
         self._commands_template: CTree | None = self._get_commands_template(platform, commands_template)
 
-        self._current_raw = current
-        self.current = self.parser.parse(config=current, template=self._commands_template)
+        self._current_config = current_config
+        self._current: CTree | None = None
 
-        self._target_raw = target
-        self.target = self.parser.parse(config=target, template=self._commands_template)
+        self._target_config = target_config
+        self._target: CTree | None = None
 
         self._diff: CTree
         self._human_diff: str
+
+    @property
+    def current(self) -> CTree:
+        if self._current is None:
+            self._current = self.parser.parse(
+                config=self._current_config,
+                template=self._commands_template,
+            )
+        return self._current
+
+    @property
+    def target(self) -> CTree:
+        if self._target is None:
+            self._target = self.parser.parse(
+                config=self._target_config,
+                template=self._commands_template,
+            )
+        return self._target
 
     def _get_commands_template(self, platform: Platform, commands_template: str | None) -> CTree | None:
         if isinstance(commands_template, str) and len(commands_template) == 0:

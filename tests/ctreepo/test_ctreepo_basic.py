@@ -37,8 +37,8 @@ def test_ctreepo_human_diff() -> None:
         """,
     ).strip("\n")
     ct = CTreePO(
-        current=current,
-        target=target,
+        current_config=current,
+        target_config=target,
         platform=Platform.CISCO_IOSXE,
     )
     assert ct.human_diff == human_diff
@@ -66,8 +66,8 @@ def test_ctreepo_diff() -> None:
         """,
     ).strip()
     ct = CTreePO(
-        current=current,
-        target=target,
+        current_config=current,
+        target_config=target,
         platform=Platform.CISCO_IOSXE,
     )
     assert ct.diff.config == diff
@@ -88,8 +88,8 @@ def test_ctreepo_diff() -> None:
 )
 def test_ctreepo_command_template(commands_template: str | None) -> None:
     ct = CTreePO(
-        current=current,
-        target=target,
+        current_config=current,
+        target_config=target,
         platform=Platform.CISCO_IOSXE,
         commands_template=commands_template,
     )
@@ -126,8 +126,8 @@ def test_ctreepo_command_template(commands_template: str | None) -> None:
 )
 def test_ctreepo_tagging_rules_file(tagging_rules: str | None) -> None:
     ct = CTreePO(
-        current=current,
-        target=target,
+        current_config=current,
+        target_config=target,
         platform=Platform.CISCO_IOSXE,
         tagging_file=tagging_rules,
     )
@@ -165,8 +165,8 @@ def test_ctreepo_tagging_rules_dict() -> None:
         },
     ]
     ct = CTreePO(
-        current=current,
-        target=target,
+        current_config=current,
+        target_config=target,
         platform=Platform.CISCO_IOSXE,
         tagging_list=tagging_rules,
     )
