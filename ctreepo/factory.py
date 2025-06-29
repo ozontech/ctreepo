@@ -1,31 +1,27 @@
 from .ctree import CTree
-from .models import Vendor
-from .vendors import AristaCT, CiscoCT, HuaweiCT
+from .models import Platform
+from .platforms import AristaEOS, CiscoIOSXE, HuaweiVRP
 
-__all__ = ("ctree_factory", "ctree_class")
+__all__ = ("CTreeFactory",)
 
 
-def ctree_class(vendor: Vendor) -> type[CTree]:
-    vendor_map: dict[Vendor, type[CTree]] = {
-        Vendor.ARISTA: AristaCT,
-        Vendor.CISCO: CiscoCT,
-        Vendor.HUAWEI: HuaweiCT,
+class CTreeFactory:
+    _PLATFORM_MAP: dict[Platform, type[CTree]] = {
+        Platform.ARISTA_EOS: AristaEOS,
+        Platform.CISCO_IOSXE: CiscoIOSXE,
+        Platform.HUAWEI_VRP: HuaweiVRP,
     }
 
-    if vendor not in vendor_map:
-        raise NotImplementedError(f"unknown vendor {vendor}")
-    else:
-        return vendor_map[vendor]
-
-
-def ctree_factory(
-    vendor: Vendor,
-    line: str = "",
-    parent: CTree | None = None,
-    tags: list[str] | None = None,
-) -> CTree:
-    _ct = ctree_class(vendor)
-    node = _ct(line=line, parent=parent, tags=tags)
-    # тут уже CTree, cast не нужен, но для истории оставлю
-    # node = cast(CTree, node)
-    return node
+    @classmethod
+    def create(
+        cls,
+        platform: Platform,
+        line: str = "",
+        parent: CTree | None = None,
+        tags: list[str] | None = None,
+    ) -> CTree:
+        if platform not in cls._PLATFORM_MAP:
+            raise ValueError(f"unknown platform '{platform}'")
+        _ct = cls._PLATFORM_MAP[platform]
+        node = _ct(line=line, parent=parent, tags=tags)
+        return node

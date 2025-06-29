@@ -3,22 +3,21 @@
 init:
 	python -m pip install --upgrade pip
 	pip install "poetry>=2.0"
-	poetry install
+	poetry install --without dev
 	poetry --version
 
 init-dev: init
 	poetry install --with dev
 
 lint:
-	poetry run ruff check
+	poetry run black --check .
+	poetry run ruff check ctreepo tests examples
 
 build: init
 	poetry build
 
 mypy:
-	poetry run mypy ctreepo
-	poetry run mypy tests
-
+	poetry run mypy ctreepo tests
 test:
 	poetry run pytest -vv
 

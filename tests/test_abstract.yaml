@@ -1,5 +1,5 @@
 tagging-rules:
-  huawei:
+  huawei_vrp:
     - regex: ^ip ip-prefix (\S+) index \d+
       tags: [bgp-routing-policy, pl]
     - regex: ^ip community-list (\S+)

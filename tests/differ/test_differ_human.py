@@ -1,6 +1,6 @@
 from textwrap import dedent
 
-from ctreepo import CTreeDiffer, CTreeParser, Vendor
+from ctreepo import CTreeDiffer, CTreeParser, Platform
 
 current_config = dedent(
     """
@@ -35,7 +35,7 @@ current_config = dedent(
     router ospf 1
      router-id 1.2.3.4
     !
-    """
+    """,
 ).strip()
 
 target_config = dedent(
@@ -69,7 +69,7 @@ target_config = dedent(
     router ospf 1
      router-id 4.3.2.1
     !
-    """
+    """,
 ).strip()
 
 
@@ -118,9 +118,9 @@ def test_differ_human_full() -> None:
         - router-id 1.2.3.4
         + router-id 4.3.2.1
          !
-        """
+        """,
     ).strip("\n")
-    parser = CTreeParser(Vendor.CISCO)
+    parser = CTreeParser(Platform.CISCO_IOSXE)
     current = parser.parse(current_config)
     target = parser.parse(target_config)
     diff = CTreeDiffer.human_diff(current=current, target=target, mode="full")
@@ -166,9 +166,9 @@ def test_differ_human_diff_only() -> None:
         - router-id 1.2.3.4
         + router-id 4.3.2.1
          !
-        """
+        """,
     ).strip("\n")
-    parser = CTreeParser(Vendor.CISCO)
+    parser = CTreeParser(Platform.CISCO_IOSXE)
     current = parser.parse(current_config)
     target = parser.parse(target_config)
     diff = CTreeDiffer.human_diff(current=current, target=target, mode="diff-only")
@@ -208,9 +208,9 @@ def test_differ_human_add_all() -> None:
         +router ospf 1
         + router-id 4.3.2.1
          !
-        """
+        """,
     ).strip("\n")
-    parser = CTreeParser(Vendor.CISCO)
+    parser = CTreeParser(Platform.CISCO_IOSXE)
     current = parser.parse("")
     target = parser.parse(target_config)
     diff = CTreeDiffer.human_diff(current=current, target=target, mode="full")
@@ -252,9 +252,9 @@ def test_differ_human_delete_all() -> None:
         -router ospf 1
         - router-id 1.2.3.4
          !
-        """
+        """,
     ).strip("\n")
-    parser = CTreeParser(Vendor.CISCO)
+    parser = CTreeParser(Platform.CISCO_IOSXE)
     current = parser.parse(current_config)
     target = parser.parse("")
     diff = CTreeDiffer.human_diff(current=current, target=target, mode="full")
@@ -265,7 +265,7 @@ def test_differ_human_no_diff() -> None:
     """Сравнение одинаковых конфигураций."""
     expected_diff = ""
 
-    parser = CTreeParser(Vendor.CISCO)
+    parser = CTreeParser(Platform.CISCO_IOSXE)
     current = parser.parse(current_config)
     target = parser.parse(current_config)
     diff = CTreeDiffer.human_diff(current=current, target=target, mode="diff-only")

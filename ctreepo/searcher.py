@@ -1,7 +1,7 @@
 import re
 from typing import Literal
 
-from .ctree import CTree
+from ctreepo.ctree import CTree
 
 __all__ = ("CTreeSearcher",)
 
@@ -80,7 +80,7 @@ class CTreeSearcher:
                         include_mode=include_mode,
                         exclude_tags=exclude_tags,
                         include_children=include_children,
-                    )
+                    ),
                 )
 
         return result

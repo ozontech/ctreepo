@@ -3,7 +3,7 @@ from textwrap import dedent
 
 import pytest
 
-from ctreepo import CTreeParser, Vendor
+from ctreepo import CTreeParser, Platform
 from ctreepo.models import TaggingRule
 from ctreepo.parser import TaggingRules, TaggingRulesDict, TaggingRulesFile
 
@@ -37,7 +37,7 @@ huawei_config = dedent(
      radius-server shared-key cipher secret_password
      radius-server algorithm loading-share
     #
-    """
+    """,
 ).strip()
 
 arista_config = dedent(
@@ -70,14 +70,14 @@ arista_config = dedent(
        radius-server shared-key cipher secret_password
        radius-server algorithm loading-share
     !
-    """
+    """,
 ).strip()
 
 
 @pytest.fixture(scope="session")
 def get_dict_loader() -> TaggingRules:
-    tagging_rules_dict: dict[Vendor, list[dict[str, str | list[str]]]] = {
-        Vendor.HUAWEI: [
+    tagging_rules_dict: dict[Platform, list[dict[str, str | list[str]]]] = {
+        Platform.HUAWEI_VRP: [
             {"regex": r"^ip vpn-instance (\S+)$", "tags": ["vpn"]},
             {"regex": r"^ip vpn-instance (\S+) .* export-extcommunity evpn", "tags": ["rt"]},
             {"regex": r"^interface (\S+)$", "tags": ["interface"]},
@@ -97,11 +97,11 @@ def get_file_loader() -> TaggingRules:
 
 
 def test_instance() -> None:
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
     root = parser.parse(huawei_config)
     assert root.config == huawei_config
 
-    parser = CTreeParser(Vendor.ARISTA)
+    parser = CTreeParser(Platform.ARISTA_EOS)
     root = parser.parse(arista_config)
     assert root.config == arista_config
 
@@ -113,16 +113,16 @@ def test_empty_line() -> None:
 
            ip address 1.1.1.1 255.255.255.252
         !
-        """
+        """,
     ).strip()
     config = dedent(
         """
         interface gi0/0/0
            ip address 1.1.1.1 255.255.255.252
         !
-        """
+        """,
     ).strip()
-    parser = CTreeParser(Vendor.ARISTA)
+    parser = CTreeParser(Platform.ARISTA_EOS)
     root = parser.parse(src_config)
     assert root.config == config
 
@@ -144,15 +144,15 @@ def test_deep_nested() -> None:
         interface gi0/0/0
          ip address 1.1.1.1 255.255.255.252
         #
-        """
+        """,
     ).strip()
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
     root = parser.parse(config)
     assert root.config == config
 
 
 def test_dict_rules(get_dict_loader: TaggingRules) -> None:
-    parser = CTreeParser(Vendor.HUAWEI, get_dict_loader)
+    parser = CTreeParser(Platform.HUAWEI_VRP, get_dict_loader)
     assert parser.tagging_rules == [
         TaggingRule(regex=r"^ip vpn-instance (\S+)$", tags=["vpn"]),
         TaggingRule(regex=r"^ip vpn-instance (\S+) .* export-extcommunity evpn", tags=["rt"]),
@@ -164,7 +164,7 @@ def test_dict_rules(get_dict_loader: TaggingRules) -> None:
 
 
 def test_file_rules(get_file_loader: TaggingRules) -> None:
-    parser = CTreeParser(Vendor.HUAWEI, get_file_loader)
+    parser = CTreeParser(Platform.HUAWEI_VRP, get_file_loader)
     assert parser.tagging_rules == [
         TaggingRule(regex=r"^ip vpn-instance (\S+)$", tags=["vpn"]),
         TaggingRule(regex=r"^ip vpn-instance (\S+) .* export-extcommunity evpn", tags=["rt"]),
@@ -176,24 +176,24 @@ def test_file_rules(get_file_loader: TaggingRules) -> None:
 
 
 def test_tags(get_dict_loader: TaggingRules) -> None:
-    parser = CTreeParser(Vendor.HUAWEI, get_dict_loader)
+    parser = CTreeParser(Platform.HUAWEI_VRP, get_dict_loader)
     root = parser.parse(huawei_config)
     assert root.config == huawei_config
 
     vpn = root.children["ip vpn-instance LAN"]
-    assert set(vpn.tags) == set(["vpn", "LAN"])
+    assert set(vpn.tags) == {"vpn", "LAN"}
     assert len(vpn.tags) == 2
 
     mgmt = root.children["ip vpn-instance MGMT"]
-    assert set(mgmt.tags) == set(["vpn", "MGMT"])
+    assert set(mgmt.tags) == {"vpn", "MGMT"}
     assert len(mgmt.tags) == 2
 
     af = vpn.children["ipv4-family"]
-    assert set(af.tags) == set(["vpn", "LAN"])
+    assert set(af.tags) == {"vpn", "LAN"}
     assert len(af.tags) == 2
 
     interface = root.children["interface gi0/0/0"]
-    assert set(interface.tags) == set(["interface", "gi0/0/0"])
+    assert set(interface.tags) == {"interface", "gi0/0/0"}
     assert len(interface.tags) == 2
 
     radius = root.children["radius-server template RADIUS_TEMPLATE"]
@@ -201,19 +201,19 @@ def test_tags(get_dict_loader: TaggingRules) -> None:
     assert len(radius.tags) == 0
 
     rd = root.children["ip vpn-instance LAN"].children["ipv4-family"].children["route-distinguisher 192.168.0.1:123"]
-    assert set(rd.tags) == set(["rd", "LAN", "192.168.0.1:123"])
+    assert set(rd.tags) == {"rd", "LAN", "192.168.0.1:123"}
     assert len(rd.tags) == 3
 
     rd = root.children["ip vpn-instance MGMT"].children["ipv4-family"].children["route-distinguisher 192.168.0.1:123"]
-    assert set(rd.tags) == set(["vpn", "MGMT"])
+    assert set(rd.tags) == {"vpn", "MGMT"}
     assert len(rd.tags) == 2
 
     ip = root.children["interface gi0/0/0"].children["ip address 1.1.1.1 255.255.255.252"]
-    assert set(ip.tags) == set(["ip", "interface-1", "gi0/0/0"])
+    assert set(ip.tags) == {"ip", "interface-1", "gi0/0/0"}
     assert len(ip.tags) == 3
 
     ip = root.children["interface gi0/0/1"].children["ip address 1.1.1.1 255.255.255.252"]
-    assert set(ip.tags) == set(["ip", "interface-2", "gi0/0/1"])
+    assert set(ip.tags) == {"ip", "interface-2", "gi0/0/1"}
     assert len(ip.tags) == 3
 
 
@@ -222,7 +222,7 @@ def test_file_rules_loader() -> None:
     loader2 = TaggingRulesFile(str(Path(__file__).with_suffix(".yaml")))
     assert id(loader1) == id(loader2)
     assert loader1.rules == {
-        Vendor.HUAWEI: [
+        Platform.HUAWEI_VRP: [
             TaggingRule(regex=r"^ip vpn-instance (\S+)$", tags=["vpn"]),
             TaggingRule(regex=r"^ip vpn-instance (\S+) .* export-extcommunity evpn", tags=["rt"]),
             TaggingRule(regex=r"^interface (\S+)$", tags=["interface"]),
@@ -230,7 +230,7 @@ def test_file_rules_loader() -> None:
             TaggingRule(regex=r"^interface (gi0/0/1) .* ip address \S+ \S+$", tags=["ip", "interface-2"]),
             TaggingRule(regex=r"^ip vpn-instance (LAN) .* route-distinguisher (\S+)", tags=["rd"]),
         ],
-        Vendor.ARISTA: [
+        Platform.ARISTA_EOS: [
             TaggingRule(regex="^interface (\\S+)$", tags=["interface"]),
         ],
     }
@@ -238,7 +238,7 @@ def test_file_rules_loader() -> None:
 
 def test_dict_rules_loader() -> None:
     tagging_rules_dict = {
-        Vendor.HUAWEI: [
+        Platform.HUAWEI_VRP: [
             {"regex": r"^ip vpn-instance (\S+)$", "tags": ["vpn"]},
             {"regex": r"^ip vpn-instance (\S+) .* export-extcommunity evpn", "tags": ["rt"]},
             {"regex": r"^interface (\S+)$", "tags": ["interface"]},
@@ -246,16 +246,16 @@ def test_dict_rules_loader() -> None:
             {"regex": r"^interface (gi0/0/1) .* ip address \S+ \S+$", "tags": ["ip", "interface-2"]},
             {"regex": r"^ip vpn-instance (LAN) .* route-distinguisher (\S+)", "tags": ["rd"]},
         ],
-        Vendor.ARISTA: [
+        Platform.ARISTA_EOS: [
             {"regex": "^interface (\\S+)$", "tags": ["interface"]},
         ],
-        "unknown_vendor": [
+        "unknown_platform": [
             {"regex": "^interface (\\S+)$", "tags": ["interface"]},
         ],
     }
     loader = TaggingRulesDict(tagging_rules_dict)  # type: ignore[arg-type]
     assert loader.rules == {
-        Vendor.HUAWEI: [
+        Platform.HUAWEI_VRP: [
             TaggingRule(regex=r"^ip vpn-instance (\S+)$", tags=["vpn"]),
             TaggingRule(regex=r"^ip vpn-instance (\S+) .* export-extcommunity evpn", tags=["rt"]),
             TaggingRule(regex=r"^interface (\S+)$", tags=["interface"]),
@@ -263,7 +263,7 @@ def test_dict_rules_loader() -> None:
             TaggingRule(regex=r"^interface (gi0/0/1) .* ip address \S+ \S+$", tags=["ip", "interface-2"]),
             TaggingRule(regex=r"^ip vpn-instance (LAN) .* route-distinguisher (\S+)", tags=["rd"]),
         ],
-        Vendor.ARISTA: [
+        Platform.ARISTA_EOS: [
             TaggingRule(regex="^interface (\\S+)$", tags=["interface"]),
         ],
     }
@@ -279,7 +279,7 @@ def test_repeated_section() -> None:
           import-route direct route-policy RP_LOOPBACKS
          ipv4-family vpn-instance VRF_LAN
           peer MY_PEER_2 route-policy RP_MY_2 import
-        """
+        """,
     )
     target_config = dedent(
         """
@@ -290,8 +290,8 @@ def test_repeated_section() -> None:
          ipv4-family unicast
           import-route direct route-policy RP_LOOPBACKS
         #
-        """
+        """,
     ).strip()
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
     root = parser.parse(config)
     assert root.config == target_config

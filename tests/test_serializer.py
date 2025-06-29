@@ -2,7 +2,7 @@ from textwrap import dedent
 
 import pytest
 
-from ctreepo import CTreeParser, CTreeSerializer, Vendor
+from ctreepo import CTreeParser, CTreeSerializer, Platform
 from ctreepo.parser import TaggingRules, TaggingRulesDict
 
 config = dedent(
@@ -34,7 +34,7 @@ config = dedent(
      radius-server shared-key cipher secret_password
      radius-server algorithm loading-share
     #
-    """
+    """,
 ).strip()
 
 config_dict = {
@@ -75,9 +75,9 @@ config_dict = {
                             "template": "",
                             "undo_line": "",
                             "children": {},
-                        }
+                        },
                     },
-                }
+                },
             },
         },
         "ip vpn-instance LAN": {
@@ -136,7 +136,7 @@ config_dict = {
                     "template": "",
                     "undo_line": "",
                     "children": {},
-                }
+                },
             },
         },
         "interface gi0/0/1": {
@@ -151,7 +151,7 @@ config_dict = {
                     "template": "",
                     "undo_line": "",
                     "children": {},
-                }
+                },
             },
         },
         "ntp-service authentication-keyid 1 authentication-mode md5 cipher secret_password": {
@@ -189,8 +189,8 @@ config_dict = {
 
 @pytest.fixture(scope="session")
 def get_dict_loader() -> TaggingRules:
-    tagging_rules_dict: dict[Vendor, list[dict[str, str | list[str]]]] = {
-        Vendor.HUAWEI: [
+    tagging_rules_dict: dict[Platform, list[dict[str, str | list[str]]]] = {
+        Platform.HUAWEI_VRP: [
             {"regex": r"^ip vpn-instance (\S+)$", "tags": ["vpn"]},
             {"regex": r"^ip vpn-instance (\S+) .* export-extcommunity evpn", "tags": ["rt"]},
             {"regex": r"^interface (\S+)$", "tags": ["interface"]},
@@ -199,20 +199,19 @@ def get_dict_loader() -> TaggingRules:
             {"regex": r"^ip vpn-instance (LAN) .* route-distinguisher (\S+)", "tags": ["rd"]},
         ],
     }
-    loader = TaggingRulesDict(tagging_rules_dict)
-    return loader
+    return TaggingRulesDict(tagging_rules_dict)
 
 
 def test_to_dict(get_dict_loader: TaggingRules) -> None:
-    parser = CTreeParser(vendor=Vendor.HUAWEI, tagging_rules=get_dict_loader)
+    parser = CTreeParser(platform=Platform.HUAWEI_VRP, tagging_rules=get_dict_loader)
     root = parser.parse(config)
     serialized_config = CTreeSerializer.to_dict(root)
     assert serialized_config == config_dict
 
 
 def test_from_dict(get_dict_loader: TaggingRules) -> None:
-    parser = CTreeParser(vendor=Vendor.HUAWEI, tagging_rules=get_dict_loader)
+    parser = CTreeParser(platform=Platform.HUAWEI_VRP, tagging_rules=get_dict_loader)
     root_from_config = parser.parse(config)
 
-    root_from_dict = CTreeSerializer.from_dict(Vendor.HUAWEI, config_dict)
+    root_from_dict = CTreeSerializer.from_dict(Platform.HUAWEI_VRP, config_dict)
     assert root_from_config == root_from_dict

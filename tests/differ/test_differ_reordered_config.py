@@ -1,6 +1,6 @@
 from textwrap import dedent
 
-from ctreepo import CTreeDiffer, CTreeParser, Vendor
+from ctreepo import CTreeDiffer, CTreeParser, Platform
 
 
 def test_reordered_config() -> None:
@@ -16,7 +16,7 @@ def test_reordered_config() -> None:
           peer PEER_GROUP_2 route-policy RP_NAME_OUT export
           peer PEER_GROUP_3 route-policy RP_NAME_IN_3 import
           peer PEER_GROUP_3 route-policy RP_NAME_OUT export
-        """
+        """,
     ).strip()
 
     config2 = dedent(
@@ -31,10 +31,10 @@ def test_reordered_config() -> None:
           peer PEER_GROUP_3 route-policy RP_NAME_OUT export
          ipv4-family unicast
           import-route direct route-policy RP_CONNECTED
-        """
+        """,
     ).strip()
 
-    parser = CTreeParser(vendor=Vendor.HUAWEI)
+    parser = CTreeParser(platform=Platform.HUAWEI_VRP)
     root1 = parser.parse(config1)
     root2 = parser.parse(config2)
 

@@ -2,10 +2,10 @@ import re
 from collections import deque
 from typing import Literal
 
-from . import settings
-from .ctree import CTree
-from .models import DiffAction
-from .postproc import _REGISTRY, CTreePostProc
+from ctreepo import settings
+from ctreepo.ctree import CTree
+from ctreepo.models import DiffAction
+from ctreepo.postproc import _REGISTRY, CTreePostProc
 
 __all__ = ("CTreeDiffer",)
 
@@ -209,7 +209,7 @@ class CTreeDiffer:
 
         # пробегаем по post-proc правилам и дорабатываем diff
         if post_proc_rules is None:
-            post_proc_rules = _REGISTRY.get(root.vendor) or []
+            post_proc_rules = _REGISTRY.get(root.platform) or []
         for rule in post_proc_rules:
             rule.process(root)
 

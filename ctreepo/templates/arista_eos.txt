@@ -1,0 +1,4 @@
+aaa authentication (?:login|enable) (?P<METHODS>.*)
+(username \S+) .* secret (?:sha512 )?(?P<PASSWORD>\S+)  UNDO>>no \1
+
+(ip prefix-list \S+ seq \d+) .*                         UNDO>> no \1

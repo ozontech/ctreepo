@@ -3,12 +3,12 @@ from typing import cast
 
 import pytest
 
-from ctreepo import CTreeEnv, Vendor
-from ctreepo.vendors import HuaweiCT
+from ctreepo import CTreeEnv, Platform
+from ctreepo.platforms import HuaweiVRP
 
 
 @pytest.fixture(scope="function")
-def env_root() -> tuple[CTreeEnv, HuaweiCT]:
+def env_root() -> tuple[CTreeEnv, HuaweiVRP]:
     config_str = dedent(
         """
         !Software Version abcdef
@@ -142,7 +142,7 @@ def env_root() -> tuple[CTreeEnv, HuaweiCT]:
          end-filter
         #
         return
-        """
+        """,
     )
     tagging_rules: list[dict[str, str | list[str]]] = [
         {"regex": r"^interface (LoopBack\d+)$", "tags": ["interface", "loopback"]},
@@ -162,15 +162,15 @@ def env_root() -> tuple[CTreeEnv, HuaweiCT]:
     ]
 
     env = CTreeEnv(
-        vendor=Vendor.HUAWEI,
+        platform=Platform.HUAWEI_VRP,
         tagging_rules=tagging_rules,
     )
     root = env.parse(config_str)
-    root = cast(HuaweiCT, root)
+    root = cast(HuaweiVRP, root)
     return env, root
 
 
-def test_config(env_root: tuple[CTreeEnv, HuaweiCT]) -> None:
+def test_config(env_root: tuple[CTreeEnv, HuaweiVRP]) -> None:
     config = dedent(
         """
         telnet server disable
@@ -302,12 +302,12 @@ def test_config(env_root: tuple[CTreeEnv, HuaweiCT]) -> None:
          endif
          end-filter
         #
-        """
+        """,
     ).strip()
     assert env_root[1].config == config
 
 
-def test_patch(env_root: tuple[CTreeEnv, HuaweiCT]) -> None:
+def test_patch(env_root: tuple[CTreeEnv, HuaweiVRP]) -> None:
     patch = dedent(
         """
         telnet server disable
@@ -438,12 +438,12 @@ def test_patch(env_root: tuple[CTreeEnv, HuaweiCT]) -> None:
         approve
         endif
         end-filter
-        """
+        """,
     ).strip()
     assert env_root[1].patch == patch
 
 
-def test_to_dict(env_root: tuple[CTreeEnv, HuaweiCT]) -> None:
+def test_to_dict(env_root: tuple[CTreeEnv, HuaweiVRP]) -> None:
     dst = {
         "line": "",
         "tags": [],
@@ -748,7 +748,7 @@ def test_to_dict(env_root: tuple[CTreeEnv, HuaweiCT]) -> None:
                         "template": "",
                         "undo_line": "",
                         "children": {},
-                    }
+                    },
                 },
             },
             "route-policy RP_DENY deny node 10": {
@@ -785,7 +785,7 @@ def test_to_dict(env_root: tuple[CTreeEnv, HuaweiCT]) -> None:
                                 "children": {},
                             },
                         },
-                    }
+                    },
                 },
             },
             "aaa": {
@@ -813,7 +813,7 @@ def test_to_dict(env_root: tuple[CTreeEnv, HuaweiCT]) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
                     },
                     "authorization-scheme default": {
@@ -828,7 +828,7 @@ def test_to_dict(env_root: tuple[CTreeEnv, HuaweiCT]) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
                     },
                     "authorization-scheme local": {
@@ -864,7 +864,7 @@ def test_to_dict(env_root: tuple[CTreeEnv, HuaweiCT]) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
                     },
                     "local-user admin@local password irreversible-cipher admin-secret-key": {
@@ -1053,9 +1053,9 @@ def test_to_dict(env_root: tuple[CTreeEnv, HuaweiCT]) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
-                    }
+                    },
                 },
             },
             "xpl extcommunity-list soo CL_SOO_1": {
@@ -1179,7 +1179,7 @@ def test_to_dict(env_root: tuple[CTreeEnv, HuaweiCT]) -> None:
     assert dst == serialized
 
 
-def test_from_dict(env_root: tuple[CTreeEnv, HuaweiCT]) -> None:
+def test_from_dict(env_root: tuple[CTreeEnv, HuaweiVRP]) -> None:
     src = {
         "line": "",
         "tags": [],
@@ -1484,7 +1484,7 @@ def test_from_dict(env_root: tuple[CTreeEnv, HuaweiCT]) -> None:
                         "template": "",
                         "undo_line": "",
                         "children": {},
-                    }
+                    },
                 },
             },
             "route-policy RP_DENY deny node 10": {
@@ -1521,7 +1521,7 @@ def test_from_dict(env_root: tuple[CTreeEnv, HuaweiCT]) -> None:
                                 "children": {},
                             },
                         },
-                    }
+                    },
                 },
             },
             "aaa": {
@@ -1549,7 +1549,7 @@ def test_from_dict(env_root: tuple[CTreeEnv, HuaweiCT]) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
                     },
                     "authorization-scheme default": {
@@ -1564,7 +1564,7 @@ def test_from_dict(env_root: tuple[CTreeEnv, HuaweiCT]) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
                     },
                     "authorization-scheme local": {
@@ -1600,7 +1600,7 @@ def test_from_dict(env_root: tuple[CTreeEnv, HuaweiCT]) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
                     },
                     "local-user admin@local password irreversible-cipher admin-secret-key": {
@@ -1789,9 +1789,9 @@ def test_from_dict(env_root: tuple[CTreeEnv, HuaweiCT]) -> None:
                                 "template": "",
                                 "undo_line": "",
                                 "children": {},
-                            }
+                            },
                         },
-                    }
+                    },
                 },
             },
             "xpl extcommunity-list soo CL_SOO_1": {
@@ -1920,7 +1920,7 @@ def test_from_dict(env_root: tuple[CTreeEnv, HuaweiCT]) -> None:
     assert ct != deserialized
 
 
-def test_masked_config(env_root: tuple[CTreeEnv, HuaweiCT]) -> None:
+def test_masked_config(env_root: tuple[CTreeEnv, HuaweiVRP]) -> None:
     masked_config = dedent(
         f"""
         telnet server disable
@@ -1995,40 +1995,40 @@ def test_masked_config(env_root: tuple[CTreeEnv, HuaweiCT]) -> None:
          domain default
          domain local
           authentication-scheme local
-         local-user admin@local password irreversible-cipher {HuaweiCT.masking_string}
+         local-user admin@local password irreversible-cipher {HuaweiVRP.masking_string}
          local-user admin@local privilege level 3
          local-user admin@local service-type terminal ssh
         #
         hwtacacs-server template template-name
          hwtacacs-server authentication 5.5.5.5 vpn-instance MGMT
          hwtacacs-server authentication 6.6.6.6 vpn-instance MGMT secondary
-         hwtacacs-server shared-key cipher {HuaweiCT.masking_string}
+         hwtacacs-server shared-key cipher {HuaweiVRP.masking_string}
         #
         ssl policy policy-name
          diffie-hellman modulus 2048
          certificate load pem-cert cert.cer key-pair rsa key-file \
-cert.key.pem auth-code cipher {HuaweiCT.masking_string}
+cert.key.pem auth-code cipher {HuaweiVRP.masking_string}
         #
-        snmp-agent community read cipher {HuaweiCT.masking_string} mib-view iso-view
+        snmp-agent community read cipher {HuaweiVRP.masking_string} mib-view iso-view
         #
         ike peer ike_peer_name
          version 2
-         pre-shared-key cipher {HuaweiCT.masking_string}
+         pre-shared-key cipher {HuaweiVRP.masking_string}
          local-id-type fqdn
         #
         interface Tunnel0/0/0
          mtu 1300
          source LoopBack0
-         gre key cipher {HuaweiCT.masking_string}
-         nhrp authentication cipher {HuaweiCT.masking_string}
+         gre key cipher {HuaweiVRP.masking_string}
+         nhrp authentication cipher {HuaweiVRP.masking_string}
         #
         user-interface con 0
          authentication-mode password
-         set authentication password cipher {HuaweiCT.masking_string}
+         set authentication password cipher {HuaweiVRP.masking_string}
         #
         wlan ac
          security-profile name default
-          security wpa2 psk pass-phrase {HuaweiCT.masking_string} aes
+          security wpa2 psk pass-phrase {HuaweiVRP.masking_string} aes
         #
         xpl extcommunity-list soo CL_SOO_1
          123:123
@@ -2053,12 +2053,12 @@ cert.key.pem auth-code cipher {HuaweiCT.masking_string}
          endif
          end-filter
         #
-        """
+        """,
     ).strip()
     assert env_root[1].masked_config == masked_config
 
 
-def test_masked_patch(env_root: tuple[CTreeEnv, HuaweiCT]) -> None:
+def test_masked_patch(env_root: tuple[CTreeEnv, HuaweiVRP]) -> None:
     masked_patch = dedent(
         f"""
         telnet server disable
@@ -2136,39 +2136,39 @@ def test_masked_patch(env_root: tuple[CTreeEnv, HuaweiCT]) -> None:
         domain local
         authentication-scheme local
         quit
-        local-user admin@local password irreversible-cipher {HuaweiCT.masking_string}
+        local-user admin@local password irreversible-cipher {HuaweiVRP.masking_string}
         local-user admin@local privilege level 3
         local-user admin@local service-type terminal ssh
         quit
         hwtacacs-server template template-name
         hwtacacs-server authentication 5.5.5.5 vpn-instance MGMT
         hwtacacs-server authentication 6.6.6.6 vpn-instance MGMT secondary
-        hwtacacs-server shared-key cipher {HuaweiCT.masking_string}
+        hwtacacs-server shared-key cipher {HuaweiVRP.masking_string}
         quit
         ssl policy policy-name
         diffie-hellman modulus 2048
         certificate load pem-cert cert.cer key-pair rsa key-file \
-cert.key.pem auth-code cipher {HuaweiCT.masking_string}
+cert.key.pem auth-code cipher {HuaweiVRP.masking_string}
         quit
-        snmp-agent community read cipher {HuaweiCT.masking_string} mib-view iso-view
+        snmp-agent community read cipher {HuaweiVRP.masking_string} mib-view iso-view
         ike peer ike_peer_name
         version 2
-        pre-shared-key cipher {HuaweiCT.masking_string}
+        pre-shared-key cipher {HuaweiVRP.masking_string}
         local-id-type fqdn
         quit
         interface Tunnel0/0/0
         mtu 1300
         source LoopBack0
-        gre key cipher {HuaweiCT.masking_string}
-        nhrp authentication cipher {HuaweiCT.masking_string}
+        gre key cipher {HuaweiVRP.masking_string}
+        nhrp authentication cipher {HuaweiVRP.masking_string}
         quit
         user-interface con 0
         authentication-mode password
-        set authentication password cipher {HuaweiCT.masking_string}
+        set authentication password cipher {HuaweiVRP.masking_string}
         quit
         wlan ac
         security-profile name default
-        security wpa2 psk pass-phrase {HuaweiCT.masking_string} aes
+        security wpa2 psk pass-phrase {HuaweiVRP.masking_string} aes
         quit
         quit
         xpl extcommunity-list soo CL_SOO_1
@@ -2190,12 +2190,12 @@ cert.key.pem auth-code cipher {HuaweiCT.masking_string}
         approve
         endif
         end-filter
-        """
+        """,
     ).strip()  # noqa: F501
     assert env_root[1].masked_patch == masked_patch
 
 
-def test_searcher(env_root: tuple[CTreeEnv, HuaweiCT]) -> None:
+def test_searcher(env_root: tuple[CTreeEnv, HuaweiVRP]) -> None:
     qos_config = dedent(
         """
         diffserv domain default
@@ -2212,7 +2212,7 @@ def test_searcher(env_root: tuple[CTreeEnv, HuaweiCT]) -> None:
          qos queue 4 drr weight 50
          qos queue 1 ecn
         #
-        """
+        """,
     ).strip()
     interface_or_qos_config = dedent(
         """
@@ -2256,7 +2256,7 @@ def test_searcher(env_root: tuple[CTreeEnv, HuaweiCT]) -> None:
          gre key cipher gre-secret-key
          nhrp authentication cipher nhrp-secret-key
         #
-        """
+        """,
     ).strip()
     interface_and_qos_config = dedent(
         """
@@ -2272,7 +2272,7 @@ def test_searcher(env_root: tuple[CTreeEnv, HuaweiCT]) -> None:
          qos queue 4 drr weight 50
          qos queue 1 ecn
         #
-        """
+        """,
     ).strip()
 
     env, ct = env_root
@@ -2284,13 +2284,13 @@ def test_searcher(env_root: tuple[CTreeEnv, HuaweiCT]) -> None:
     assert interface_and_qos.config == interface_and_qos_config
 
 
-def test_tagging_rules(env_root: tuple[CTreeEnv, HuaweiCT]) -> None:
+def test_tagging_rules(env_root: tuple[CTreeEnv, HuaweiVRP]) -> None:
     env_dict, _ = env_root
-    env_file = CTreeEnv(vendor=Vendor.HUAWEI, tagging_rules="./tests/test_environment_huawei.yaml")
+    env_file = CTreeEnv(platform=Platform.HUAWEI_VRP, tagging_rules="./tests/test_environment_huawei.yaml")
     assert env_dict._parser.tagging_rules == env_file._parser.tagging_rules
 
 
-def test_diff(env_root: tuple[CTreeEnv, HuaweiCT]) -> None:
+def test_diff(env_root: tuple[CTreeEnv, HuaweiVRP]) -> None:
     target_str = dedent(
         """
         !Software Version abcdef
@@ -2424,7 +2424,7 @@ def test_diff(env_root: tuple[CTreeEnv, HuaweiCT]) -> None:
          end-filter
         #
         return
-        """
+        """,
     )
     diff_str_raw = dedent(
         """
@@ -2443,7 +2443,7 @@ def test_diff(env_root: tuple[CTreeEnv, HuaweiCT]) -> None:
         #
         ip ip-prefix PL_LOOPBACK index 10 permit 2.2.2.0 24 greater-equal 32 less-equal 32
         #
-        """
+        """,
     ).strip()
     diff_str_no_diff_section = dedent(
         """
@@ -2466,14 +2466,14 @@ def test_diff(env_root: tuple[CTreeEnv, HuaweiCT]) -> None:
          endif
          end-filter
         #
-        """
+        """,
     ).strip()
     env, current = env_root
     target = env.parse(target_str)
     diff = env.diff(a=current, b=target)
 
     env_no_diff = CTreeEnv(
-        vendor=Vendor.HUAWEI,
+        platform=Platform.HUAWEI_VRP,
         no_diff_sections=[r"^xpl \S+ \S+$"],
     )
     diff_no_diff = env_no_diff.diff(a=current, b=target)

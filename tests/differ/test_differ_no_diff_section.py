@@ -1,6 +1,6 @@
 from textwrap import dedent
 
-from ctreepo import CTreeDiffer, CTreeParser, Vendor
+from ctreepo import CTreeDiffer, CTreeParser, Platform
 
 
 def test_differ_no_diff_section_case_1() -> None:
@@ -28,7 +28,7 @@ def test_differ_no_diff_section_case_1() -> None:
          refuse
          end-filter
         #
-        """
+        """,
     ).strip()
     target_config = dedent(
         """
@@ -56,7 +56,7 @@ def test_differ_no_diff_section_case_1() -> None:
          refuse
          end-filter
         #
-        """
+        """,
     ).strip()
     diff_raw_config = dedent(
         """
@@ -76,7 +76,7 @@ def test_differ_no_diff_section_case_1() -> None:
         #
         route-policy RP_LEGACY_BLOCK deny node 10
         #
-        """
+        """,
     ).strip()
     diff_raw_patch = dedent(
         """
@@ -95,7 +95,7 @@ def test_differ_no_diff_section_case_1() -> None:
         approve
         route-policy RP_LEGACY_BLOCK deny node 10
         quit
-        """
+        """,
     ).strip()
     diff_raw_empty_section_patch = dedent(
         """
@@ -114,7 +114,7 @@ def test_differ_no_diff_section_case_1() -> None:
         approve
         route-policy RP_LEGACY_BLOCK deny node 10
         quit
-        """
+        """,
     ).strip()
     diff_no_diff_config = dedent(
         """
@@ -138,7 +138,7 @@ def test_differ_no_diff_section_case_1() -> None:
         #
         route-policy RP_LEGACY_BLOCK deny node 10
         #
-        """
+        """,
     ).strip()
     diff_no_diff_patch = dedent(
         """
@@ -161,10 +161,10 @@ def test_differ_no_diff_section_case_1() -> None:
         end-filter
         route-policy RP_LEGACY_BLOCK deny node 10
         quit
-        """
+        """,
     ).strip()
 
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
     target = parser.parse(target_config)
     current = parser.parse(current_config)
 
@@ -197,7 +197,7 @@ def test_differ_no_diff_section_case_2() -> None:
         some root line 2
         some root line 3
         #
-        """
+        """,
     )
     target_config = dedent(
         """
@@ -210,7 +210,7 @@ def test_differ_no_diff_section_case_2() -> None:
         #
         some root line 3
         #
-        """
+        """,
     )
     diff_config = dedent(
         """
@@ -221,7 +221,7 @@ def test_differ_no_diff_section_case_2() -> None:
         #
         undo some root line 2
         #
-        """
+        """,
     ).strip()
     diff_patch = dedent(
         """
@@ -231,9 +231,9 @@ def test_differ_no_diff_section_case_2() -> None:
         line 3
         quit
         undo some root line 2
-        """
+        """,
     ).strip()
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
     current = parser.parse(current_config)
     target = parser.parse(target_config)
     diff = CTreeDiffer.diff(current, target, no_diff_sections=[r"route-policy \S+"])
@@ -258,7 +258,7 @@ def test_differ_no_diff_section_case_3() -> None:
         some root line 2
         some root line 3
         #
-        """
+        """,
     )
     target_config = dedent(
         """
@@ -275,7 +275,7 @@ def test_differ_no_diff_section_case_3() -> None:
         #
         some root line 3
         #
-        """
+        """,
     )
     diff_config = dedent(
         """
@@ -287,7 +287,7 @@ def test_differ_no_diff_section_case_3() -> None:
         #
         undo some root line 2
         #
-        """
+        """,
     ).strip()
     diff_patch = dedent(
         """
@@ -299,9 +299,9 @@ def test_differ_no_diff_section_case_3() -> None:
         quit
         quit
         undo some root line 2
-        """
+        """,
     ).strip()
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
     current = parser.parse(current_config)
     target = parser.parse(target_config)
     diff = CTreeDiffer.diff(current, target, no_diff_sections=[r"section \d+ / route-policy \S+"])
@@ -325,7 +325,7 @@ def test_differ_no_diff_section_case_4() -> None:
          line 1
          line 2
         #
-        """
+        """,
     )
     target_config = dedent(
         """
@@ -338,7 +338,7 @@ def test_differ_no_diff_section_case_4() -> None:
          line 2
          line 3
         #
-        """
+        """,
     )
     diff_config = dedent(
         """
@@ -349,7 +349,7 @@ def test_differ_no_diff_section_case_4() -> None:
         #
         undo route-policy NO_DIFF_POLICY_3
         #
-        """
+        """,
     ).strip()
     diff_patch = dedent(
         """
@@ -359,9 +359,9 @@ def test_differ_no_diff_section_case_4() -> None:
         line 3
         quit
         undo route-policy NO_DIFF_POLICY_3
-        """
+        """,
     ).strip()
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
     current = parser.parse(current_config)
     target = parser.parse(target_config)
     diff = CTreeDiffer.diff(current, target, no_diff_sections=[r"route-policy \S+"])
@@ -387,7 +387,7 @@ def test_differ_no_diff_section_case_5() -> None:
           line 2
          #
         #
-        """
+        """,
     )
     target_config = dedent(
         """
@@ -402,7 +402,7 @@ def test_differ_no_diff_section_case_5() -> None:
           line 3
          #
         #
-        """
+        """,
     )
     diff_config = dedent(
         """
@@ -413,7 +413,7 @@ def test_differ_no_diff_section_case_5() -> None:
           line 2
           line 3
         #
-        """
+        """,
     ).strip()
     diff_patch = dedent(
         """
@@ -425,9 +425,9 @@ def test_differ_no_diff_section_case_5() -> None:
         line 3
         quit
         quit
-        """
+        """,
     ).strip()
-    parser = CTreeParser(Vendor.HUAWEI)
+    parser = CTreeParser(Platform.HUAWEI_VRP)
     current = parser.parse(current_config)
     target = parser.parse(target_config)
     diff = CTreeDiffer.diff(current, target, no_diff_sections=[r"route-policy \S+"])
