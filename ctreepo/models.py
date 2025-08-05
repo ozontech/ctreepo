@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from enum import StrEnum
+from enum import StrEnum, auto
 
 __all__ = (
     "TaggingRule",
@@ -22,9 +22,10 @@ class TaggingRule:
 
 
 class Vendor(StrEnum):
-    ARISTA = "arista"
-    CISCO = "cisco"
-    HUAWEI = "huawei"
+    ARISTA = auto()
+    CISCO = auto()
+    HUAWEI = auto()
+    FORTINET = auto()
 
 
 class DiffAction(StrEnum):

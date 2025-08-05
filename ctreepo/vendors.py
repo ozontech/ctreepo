@@ -1,4 +1,6 @@
 import re
+from collections import deque
+from typing import Self
 
 from .ctree import CTree
 from .models import Vendor
@@ -196,4 +198,64 @@ class HuaweiCT(CTree):
     def pre_run(cls, config: str) -> str:
         config = cls._remove_spaces(config)
         config = cls._expand_vty(config)
+        return config
+
+
+class FortinetCT(CTree):
+    platform = Vendor.FORTINET
+    spaces = "    "
+    undo = "unset"
+    section_exit = ""
+    section_separator = ""
+    sections_require_exit = []
+    sections_without_exit = []
+    junk_lines = [
+        r"\s*end",
+        r"\s*next",
+        r"\s*#.*",
+    ]
+    mask_patterns = []
+    new_line_mask = "<<br>>"
+
+    def _build_patch(self: Self, masked: bool) -> str:
+        nodes = deque(self.children.values())
+        result = []
+        path_to_root = []
+
+        node = self
+        while node.parent is not None:
+            path_to_root.append(node.masked_line if masked else node.line)
+            node = node.parent
+        path_to_root.reverse()
+
+        while nodes:
+            node = nodes.popleft()
+            result.append(node.masked_line if masked else node.line)
+            if node.line.startswith("config "):
+                nodes.appendleft(self.__class__(line="end"))
+            elif node.line.startswith("edit "):
+                nodes.appendleft(self.__class__(line="next"))
+            nodes.extendleft(reversed(node.children.values()))
+        result = path_to_root + result
+        for line in path_to_root[::-1]:
+            if line.startswith("config "):
+                result.append("end")
+            elif line.startswith("edit "):
+                result.append("next")
+        return "\n".join(result)
+
+    @classmethod
+    def _mask_certificates(cls, config: str) -> str:
+        return re.sub(r'(set (?:certificate|private-key) )"[- \S\n]+?"', r'\1""', config)
+
+    @classmethod
+    def _mask_buffer(cls, config: str) -> str:
+        return re.sub(r'(set buffer )".*?"(?=\n)', r'\1""', config, flags=re.DOTALL)
+
+    @classmethod
+    def pre_run(cls, config: str) -> str:
+        config = cls._mask_certificates(config)
+        config = cls._mask_buffer(config)
+        with open("parsed-fortinet.txt", "w") as f:
+            f.write(config)
         return config
