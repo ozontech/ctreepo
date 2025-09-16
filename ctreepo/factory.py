@@ -1,6 +1,6 @@
 from .ctree import CTree
 from .models import Vendor
-from .vendors import AristaCT, CiscoCT, FortinetCT, HuaweiCT
+from .vendors import AristaCT, ArubaCT, CiscoCT, FortinetCT, HuaweiCT
 
 __all__ = ("ctree_factory", "ctree_class")
 
@@ -11,6 +11,7 @@ def ctree_class(vendor: Vendor) -> type[CTree]:
         Vendor.CISCO: CiscoCT,
         Vendor.HUAWEI: HuaweiCT,
         Vendor.FORTINET: FortinetCT,
+        Vendor.ARUBA: ArubaCT,
     }
 
     if vendor not in vendor_map:

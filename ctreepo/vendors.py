@@ -259,3 +259,21 @@ class FortinetCT(CTree):
         with open("parsed-fortinet.txt", "w") as f:
             f.write(config)
         return config
+
+
+class ArubaCT(CTree):
+    vendor = Vendor.ARUBA
+    spaces = "   "
+    undo = "no"
+    section_exit = "exit"
+    section_separator = ""
+    sections_require_exit = []
+    sections_without_exit = []
+    junk_lines = [
+        r"\s*;.*",
+        r"\s*exit",
+        "Running configuration:",
+    ]
+    mask_patterns = [
+        r".*(?:key|encrypted-key|md5|community)(?: 7)? (\S+).*",
+    ]
