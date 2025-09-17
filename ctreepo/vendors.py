@@ -9,6 +9,8 @@ __all__ = (
     "AristaCT",
     "CiscoCT",
     "HuaweiCT",
+    "FortinetCT",
+    "ArubaCT",
 )
 
 

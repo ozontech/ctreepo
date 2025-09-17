@@ -39,7 +39,7 @@ class CTreeDiffer:
             if len(node.template) == 0:
                 continue
             patterns = []
-            if len(node.undo_line) != 0:
+            if len(node.undo_line) != 0 and node.undo_line.startswith(node.undo):
                 patterns.append(node.undo_line)
             if node.line.startswith(f"{node.undo} "):
                 patterns.append(node.template.replace(f"{node.undo} ", "", 1))
