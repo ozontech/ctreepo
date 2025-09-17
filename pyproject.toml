@@ -1,6 +1,6 @@
 [project]
 name = "ctreepo"
-version = "0.3.30"
+version = "0.3.31"
 description = "CTreePO - configuration tree patch overview - Parsing, filtering and diff calculation for network device configurations"
 authors = [{ name = "Alexander Ignatov", email = "alexigna@ozon.ru" }]
 license = "Apache-2.0"

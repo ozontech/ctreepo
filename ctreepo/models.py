@@ -26,6 +26,7 @@ class Vendor(StrEnum):
     CISCO = auto()
     HUAWEI = auto()
     FORTINET = auto()
+    ARUBA = auto()
 
 
 class DiffAction(StrEnum):
