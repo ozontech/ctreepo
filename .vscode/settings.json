@@ -1,0 +1,12 @@
+{
+    "python.testing.unittestEnabled": false,
+    "python.testing.unittestArgs": [],
+    "python.testing.pytestEnabled": true,
+    "python.testing.pytestArgs": [
+        "tests",
+        "-s",
+        "-vv",
+        "-ra",
+        "--strict-markers"
+    ]
+}
