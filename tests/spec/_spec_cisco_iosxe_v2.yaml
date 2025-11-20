@@ -1,0 +1,8 @@
+name: "cisco_iosxe"
+scrapli_platform: "cisco_iosxe"
+spaces: "   "
+section_sep: "#"
+section_exit: "quit"
+
+junk_lines:
+  - "\\s*!.*"

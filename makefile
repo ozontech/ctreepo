@@ -1,26 +1,33 @@
-.PHONY: init init-dev lint mypy tests check
+.PHONY: init init-dev build lint mypy check
 
 init:
-	python -m pip install --upgrade pip
-	pip install "poetry>=2.0"
-	poetry install
-	poetry --version
+	pip install poetry
+	poetry install --without dev
 
 init-dev: init
 	poetry install --with dev
 
-lint:
-	poetry run ruff check
-
 build: init
 	poetry build
 
+lint:	
+	poetry run black --check src tests
+	poetry run ruff check src tests
+
 mypy:
-	poetry run mypy ctreepo
-	poetry run mypy tests
+	poetry run mypy src tests
 
 test:
-	poetry run pytest -vv
+	poetry run pytest \
+	--cov src \
+	--cov-report term \
+	--cov-report html \
+	--cov-report xml:coverage.xml \
+	--cov-fail-under=80
 
-check: lint mypy test
+format:
+	poetry run ruff check src tests --select F401,UP035,I001 --fix
+	poetry run black src tests
+	
+check: format lint mypy test
 	@echo "✅ Проверки пройдены"

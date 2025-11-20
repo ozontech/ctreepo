@@ -1,0 +1,29 @@
+name: "huawei_vrp"
+scrapli_platform: "huawei_vrp"
+spaces: " "
+section_sep: "#"
+section_exit: "quit"
+undo: "undo"
+
+junk_lines:
+  - "\\s*#.*"
+  - "!.*"
+  - "return"
+
+mask_patterns:
+  - ".*secret (?:5|9|7) (\\S+)"
+
+sections_required_exit:
+  - "route-policy \\S+ (?:deny|permit) node \\d+"
+  - "aaa / authentication-scheme \\S+"
+  - "aaa / authorization-scheme \\S+"
+  - "aaa / accounting-scheme \\S+"
+  - "aaa / service-scheme \\S+"
+  - "aaa / domain \\S+"
+  - "(?:radius|hwtacacs)-server template \\S+"
+  - "(?:dot1x|mac)-access-profile \\S+"
+  - "authentication-profile \\S+"
+  - "interface \\S+"
+
+sections_no_diff:
+  - "xpl \\S+ .*"

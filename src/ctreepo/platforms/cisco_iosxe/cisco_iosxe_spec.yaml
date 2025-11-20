@@ -1,0 +1,32 @@
+name: "cisco_iosxe"
+scrapli_platform: "cisco_iosxe"
+spaces: " "
+section_sep: "!"
+section_exit: "exit"
+undo: "no"
+
+junk_lines:
+  - "\\s*!.*"
+  - "Building configuration..."
+  - "Current configuration : \\d+ bytes"
+  - "version \\S+"
+  - "\\s*exit-address-family"
+  - "end"
+
+mask_patterns:
+  - " secret (?:5|9|7) (\\S+)"
+  - " password (?:5|9|7) (\\S+)"
+
+sections_required_exit:
+  - "route-map \\S+ (?:deny|permit) \\d+"
+  - "router bgp \\d+ / address-family \\S+"
+  - "interface \\S+"
+
+sections_without_exit:
+  - "crypto pki certificate chain \\S+ / certificate(?: ca| self-signed)? \\S+.*"
+
+sections_no_diff:
+  - "prefix-set \\S+"
+
+ordered_sections:
+  - "ip access-list standard \\S+"

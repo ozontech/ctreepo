@@ -1,6 +1,7 @@
 # CTreePO - Configuration Tree Patch Overview
 
 - [CTreePO - Configuration Tree Patch Overview](#ctreepo---configuration-tree-patch-overview)
+  - [v0.4.0](#v040)
   - [Краткое описание](#краткое-описание)
   - [Быстрый пример (00.quick-start.py)](#быстрый-пример-00quick-startpy)
   - [Преобразование в дерево (01.parsing.py)](#преобразование-в-дерево-01parsingpy)
@@ -12,6 +13,10 @@
     - [Пост-обработка разницы конфигураций (06.postproc.diff.py)](#пост-обработка-разницы-конфигураций-06postprocdiffpy)
     - [Секции без вычисления разницы (07.no.diff.section.py)](#секции-без-вычисления-разницы-07nodiffsectionpy)
     - [Секции, где порядок имеет значение (08.ordered.diff.py)](#секции-где-порядок-имеет-значение-08ordereddiffpy)
+
+## v0.4.0
+
+Библиотека переписана, описание будет обновлено позже.
 
 ## Краткое описание
 

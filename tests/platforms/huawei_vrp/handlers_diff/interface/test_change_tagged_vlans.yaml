@@ -1,0 +1,109 @@
+- current: |
+    interface Eth-Trunk1
+     undo port link-type
+     port link-type hybrid
+     port hybrid tagged vlan 10 19 to 24
+  target: |
+    interface Eth-Trunk1
+     undo port link-type
+     port link-type hybrid
+     port hybrid tagged vlan 15 23 to 24 26
+  diff: |
+    interface Eth-Trunk1
+     undo port hybrid tagged vlan 10 19 to 22
+     port hybrid tagged vlan 15 23 to 24 26
+    #
+
+- current: |
+    interface Eth-Trunk1
+     undo port link-type
+     port link-type hybrid
+     port hybrid tagged vlan 10 to 15
+  target: |
+    interface Eth-Trunk1
+     undo port link-type
+     port link-type hybrid
+     port hybrid tagged vlan 12 to 17
+  diff: |
+    interface Eth-Trunk1
+     undo port hybrid tagged vlan 10 to 11
+     port hybrid tagged vlan 12 to 17
+    #
+
+- current: |
+    interface Eth-Trunk1
+     undo port link-type
+     port link-type hybrid
+     port hybrid tagged vlan 10 to 15
+  target: |
+    interface Eth-Trunk1
+     undo port link-type
+     port link-type hybrid
+     port hybrid tagged vlan 20 to 25
+  diff: |
+    interface Eth-Trunk1
+     undo port hybrid tagged vlan 10 to 15
+     port hybrid tagged vlan 20 to 25
+    #
+
+- current: |
+    interface Eth-Trunk1
+     undo port link-type
+     port link-type hybrid
+     port hybrid tagged vlan 10
+  target: |
+    interface Eth-Trunk1
+     undo port link-type
+     port link-type hybrid
+     port hybrid tagged vlan 20
+  diff: |
+    interface Eth-Trunk1
+     undo port hybrid tagged vlan 10
+     port hybrid tagged vlan 20
+    #
+
+- current: |
+    interface Eth-Trunk1
+     undo port link-type
+     port link-type hybrid
+     port hybrid tagged vlan 10 to 15
+  target: |
+    interface Eth-Trunk1
+     undo port link-type
+     port link-type hybrid
+     port hybrid tagged vlan 10 to 15 20
+  diff: |
+    interface Eth-Trunk1
+     port hybrid tagged vlan 10 to 15 20
+    #
+
+- current: |
+    interface Eth-Trunk1
+     port link-type trunk
+     undo port trunk allow-pass vlan 1
+     port trunk allow-pass vlan 2 to 99 101 to 199 201 to 299
+  target: |
+    interface Eth-Trunk1
+     port link-type trunk
+     port trunk allow-pass vlan 2 to 4094
+  diff: |
+    interface Eth-Trunk1
+     port trunk allow-pass vlan 1
+     port trunk allow-pass vlan 2 to 4094
+    #
+
+- current: |
+    interface Eth-Trunk1
+     port link-type trunk
+     port trunk allow-pass vlan 2 to 4094
+  target: |
+    interface Eth-Trunk1
+     port link-type trunk
+     undo port trunk allow-pass vlan 1
+     port trunk allow-pass vlan 100 to 199 201 to 299 500
+  diff: |
+    interface Eth-Trunk1
+     undo port trunk allow-pass vlan 2 to 99 200 300 to 499 501 to 4094
+     undo port trunk allow-pass vlan 1
+     port trunk allow-pass vlan 100 to 199 201 to 299 500
+    #

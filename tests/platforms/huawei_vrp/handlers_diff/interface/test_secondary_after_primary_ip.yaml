@@ -1,0 +1,43 @@
+- current: |
+    no service pad
+    #
+    interface GigabitEthernet0/0/1
+     description test
+     ip address 192.168.0.1 255.255.255.0
+    #
+  target: |
+    no service pad
+    #
+    interface GigabitEthernet0/0/1
+     description test
+     ip address 192.168.2.1 255.255.255.0 sub
+     ip address 192.168.1.1 255.255.255.0
+     ip address 192.168.3.1 255.255.255.0 sub
+    #
+  diff: |
+    interface GigabitEthernet0/0/1
+     undo ip address 192.168.0.1 255.255.255.0
+     ip address 192.168.1.1 255.255.255.0
+     ip address 192.168.2.1 255.255.255.0 sub
+     ip address 192.168.3.1 255.255.255.0 sub
+    #
+
+- current: |
+    no service pad
+    #
+    interface GigabitEthernet0/0/1
+     description test
+     ip address 192.168.0.1 255.255.255.0
+    #
+  target: |
+    no service pad
+    #
+    interface GigabitEthernet0/0/1
+     description test
+     ip address 192.168.0.2 255.255.255.0
+    #
+  diff: |
+    interface GigabitEthernet0/0/1
+     undo ip address 192.168.0.1 255.255.255.0
+     ip address 192.168.0.2 255.255.255.0
+    #

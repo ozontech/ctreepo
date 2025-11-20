@@ -1,0 +1,41 @@
+# что бы собрать физику в lag нужно сначала удалить все сабы физики
+- current: |
+    interface GigabitEthernet0/0/1.100
+     description sub-eth-interface-100
+    interface GigabitEthernet0/0/1
+     description eth-interface
+    interface GigabitEthernet0/0/1.200
+     description sub-eth-interface-200
+  target: |
+    interface Eth-Trunk1
+     description lag-interface
+    interface GigabitEthernet0/0/1
+     description eth-interface
+     eth-trunk 1
+  diff: |
+    undo interface GigabitEthernet0/0/1.100
+    undo interface GigabitEthernet0/0/1.200
+    #
+    interface Eth-Trunk1
+     description lag-interface
+    #
+    interface GigabitEthernet0/0/1
+     eth-trunk 1
+    #
+
+# на физике сначала нужно сделать все undo команды, что бы очистить интерфейс
+- current: |
+    interface 10GE1/0/1
+     description interface under test
+     undo portswitch
+     mtu 9198
+  target: |
+    interface 10GE1/0/1
+     description interface under test
+     eth-trunk 1
+  diff: |
+    interface 10GE1/0/1
+     undo mtu 9198
+     portswitch
+     eth-trunk 1
+    #

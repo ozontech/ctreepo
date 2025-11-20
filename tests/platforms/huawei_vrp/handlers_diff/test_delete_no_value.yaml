@@ -1,0 +1,110 @@
+# нет no-value, ничего не нужно делать
+- name: no modification
+  current: |
+    snmp-agent
+    snmp-agent sys-info version v2c v3
+    snmp-agent community read public12345 mib-view device42 acl 1234
+  target: |
+    snmp-agent
+    snmp-agent sys-info version v2c v3
+    snmp-agent community read public54321 mib-view device42 acl 1234
+  diff: |
+    snmp-agent community read public54321 mib-view device42 acl 1234
+    undo snmp-agent community read public12345 mib-view device42 acl 1234
+    #
+
+# верхний уровень, no-value строка совпадает с удаляемой, поэтому их обе исключаем
+- current: |
+    snmp-agent
+    snmp-agent sys-info version v2c v3
+    snmp-agent community read public12345 mib-view device42 acl 1234
+  target: |
+    snmp-agent
+    snmp-agent sys-info version v2c v3
+    snmp-agent community read <<no-value>> mib-view device42 acl 1234
+  diff: ""
+
+# тут кроме совпадения есть еще другая строка, её обрабатываем как обычно
+- current: |
+    snmp-agent
+    snmp-agent sys-info version v2c v3
+    snmp-agent community read public12345 mib-view device42 acl 1234
+    snmp-agent community read 12345public mib-view device42 acl 5432
+  target: |
+    snmp-agent
+    snmp-agent sys-info version v2c v3
+    snmp-agent community read <<no-value>> mib-view device42 acl 1234
+  diff: |
+    undo snmp-agent community read 12345public mib-view device42 acl 5432
+    #
+
+# тут вложенный уровень
+- name: sub-level
+  current: |
+    hwtacacs-server template tacacs-group
+     hwtacacs-server shared-key cipher tacacs-password
+     hwtacacs-server timer response-timeout 4
+  target: |
+    hwtacacs-server template tacacs-group
+     hwtacacs-server shared-key cipher <<no-value>>
+     hwtacacs-server timer response-timeout 5
+  diff: |
+    hwtacacs-server template tacacs-group
+     undo hwtacacs-server timer response-timeout 4
+     hwtacacs-server timer response-timeout 5
+    #
+
+# вложенный уровень и нет другой разницы кроме no-value, поэтому проверяем удаление родителя
+- current: |
+    hwtacacs-server template tacacs-group
+     hwtacacs-server shared-key cipher tacacs-password
+     hwtacacs-server timer response-timeout 4
+  target: |
+    hwtacacs-server template tacacs-group
+     hwtacacs-server shared-key cipher <<no-value>>
+     hwtacacs-server timer response-timeout 4
+  diff: ""
+
+# тут вместе верхний и вложенный уровень
+- current: |
+    sysname router1
+    #
+    snmp-agent
+    snmp-agent community read public12345 mib-view device42 acl 1234
+    #
+    hwtacacs-server template tacacs-group
+     hwtacacs-server shared-key cipher tacacs-password
+     hwtacacs-server timer response-timeout 4
+  target: |
+    sysname router1
+    #
+    snmp-agent
+    snmp-agent community read <<no-value>> mib-view device42 acl 1234
+    #
+    hwtacacs-server template tacacs-group
+     hwtacacs-server shared-key cipher <<no-value>>
+     hwtacacs-server timer response-timeout 4
+  diff: ""
+
+# два уровня, для no-value нет совпадения, но есть дифф в другой строке
+- current: |
+    sysname router1
+    #
+    snmp-agent
+    snmp-agent community read public12345 mib-view device42 acl 1234
+    #
+    hwtacacs-server template tacacs-group
+     hwtacacs-server shared-key cipher tacacs-password
+     hwtacacs-server timer response-timeout 4
+  target: |
+    sysname router1
+    #
+    snmp-agent
+    snmp-agent community read <<no-value>> mib-view device42 acl 4321
+    #
+    hwtacacs-server template tacacs-group
+     hwtacacs-server shared-key cipher <<no-value>>
+     hwtacacs-server timer response-timeout 4
+  diff: |
+    undo snmp-agent community read public12345 mib-view device42 acl 1234
+    #

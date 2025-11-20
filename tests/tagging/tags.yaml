@@ -1,0 +1,14 @@
+tagging-rules:
+  cisco_iosxe:
+    ^ip vpn-instance (\S+)$:
+      - vpn
+      - vrf
+    ^interface (?P<if_name>\S+)$:
+      - interface
+      - "{if_name}"
+      - interface:{if_name}
+  huawei_vrp:
+    ^interface (\S+)$: [interface]
+    ^router ospf 1$: [routing, ospf]
+  unknown_platform:
+    ^interface (\S+)$: [interface]

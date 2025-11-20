@@ -1,0 +1,3 @@
+interface \S+
+ port link-type (?P<LINK_TYPE>hybrid|trunk)       UNDO>> undo port link-type
+#

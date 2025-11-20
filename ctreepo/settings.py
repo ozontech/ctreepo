@@ -1,3 +1,0 @@
-MASKING_STRING = "******"
-TEMPLATE_SEPARATOR = "UNDO>>"
-TAG_ON_UNDO = "post"

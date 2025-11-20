@@ -1,0 +1,44 @@
+- current: |
+    interface 25GE1/0/1
+     port link-type trunk
+     undo port trunk allow-pass vlan 1
+     stp edged-port enable
+    #
+    interface 25GE1/0/1.1234 mode l2
+     encapsulation untag
+     bridge-domain 1234
+    #
+    interface 25GE1/0/2
+     port link-type trunk
+     undo port trunk allow-pass vlan 1
+     stp edged-port enable
+    #
+    interface 25GE1/0/2.1234 mode l2
+     encapsulation untag
+     bridge-domain 1234
+    #
+  target: |
+    interface 25GE1/0/2
+     description test
+     port link-type trunk
+     undo port trunk allow-pass vlan 1
+     stp edged-port enable
+    #
+    interface 25GE1/0/2.1234 mode l2
+     encapsulation untag
+     bridge-domain 1234
+    #
+  diff: |
+    undo interface 25GE1/0/1.1234 mode l2
+    #
+    interface 25GE1/0/2
+     description test
+    #
+    undo interface 25GE1/0/1
+    #
+  patch: |
+    undo interface 25GE1/0/1.1234 mode l2
+    interface 25GE1/0/2
+    description test
+    quit
+    undo interface 25GE1/0/1

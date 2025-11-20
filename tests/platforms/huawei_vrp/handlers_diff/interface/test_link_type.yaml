@@ -1,0 +1,272 @@
+# удаление link-type автоматом чистит связанные команды
+- name: remove link type
+  current: |
+    interface GigabitEthernet0/0/1
+     description INTERFACE UNDER DESCRIPTION
+     port link-type trunk
+     undo port trunk allow-pass vlan 1
+     port trunk allow-pass vlan 500 to 505
+     stp edged-port enable
+  target: |
+    interface GigabitEthernet0/0/1
+     description INTERFACE UNDER DESCRIPTION
+     stp edged-port enable
+  template: |
+    interface \S+
+     port link-type (?P<LINK_TYPE>hybrid|trunk|access)       UNDO>> undo port link-type
+  diff: |
+    interface GigabitEthernet0/0/1
+     undo port link-type
+    #
+
+- name: trunk -> hybrid
+  current: |
+    interface GigabitEthernet0/0/1
+     description INTERFACE UNDER DESCRIPTION
+     port link-type trunk
+     port trunk pvid vlan 200
+     undo port trunk allow-pass vlan 1
+     port trunk allow-pass vlan 2 to 99 101 to 199 201 to 299
+     stp edged-port enable
+  target: |
+    interface GigabitEthernet0/0/1
+     description INTERFACE UNDER DESCRIPTION
+     port link-type hybrid
+     port hybrid pvid vlan 200
+     port hybrid tagged vlan 2 to 99 101 to 199 201 to 299
+     port hybrid untagged vlan 200
+     stp edged-port enable
+  template: |
+    interface \S+
+     port link-type (?P<LINK_TYPE>hybrid|trunk|access)       UNDO>> undo port link-type
+  diff: |
+    interface GigabitEthernet0/0/1
+     port link-type hybrid
+     port hybrid pvid vlan 200
+     port hybrid tagged vlan 2 to 99 101 to 199 201 to 299
+     port hybrid untagged vlan 200
+    #
+
+- name: trunk -> access (static)
+  current: |
+    interface GigabitEthernet0/0/1
+     description INTERFACE UNDER DESCRIPTION
+     port link-type trunk
+     port trunk pvid vlan 200
+     undo port trunk allow-pass vlan 1
+     port trunk allow-pass vlan 2 to 99 101 to 199 201 to 299
+     stp edged-port enable
+  target: |
+    interface GigabitEthernet0/0/1
+     description INTERFACE UNDER DESCRIPTION
+     port link-type access
+     port default vlan 200
+     stp edged-port enable
+  template: |
+    interface \S+
+     port link-type (?P<LINK_TYPE>hybrid|trunk|access)       UNDO>> undo port link-type
+  diff: |
+    interface GigabitEthernet0/0/1
+     port link-type access
+     port default vlan 200
+    #
+
+- name: trunk -> access (dynamic)
+  current: |
+    interface GigabitEthernet0/0/1
+     description INTERFACE UNDER DESCRIPTION
+     port link-type trunk
+     port trunk pvid vlan 200
+     undo port trunk allow-pass vlan 1
+     port trunk allow-pass vlan 2 to 99 101 to 199 201 to 299
+     stp edged-port enable
+  target: |
+    interface GigabitEthernet0/0/1
+     description INTERFACE UNDER DESCRIPTION
+     port default vlan 200
+     stp edged-port enable
+  template: |
+    interface \S+
+     port link-type (?P<LINK_TYPE>hybrid|trunk|access)       UNDO>> undo port link-type
+  diff: |
+    interface GigabitEthernet0/0/1
+     undo port link-type
+     port default vlan 200
+    #
+
+- name: hybrid -> trunk
+  current: |
+    interface GigabitEthernet0/0/1
+     description INTERFACE UNDER DESCRIPTION
+     port link-type hybrid
+     port hybrid pvid vlan 200
+     port hybrid tagged vlan 2 to 99 101 to 199 201 to 299
+     port hybrid untagged vlan 200
+     stp edged-port enable
+  target: |
+    interface GigabitEthernet0/0/1
+     description INTERFACE UNDER DESCRIPTION
+     port link-type trunk
+     port trunk pvid vlan 200
+     undo port trunk allow-pass vlan 1
+     port trunk allow-pass vlan 2 to 99 101 to 199 201 to 299
+     stp edged-port enable
+  template: |
+    interface \S+
+     port link-type (?P<LINK_TYPE>hybrid|trunk|access)       UNDO>> undo port link-type
+  diff: |
+    interface GigabitEthernet0/0/1
+     port link-type trunk
+     port trunk pvid vlan 200
+     undo port trunk allow-pass vlan 1
+     port trunk allow-pass vlan 2 to 99 101 to 199 201 to 299
+    #
+
+- name: hybrid -> access (static)
+  current: |
+    interface GigabitEthernet0/0/1
+     description INTERFACE UNDER DESCRIPTION
+     port link-type hybrid
+     port hybrid pvid vlan 200
+     port hybrid tagged vlan 2 to 99 101 to 199 201 to 299
+     port hybrid untagged vlan 200
+     stp edged-port enable
+  template: |
+    interface \S+
+     port link-type (?P<LINK_TYPE>hybrid|trunk|access)       UNDO>> undo port link-type
+  target: |
+    interface GigabitEthernet0/0/1
+     description INTERFACE UNDER DESCRIPTION
+     port link-type access
+     port default vlan 200
+     stp edged-port enable
+  diff: |
+    interface GigabitEthernet0/0/1
+     port link-type access
+     port default vlan 200
+    #
+
+- name: hybrid -> access (dynamic)
+  current: |
+    interface GigabitEthernet0/0/1
+     description INTERFACE UNDER DESCRIPTION
+     port link-type hybrid
+     port hybrid pvid vlan 200
+     port hybrid tagged vlan 2 to 99 101 to 199 201 to 299
+     port hybrid untagged vlan 200
+     stp edged-port enable
+  template: |
+    interface \S+
+     port link-type (?P<LINK_TYPE>hybrid|trunk|access)       UNDO>> undo port link-type
+  target: |
+    interface GigabitEthernet0/0/1
+     description INTERFACE UNDER DESCRIPTION
+     port default vlan 200
+     stp edged-port enable
+  diff: |
+    interface GigabitEthernet0/0/1
+     undo port link-type
+     port default vlan 200
+    #
+
+- name: access (static) -> hybrid
+  current: |
+    interface GigabitEthernet0/0/1
+     description INTERFACE UNDER DESCRIPTION
+     port link-type access
+     port default vlan 200
+     stp edged-port enable
+  target: |
+    interface GigabitEthernet0/0/1
+     description INTERFACE UNDER DESCRIPTION
+     port link-type hybrid
+     port hybrid pvid vlan 200
+     port hybrid tagged vlan 2 to 99 101 to 199 201 to 299
+     port hybrid untagged vlan 200
+     stp edged-port enable
+  template: |
+    interface \S+
+     port link-type (?P<LINK_TYPE>hybrid|trunk|access)       UNDO>> undo port link-type
+  diff: |
+    interface GigabitEthernet0/0/1
+     port link-type hybrid
+     port hybrid pvid vlan 200
+     port hybrid tagged vlan 2 to 99 101 to 199 201 to 299
+     port hybrid untagged vlan 200
+    #
+
+- name: access (static) -> trunk
+  current: |
+    interface GigabitEthernet0/0/1
+     description INTERFACE UNDER DESCRIPTION
+     port link-type access
+     port default vlan 200
+     stp edged-port enable
+  target: |
+    interface GigabitEthernet0/0/1
+     description INTERFACE UNDER DESCRIPTION
+     port link-type trunk
+     port trunk pvid vlan 200
+     undo port trunk allow-pass vlan 1
+     port trunk allow-pass vlan 2 to 99 101 to 199 201 to 299
+     stp edged-port enable
+  template: |
+    interface \S+
+     port link-type (?P<LINK_TYPE>hybrid|trunk|access)       UNDO>> undo port link-type
+  diff: |
+    interface GigabitEthernet0/0/1
+     port link-type trunk
+     port trunk pvid vlan 200
+     undo port trunk allow-pass vlan 1
+     port trunk allow-pass vlan 2 to 99 101 to 199 201 to 299
+    #
+
+- name: access (dynamic) -> hybrid
+  current: |
+    interface GigabitEthernet0/0/1
+     description INTERFACE UNDER DESCRIPTION
+     port default vlan 200
+     stp edged-port enable
+  target: |
+    interface GigabitEthernet0/0/1
+     description INTERFACE UNDER DESCRIPTION
+     port link-type hybrid
+     port hybrid pvid vlan 200
+     port hybrid tagged vlan 2 to 99 101 to 199 201 to 299
+     port hybrid untagged vlan 200
+     stp edged-port enable
+  template: |
+    interface \S+
+     port link-type (?P<LINK_TYPE>hybrid|trunk|access)       UNDO>> undo port link-type
+  diff: |
+    interface GigabitEthernet0/0/1
+     port link-type hybrid
+     port hybrid pvid vlan 200
+     port hybrid tagged vlan 2 to 99 101 to 199 201 to 299
+     port hybrid untagged vlan 200
+    #
+
+- name: access (dynamic) -> trunk
+  current: |
+    interface GigabitEthernet0/0/1
+     description INTERFACE UNDER DESCRIPTION
+     port default vlan 200
+     stp edged-port enable
+  target: |
+    interface GigabitEthernet0/0/1
+     description INTERFACE UNDER DESCRIPTION
+     port link-type trunk
+     port trunk pvid vlan 200
+     undo port trunk allow-pass vlan 1
+     port trunk allow-pass vlan 2 to 99 101 to 199 201 to 299
+     stp edged-port enable
+  template: |
+    interface \S+
+     port link-type (?P<LINK_TYPE>hybrid|trunk|access)       UNDO>> undo port link-type
+  diff: |
+    interface GigabitEthernet0/0/1
+     port link-type trunk
+     port trunk pvid vlan 200
+     undo port trunk allow-pass vlan 1
+     port trunk allow-pass vlan 2 to 99 101 to 199 201 to 299
+    #
